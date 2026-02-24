@@ -4,7 +4,7 @@ public class ToDoOwner
 {
     private Dictionary<Guid, ToDo> todos = new();
     
-    public ToDo AddToDo(string title, string description)
+    public Task<ToDo> AddToDoAsync(string title, string description)
     {
         var todo = new ToDo()
         {
@@ -14,14 +14,14 @@ public class ToDoOwner
         
         todos.Add(todo.Id, todo);
 
-        return todo;
+        return Task.FromResult(todo);
     }
 
-    public ToDo? GetToDoById(Guid id)
+    public Task<ToDo?> GetToDoByIdAsync(Guid id)
     {
         ToDo? todo;
         todos.TryGetValue(id, out todo);
 
-        return todo;
+        return Task.FromResult(todo);
     }
 }
