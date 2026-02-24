@@ -16,4 +16,12 @@ public class ToDoOwner
 
         return todo;
     }
+
+    public ToDo? GetToDoById(Guid id)
+    {
+        ToDo? todo;
+        todos.TryGetValue(id, out todo);
+
+        return todo;
+    }
 }
