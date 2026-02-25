@@ -5,4 +5,6 @@ public interface IToDo
     Guid Id { get; set; }
     string Title { get; set; }
     string Description { get; set; }
+    DateTimeOffset? CompletionDatePlanned { get; set; }
+    DateTimeOffset? CompletionDateActual { get; set; }
 }
