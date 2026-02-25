@@ -1,15 +1,18 @@
+using Core.DTO;
+
 namespace Core.Entities;
 
 public class ToDoOwner : IToDoOwner
 {
     private Dictionary<Guid, ToDo> todos = new();
 
-    public async Task<ToDo> AddToDoAsync(string title, string description)
+    public async Task<ToDo> AddToDoAsync(ToDoAddDTO data)
     {
         var todo = new ToDo
         {
-            Title = title,
-            Description = description,
+            Title = data.Title,
+            Description = data.Description,
+            CompletionDatePlanned = data.CompletionDatePlanned,
         };
 
         todos.Add(todo.Id, todo);
