@@ -1,17 +1,17 @@
 namespace Core.Entities;
 
-public class ToDoOwner: IToDoOwner
+public class ToDoOwner : IToDoOwner
 {
     private Dictionary<Guid, ToDo> todos = new();
-    
+
     public async Task<ToDo> AddToDoAsync(string title, string description)
     {
-        var todo = new ToDo()
+        var todo = new ToDo
         {
             Title = title,
-            Description = description
+            Description = description,
         };
-        
+
         todos.Add(todo.Id, todo);
 
         return todo;
