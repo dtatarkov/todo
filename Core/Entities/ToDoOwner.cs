@@ -8,6 +8,8 @@ public class ToDoOwner : IToDoOwner
 
     public async Task<ToDo> AddToDoAsync(ToDoAddDTO data)
     {
+        ArgumentNullException.ThrowIfNull(data);
+
         var todo = new ToDo
         {
             Title = data.Title,
@@ -22,6 +24,11 @@ public class ToDoOwner : IToDoOwner
 
     public async Task<ToDo?> GetToDoByIdAsync(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return null;
+        }
+
         todos.TryGetValue(id, out var todo);
 
         return todo;
