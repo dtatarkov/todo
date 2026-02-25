@@ -1,10 +1,10 @@
 namespace Core.Entities;
 
-public class ToDoOwner
+public class ToDoOwner: IToDoOwner
 {
     private Dictionary<Guid, ToDo> todos = new();
     
-    public Task<ToDo> AddToDoAsync(string title, string description)
+    public async Task<ToDo> AddToDoAsync(string title, string description)
     {
         var todo = new ToDo()
         {
@@ -14,14 +14,18 @@ public class ToDoOwner
         
         todos.Add(todo.Id, todo);
 
-        return Task.FromResult(todo);
+        return todo;
     }
 
-    public Task<ToDo?> GetToDoByIdAsync(Guid id)
+    public async Task<ToDo?> GetToDoByIdAsync(Guid id)
     {
-        ToDo? todo;
-        todos.TryGetValue(id, out todo);
+        todos.TryGetValue(id, out var todo);
 
-        return Task.FromResult(todo);
+        return todo;
+    }
+
+    public async Task<IEnumerable<ToDo>> GetAllToDosAsync()
+    {
+        return todos.Values;
     }
 }
