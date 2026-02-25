@@ -1,15 +1,16 @@
 using Core.DTO;
-using Core.Entities;
+using Core.Factories;
 
 namespace Tests.Entities;
 
 public class ToDoOwnerTests
 {
-    private readonly ToDoOwner _todoOwner = new();
-    
     [Fact]
     public async Task AddToDoReturnsToDoIfDataIsValid()
     {
+        var todoOwnerFactory = new ToDoOwnerFactory();
+        var todoOwner = todoOwnerFactory.Create();
+        
         var todoAddDto = new ToDoAddDTO
         {
             Title = "Title",
@@ -17,7 +18,7 @@ public class ToDoOwnerTests
             CompletionDatePlanned = DateTimeOffset.Now,
         };
 
-        var todo = await _todoOwner.AddToDoAsync(todoAddDto);
+        var todo = await todoOwner.AddToDoAsync(todoAddDto);
 
         Assert.Equal(todoAddDto.Title, todo.Title);
         Assert.Equal(todoAddDto.Description, todo.Description);
@@ -27,16 +28,21 @@ public class ToDoOwnerTests
     [Fact]
     public async Task AddToDoThrowExceptionIfDataIsNull()
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _todoOwner.AddToDoAsync(null));
+        var todoOwnerFactory = new ToDoOwnerFactory();
+        var todoOwner = todoOwnerFactory.Create();
+        
+        await Assert.ThrowsAsync<ArgumentNullException>(() => todoOwner.AddToDoAsync(null));
     }
 
     [Fact]
     public async Task GetToDoAdded()
     {
+        var todoOwnerFactory = new ToDoOwnerFactory();
+        var todoOwner = todoOwnerFactory.Create();
         var todoAddDto = new ToDoAddDTO();
 
-        var todoCreated = await _todoOwner.AddToDoAsync(todoAddDto);
-        var todoLoaded = await _todoOwner.GetToDoByIdAsync(todoCreated.Id);
+        var todoCreated = await todoOwner.AddToDoAsync(todoAddDto);
+        var todoLoaded = await todoOwner.GetToDoByIdAsync(todoCreated.Id);
 
         Assert.NotNull(todoLoaded);
         Assert.Equal(todoCreated.Id, todoLoaded.Id);
@@ -45,7 +51,8 @@ public class ToDoOwnerTests
     [Fact]
     public async Task GetToDoNotExisting()
     {
-        var todoOwner = new ToDoOwner();
+        var todoOwnerFactory = new ToDoOwnerFactory();
+        var todoOwner = todoOwnerFactory.Create();
         var todo = await todoOwner.GetToDoByIdAsync(Guid.Empty);
 
         Assert.Null(todo);
@@ -54,15 +61,17 @@ public class ToDoOwnerTests
     [Fact]
     public async Task GetAllToDos()
     {
-        var todosBeforeAdd = await _todoOwner.GetAllToDosAsync();
+        var todoOwnerFactory = new ToDoOwnerFactory();
+        var todoOwner = todoOwnerFactory.Create();
+        var todosBeforeAdd = await todoOwner.GetAllToDosAsync();
 
         Assert.Empty(todosBeforeAdd);
 
         var todoAddDto = new ToDoAddDTO();
 
-        await _todoOwner.AddToDoAsync(todoAddDto);
+        await todoOwner.AddToDoAsync(todoAddDto);
 
-        var todosAfterAdd = await _todoOwner.GetAllToDosAsync();
+        var todosAfterAdd = await todoOwner.GetAllToDosAsync();
 
         Assert.Single(todosAfterAdd);
     }

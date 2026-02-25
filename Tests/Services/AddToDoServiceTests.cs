@@ -1,12 +1,20 @@
 using Core.DTO;
+using Core.Factories;
 using Core.Services;
 
 namespace Tests.Services;
 
-public class AddToDoServiceTest
+public class AddToDoServiceTests
 {
-    private readonly AddToDoService _addToDoService = new();
-    
+    private readonly IAddToDoService _addToDoService;
+
+    public AddToDoServiceTests()
+    {
+        IToDoOwnerFactory toDoOwnerFactory = new ToDoOwnerFactory();
+        
+        _addToDoService = new AddToDoService(toDoOwnerFactory);
+    }
+
     [Fact]
     public async Task AddToDoAsyncShouldReturnToDoWhenDataIsValid()
     {
@@ -19,7 +27,7 @@ public class AddToDoServiceTest
         };
 
         // Act
-        var todo = await this._addToDoService.AddToDoAsync(addToDoDto);
+        var todo = await _addToDoService.AddToDoAsync(addToDoDto);
 
         // Assert
         Assert.NotEqual(todo.Id, Guid.Empty);
