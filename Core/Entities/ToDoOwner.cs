@@ -4,9 +4,9 @@ namespace Core.Entities;
 
 public class ToDoOwner : IToDoOwner
 {
-    private Dictionary<Guid, ToDo> todos = new();
+    private Dictionary<Guid, IToDo> todos = new();
 
-    public async Task<ToDo> AddToDoAsync(ToDoAddDTO data)
+    public async Task<IToDo> AddToDoAsync(ToDoAddDTO data)
     {
         ArgumentNullException.ThrowIfNull(data);
 
@@ -22,7 +22,7 @@ public class ToDoOwner : IToDoOwner
         return todo;
     }
 
-    public async Task<ToDo?> GetToDoByIdAsync(Guid id)
+    public async Task<IToDo?> GetToDoByIdAsync(Guid id)
     {
         if (id == Guid.Empty)
         {
@@ -34,7 +34,7 @@ public class ToDoOwner : IToDoOwner
         return todo;
     }
 
-    public async Task<IEnumerable<ToDo>> GetAllToDosAsync()
+    public async Task<IEnumerable<IToDo>> GetAllToDosAsync()
     {
         return todos.Values;
     }

@@ -7,4 +7,8 @@ public interface IToDo
     string Description { get; set; }
     DateTimeOffset? CompletionDatePlanned { get; set; }
     DateTimeOffset? CompletionDateActual { get; set; }
+    IToDoState State { get; set; }
+    bool IsCompleted { get; }
+    
+    Task CompleteAsync();
 }
