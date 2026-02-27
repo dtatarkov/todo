@@ -1,10 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{6852F74C-AB80-4735-9BB9-ADE405A0AD7B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF3FB92A-B606-4F7B-82FE-DE64789DD494} = {BF3FB92A-B606-4F7B-82FE-DE64789DD494}
+		{113CFFB0-2883-4512-986B-F5D8A65095D6} = {113CFFB0-2883-4512-986B-F5D8A65095D6}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{113CFFB0-2883-4512-986B-F5D8A65095D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{49630D97-5D44-4E6D-93B3-3FF6E3533BA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db.Postgre", "Db.Postgre\Db.Postgre.csproj", "{BF3FB92A-B606-4F7B-82FE-DE64789DD494}"
+	ProjectSection(ProjectDependencies) = postProject
+		{113CFFB0-2883-4512-986B-F5D8A65095D6} = {113CFFB0-2883-4512-986B-F5D8A65095D6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +33,9 @@ Global
 		{49630D97-5D44-4E6D-93B3-3FF6E3533BA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49630D97-5D44-4E6D-93B3-3FF6E3533BA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49630D97-5D44-4E6D-93B3-3FF6E3533BA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF3FB92A-B606-4F7B-82FE-DE64789DD494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3FB92A-B606-4F7B-82FE-DE64789DD494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3FB92A-B606-4F7B-82FE-DE64789DD494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3FB92A-B606-4F7B-82FE-DE64789DD494}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
