@@ -1,9 +1,26 @@
+using Core.Repositories;
+using Db.Postgre.Context;
+using Db.Postgre.Mappers;
+using Db.Postgre.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Добавляем контекст PostgreSQL
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Main"),
+        npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()));
+
+var connectionString = builder.Configuration.GetConnectionString("Main");
+
+// Регистрируем репозиторий
+builder.Services.AddScoped<IToDoRepository, PostgreToDoRepository>();
+builder.Services.AddScoped<IToDoEntityMapper, ToDoEntityMapper>();
 
 var app = builder.Build();
 
