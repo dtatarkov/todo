@@ -1,11 +1,10 @@
 using Core.DTO;
+using Core.Repositories;
 
 namespace Core.Entities;
 
-public class ToDoOwner : IToDoOwner
+public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 {
-    private Dictionary<Guid, IToDo> todos = new();
-
     public async Task<IToDo> AddToDoAsync(ToDoAddDTO data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -17,7 +16,7 @@ public class ToDoOwner : IToDoOwner
             CompletionDatePlanned = data.CompletionDatePlanned,
         };
 
-        todos.Add(todo.Id, todo);
+        await toDoRepository.AddAsync(todo);
 
         return todo;
     }
@@ -29,13 +28,11 @@ public class ToDoOwner : IToDoOwner
             return null;
         }
 
-        todos.TryGetValue(id, out var todo);
-
-        return todo;
+        return await toDoRepository.GetByIdAsync(id);
     }
 
     public async Task<IEnumerable<IToDo>> GetAllToDosAsync()
     {
-        return todos.Values;
+        return await toDoRepository.GetAllAsync();
     }
 }

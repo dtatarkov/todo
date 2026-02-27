@@ -8,6 +8,8 @@ public class AddToDoService(IToDoOwnerFactory toDoOwnerFactory) : IAddToDoServic
 {
     public async Task<IToDo> AddToDoAsync(ToDoAddDTO data)
     {
+        ArgumentNullException.ThrowIfNull(data);
+        
         var todoOwner = toDoOwnerFactory.Create();
         var todo = await todoOwner.AddToDoAsync(data);
 

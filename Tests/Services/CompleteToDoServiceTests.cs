@@ -1,56 +1,64 @@
-using Core.DTO;
 using Core.Entities;
 using Core.Factories;
 using Core.Services;
+using Moq;
 
-namespace Tests.Services
+namespace Tests.Services;
+
+public class CompleteToDoServiceTests
 {
-    public class CompleteToDoServiceTests
+    private readonly CompleteToDoService _completeToDoService;
+    private readonly Mock<IToDoOwner> _ownerMock;
+
+    public CompleteToDoServiceTests()
     {
-        private readonly CompleteToDoService _completeToDoService;
-        private readonly ToDoOwnerFactory _todoOwnerFactory;
+        _ownerMock = new Mock<IToDoOwner>();
 
-        public CompleteToDoServiceTests()
+        var ownerFactoryMock = new Mock<IToDoOwnerFactory>();
+        ownerFactoryMock.Setup(f => f.Create()).Returns(_ownerMock.Object);
+
+        _completeToDoService = new CompleteToDoService(ownerFactoryMock.Object);
+    }
+
+    [Fact]
+    public async Task CompleteToDoSuccessfullyCompletesExistingToDo()
+    {
+        var existingTodo = new ToDo
         {
-            _todoOwnerFactory = new ToDoOwnerFactory();
-            _completeToDoService = new CompleteToDoService(_todoOwnerFactory);
-        }
+            Id = Guid.NewGuid(),
+            State = ToDoStateInitial.Instance
+        };
 
-        [Fact]
-        public async Task CompleteToDoSuccessfullyCompletesExistingToDo()
-        {
-            var addDto = new ToDoAddDTO
-            {
-                Title = "Test Task",
-                Description = "Description",
-                CompletionDatePlanned = DateTimeOffset.Now.AddDays(1)
-            };
+        _ownerMock.Setup(o => o.GetToDoByIdAsync(existingTodo.Id))
+            .ReturnsAsync(existingTodo);
 
-            var todoOwner = _todoOwnerFactory.Create();
-            var todo = await todoOwner.AddToDoAsync(addDto);
+        await _completeToDoService.CompleteToDoAsync(existingTodo.Id);
 
-            await _completeToDoService.CompleteToDoAsync(todo.Id);
+        Assert.True(existingTodo.IsCompleted);
+        Assert.NotNull(existingTodo.CompletionDateActual);
+        Assert.True(existingTodo.CompletionDateActual <= DateTimeOffset.Now);
+    }
 
-            Assert.True(todo.IsCompleted);
-            Assert.NotNull(todo.CompletionDateActual);
-        }
-        
-        [Fact]
-        public async Task CompleteToDoThrowsArgumentExceptionForNonExistentId()
-        {
-            var nonExistentId = Guid.NewGuid();
+    [Fact]
+    public async Task CompleteToDoThrowsArgumentExceptionForNonExistentId()
+    {
+        var nonExistentId = Guid.NewGuid();
 
-            await Assert.ThrowsAsync<ArgumentException>(() => 
-                _completeToDoService.CompleteToDoAsync(nonExistentId));
-        }
-        
-        [Fact]
-        public async Task CompleteToDoThrowsArgumentExceptionForEmptyGuidId()
-        {
-            var emptyId = Guid.Empty;
+        _ownerMock.Setup(o => o.GetToDoByIdAsync(nonExistentId))
+            .ReturnsAsync((IToDo?)null);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => 
-                _completeToDoService.CompleteToDoAsync(emptyId));
-        }
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            _completeToDoService.CompleteToDoAsync(nonExistentId));
+    }
+
+    [Fact]
+    public async Task CompleteToDoThrowsArgumentExceptionForEmptyGuidId()
+    {
+        var emptyId = Guid.Empty;
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            _completeToDoService.CompleteToDoAsync(emptyId));
+
+        _ownerMock.Verify(o => o.GetToDoByIdAsync(emptyId), Times.Never);
     }
 }
