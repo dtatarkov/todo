@@ -1,0 +1,48 @@
+@startuml
+    autonumber
+        participant Client
+        participant ToDoOwner
+        participant ToDo
+        participant PostgreToDoRepository
+        participant PostgreToDo
+        participant EntityFramework
+        participant Database
+    
+        Client->>ToDoOwner: AddToDoAsync(ToDoAddDTO)
+        activate ToDoOwner
+    
+        ToDoOwner->>ToDo: new ToDo()
+        activate ToDo
+        Note right of ToDo: Id = Guid.Empty
+        ToDo-->>ToDoOwner: Возвращает todo
+        deactivate ToDo
+    
+        ToDoOwner->>PostgreToDoRepository: AddAsync(todo)
+        activate PostgreToDoRepository
+    
+        PostgreToDoRepository->>PostgreToDo: new PostgreToDo()
+        activate PostgreToDo
+        PostgreToDo-->PostgreToDoRepository: mapped from todo
+        deactivate PostgreToDo
+    
+        PostgreToDoRepository->>EntityFramework: dbContext.ToDos.Add(postgreToDo)
+        PostgreToDoRepository->>EntityFramework: dbContext.SaveChangesAsync()
+        activate EntityFramework
+    
+        EntityFramework->>Database: INSERT INTO todos (...) RETURNING Id
+        activate Database
+        Database-->>EntityFramework: Возвращает запись с Id
+        deactivate Database
+    
+        EntityFramework-->>PostgreToDoRepository: postgreToDo.Id заполнен
+        deactivate EntityFramework
+    
+        PostgreToDoRepository->>ToDo: todo.Id = postgreToDo.Id
+        Note right of PostgreToDoRepository: Передаём Id из БД в доменную модель
+    
+        PostgreToDoRepository-->>ToDoOwner: await завершён
+        deactivate PostgreToDoRepository
+    
+        ToDoOwner-->>Client: Возвращает IToDo (с установленным Id)
+        deactivate ToDoOwner
+@enduml
