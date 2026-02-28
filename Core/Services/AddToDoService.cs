@@ -6,7 +6,7 @@ namespace Core.Services;
 
 public class AddToDoService(IToDoOwnerFactory toDoOwnerFactory) : IAddToDoService
 {
-    public async Task<IToDo> AddToDoAsync(ToDoAddDTO data)
+    public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
         

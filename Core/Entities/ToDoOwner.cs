@@ -5,7 +5,7 @@ namespace Core.Entities;
 
 public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 {
-    public async Task<IToDo> AddToDoAsync(ToDoAddDTO data)
+    public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
 

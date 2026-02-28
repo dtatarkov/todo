@@ -24,7 +24,7 @@ public class AddToDoServiceTests
     [Fact]
     public async Task AddToDoAsyncShouldReturnToDoWhenDataIsValid()
     {
-        var addToDoDto = new ToDoAddDTO
+        var addToDoDto = new ToDoAddDto
         {
             Title = "Test",
             Description = "Desc",

@@ -5,5 +5,5 @@ namespace Core.Services;
 
 public interface IAddToDoService
 {
-    public Task<IToDo> AddToDoAsync(ToDoAddDTO data);
+    public Task<IToDo> AddToDoAsync(ToDoAddDto data);
 }

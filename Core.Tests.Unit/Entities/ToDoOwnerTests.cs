@@ -13,7 +13,7 @@ public class ToDoOwnerTests
         var todoRepositoryMock = new Mock<IToDoRepository>();
         var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
 
-        var todoAddDto = new ToDoAddDTO
+        var todoAddDto = new ToDoAddDto
         {
             Title = "Title",
             Description = "Test",
