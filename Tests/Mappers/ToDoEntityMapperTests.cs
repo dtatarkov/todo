@@ -13,13 +13,13 @@ public class ToDoEntityMapperTests
     {
         var now = DateTimeOffset.Now;
 
-        yield return new object[]
-        {
+        yield return
+        [
             new ToDo()
-        };
+        ];
 
-        yield return new object[]
-        {
+        yield return
+        [
             new ToDo
             {
                 Id = Guid.NewGuid(),
@@ -27,10 +27,10 @@ public class ToDoEntityMapperTests
                 Description = "Working on it",
                 CompletionDatePlanned = now.AddDays(2),
             }
-        };
+        ];
 
-        yield return new object[]
-        {
+        yield return
+        [
             new ToDo
             {
                 Id = Guid.NewGuid(),
@@ -40,20 +40,20 @@ public class ToDoEntityMapperTests
                 CompletionDateActual = now,
                 State = ToDoState.GetState(ToDoStateType.Completed)
             }
-        };
+        ];
     }
     
     public static IEnumerable<object[]> GetValidEntityTestCases()
     {
         var now = DateTimeOffset.Now;
 
-        yield return new object[]
-        {
+        yield return
+        [
             new PostgreToDoEntity()
-        };
+        ];
 
-        yield return new object[]
-        {
+        yield return
+        [
             new PostgreToDoEntity
             {
                 Id = Guid.NewGuid(),
@@ -61,10 +61,10 @@ public class ToDoEntityMapperTests
                 Description = "Working on it",
                 CompletionDatePlanned = now.AddDays(2),
             }
-        };
+        ];
 
-        yield return new object[]
-        {
+        yield return
+        [
             new PostgreToDoEntity
             {
                 Id = Guid.NewGuid(),
@@ -74,7 +74,7 @@ public class ToDoEntityMapperTests
                 CompletionDateActual = now,
                 StateType = ToDoStateType.Completed
             }
-        };
+        ];
     }
 
     [Fact]
