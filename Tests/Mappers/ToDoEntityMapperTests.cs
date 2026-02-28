@@ -8,6 +8,74 @@ namespace Tests.Mappers;
 public class ToDoEntityMapperTests
 {
     private readonly ToDoEntityMapper _todoEntityMapper = new();
+    
+    public static IEnumerable<object[]> GetValidToDoTestCases()
+    {
+        var now = DateTimeOffset.Now;
+
+        yield return new object[]
+        {
+            new ToDo()
+        };
+
+        yield return new object[]
+        {
+            new ToDo
+            {
+                Id = Guid.NewGuid(),
+                Title = "Task in Progress",
+                Description = "Working on it",
+                CompletionDatePlanned = now.AddDays(2),
+            }
+        };
+
+        yield return new object[]
+        {
+            new ToDo
+            {
+                Id = Guid.NewGuid(),
+                Title = "Completed Task",
+                Description = "Finished successfully",
+                CompletionDatePlanned = now.AddDays(-1),
+                CompletionDateActual = now,
+                State = ToDoState.GetState(ToDoStateType.Completed)
+            }
+        };
+    }
+    
+    public static IEnumerable<object[]> GetValidEntityTestCases()
+    {
+        var now = DateTimeOffset.Now;
+
+        yield return new object[]
+        {
+            new PostgreToDoEntity()
+        };
+
+        yield return new object[]
+        {
+            new PostgreToDoEntity
+            {
+                Id = Guid.NewGuid(),
+                Title = "Task in Progress",
+                Description = "Working on it",
+                CompletionDatePlanned = now.AddDays(2),
+            }
+        };
+
+        yield return new object[]
+        {
+            new PostgreToDoEntity
+            {
+                Id = Guid.NewGuid(),
+                Title = "Completed Task",
+                Description = "Finished successfully",
+                CompletionDatePlanned = now.AddDays(-1),
+                CompletionDateActual = now,
+                StateType = ToDoStateType.Completed
+            }
+        };
+    }
 
     [Fact]
     public void ToEntity_WhenTodoIsNull_ShouldThrowArgumentNullException()
@@ -23,20 +91,10 @@ public class ToDoEntityMapperTests
         Assert.Throws<ArgumentNullException>(() => _todoEntityMapper.ToDomainModel(null!));
     }
 
-    [Fact]
-    public void ToEntity_WhenValidTodo_ShouldMapAllProperties()
+    [Theory]
+    [MemberData(nameof(GetValidToDoTestCases))]
+    public void ToEntity_WhenValidTodo_ShouldMapAllProperties(IToDo todo)
     {
-        // Arrange
-        var todo = new ToDo
-        {
-            Id = Guid.NewGuid(),
-            Title = "Test Title",
-            Description = "Test Description",
-            CompletionDatePlanned = DateTimeOffset.Now.AddDays(1),
-            CompletionDateActual = DateTimeOffset.Now,
-            State = ToDoState.GetState(ToDoStateType.Completed)
-        };
-
         // Act
         var entity = _todoEntityMapper.ToEntity(todo);
 
@@ -49,20 +107,10 @@ public class ToDoEntityMapperTests
         Assert.Equal(todo.State.Type, entity.StateType);
     }
 
-    [Fact]
-    public void ToDomainModel_WhenValidEntity_ShouldMapAllProperties()
+    [Theory]
+    [MemberData(nameof(GetValidEntityTestCases))]
+    public void ToDomainModel_WhenValidEntity_ShouldMapAllProperties(PostgreToDoEntity entity)
     {
-        // Arrange
-        var entity = new PostgreToDoEntity
-        {
-            Id = Guid.NewGuid(),
-            Title = "Entity Title",
-            Description = "Entity Description",
-            CompletionDatePlanned = DateTimeOffset.Now.AddDays(1),
-            CompletionDateActual = DateTimeOffset.Now,
-            StateType = ToDoStateType.Completed
-        };
-
         // Act
         var todo = _todoEntityMapper.ToDomainModel(entity);
 
@@ -72,6 +120,6 @@ public class ToDoEntityMapperTests
         Assert.Equal(entity.Description, entity.Description);
         Assert.Equal(entity.CompletionDatePlanned, todo.CompletionDatePlanned);
         Assert.Equal(entity.CompletionDateActual, todo.CompletionDateActual);
-        Assert.Equal(ToDoStateType.Completed, todo.State.Type);
+        Assert.Equal(entity.StateType, todo.State.Type);
     }
 }
