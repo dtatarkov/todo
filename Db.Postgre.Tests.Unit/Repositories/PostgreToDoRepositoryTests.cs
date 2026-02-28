@@ -7,7 +7,7 @@ using Db.Postgre.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace Tests.Repositories;
+namespace Db.Postgre.Tests.Unit.Repositories;
 
 public class PostgreToDoRepositoryTests
 {

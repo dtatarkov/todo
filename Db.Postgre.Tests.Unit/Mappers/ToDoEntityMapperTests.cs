@@ -3,7 +3,7 @@ using Core.Enums;
 using Db.Postgre.Entities;
 using Db.Postgre.Mappers;
 
-namespace Tests.Mappers;
+namespace Db.Postgre.Tests.Unit.Mappers;
 
 public class ToDoEntityMapperTests
 {

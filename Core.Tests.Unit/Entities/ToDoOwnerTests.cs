@@ -3,7 +3,7 @@ using Core.Entities;
 using Core.Repositories;
 using Moq;
 
-namespace Tests.Entities;
+namespace Core.Tests.Unit.Entities;
 
 public class ToDoOwnerTests
 {

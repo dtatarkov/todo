@@ -3,7 +3,7 @@ using Core.Factories;
 using Core.Services;
 using Moq;
 
-namespace Tests.Services;
+namespace Core.Tests.Unit.Services;
 
 public class CompleteToDoServiceTests
 {
