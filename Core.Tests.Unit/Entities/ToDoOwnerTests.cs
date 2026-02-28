@@ -27,7 +27,7 @@ public class ToDoOwnerTests
         Assert.Equal(todoAddDto.CompletionDatePlanned, todoAdded.CompletionDatePlanned);
 
         todoRepositoryMock.Verify(
-            repository => repository.AddAsync(It.Is<IToDo>(todo => todo == todoAdded)), Times.Once);
+            repository => repository.SaveAsync(It.Is<IToDo>(todo => todo == todoAdded)), Times.Once);
     }
 
     [Fact]
@@ -38,7 +38,86 @@ public class ToDoOwnerTests
 
         await Assert.ThrowsAsync<ArgumentNullException>(() => todoOwner.AddToDoAsync(null!));
 
-        todoRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<IToDo>()), Times.Never);
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.IsAny<IToDo>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateToDoAsync_UpdatesExistingTodo_WhenDataIsValid()
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+
+        var existingId = Guid.NewGuid();
+
+        var existingTodo = new ToDo
+        {
+            Id = existingId,
+            Title = "Old Title",
+            Description = "Old Description",
+            CompletionDatePlanned = DateTimeOffset.Now.AddDays(-1)
+        };
+
+        var updateData = new ToDoUpdateDto
+        {
+            Id = existingId,
+            Title = "Updated Title",
+            Description = "Updated Description",
+            CompletionDatePlanned = DateTimeOffset.Now.AddDays(5)
+        };
+
+        todoRepositoryMock
+            .Setup(repo => repo.GetByIdAsync(existingId))
+            .ReturnsAsync(existingTodo);
+
+        // Act
+        await todoOwner.UpdateToDoAsync(updateData);
+
+        // Assert
+        todoRepositoryMock.Verify(repo => repo.GetByIdAsync(existingId), Times.Once);
+
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.Is<IToDo>(t =>
+            t.Id == existingId &&
+            t.Title == updateData.Title &&
+            t.Description == updateData.Description &&
+            t.CompletionDatePlanned == updateData.CompletionDatePlanned
+        )), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateToDoAsync_ThrowsInvalidOperationException_WhenTodoDoesNotExist()
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+
+        var nonExistentId = Guid.NewGuid();
+
+        var updateData = new ToDoUpdateDto
+        {
+            Id = nonExistentId
+        };
+
+        todoRepositoryMock
+            .Setup(repo => repo.GetByIdAsync(nonExistentId))
+            .ReturnsAsync((IToDo?)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => todoOwner.UpdateToDoAsync(updateData));
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.IsAny<IToDo>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateToDoAsync_ThrowsArgumentNullException_WhenDataIsNull()
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() => todoOwner.UpdateToDoAsync(null!));
+        todoRepositoryMock.Verify(repo => repo.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 
     [Fact]
@@ -132,5 +211,48 @@ public class ToDoOwnerTests
         var resultList = result.ToList();
 
         Assert.Equal(2, resultList.Count);
+    }
+
+    [Fact]
+    public async Task RemoveToDoAsync_RemovesExistingTodo_WhenIdIsValid()
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+
+        var existingId = Guid.NewGuid();
+        
+        var existingTodo = new ToDo
+        {
+            Id = existingId
+        };
+
+        todoRepositoryMock
+            .Setup(repo => repo.GetByIdAsync(existingId))
+            .ReturnsAsync(existingTodo);
+
+        // Act
+        await todoOwner.RemoveToDoAsync(existingId);
+
+        // Assert
+        todoRepositoryMock.Verify(repo => repo.GetByIdAsync(existingId), Times.Once);
+        todoRepositoryMock.Verify(repo => repo.RemoveAsync(existingTodo), Times.Once);
+    }
+
+    [Fact]
+    public async Task RemoveToDoAsync_ThrowsInvalidOperationException_WhenTodoDoesNotExist()
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+        var nonExistentId = Guid.NewGuid();
+
+        todoRepositoryMock
+            .Setup(repo => repo.GetByIdAsync(nonExistentId))
+            .ReturnsAsync((IToDo?)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => todoOwner.RemoveToDoAsync(nonExistentId));
+        todoRepositoryMock.Verify(repo => repo.RemoveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 }
