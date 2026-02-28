@@ -13,7 +13,7 @@ public class PostgreToDoRepositoryTests
 {
     private readonly Mock<IToDoEntityMapper> _mapperMock = CreateMapperMock();
 
-    public static IEnumerable<object[]> GetUpdateTodoTestCases()
+    public static IEnumerable<object[]> GetValidToDoTestCases()
     {
         var now = DateTimeOffset.Now;
 
@@ -36,33 +36,65 @@ public class PostgreToDoRepositoryTests
     }
 
     [Fact]
-    public async Task AddAsync_WhenTodoHasEmptyId_ShouldSaveAndSetId()
+    public async Task SaveAsync_WhenTodoHasEmptyId_ShouldInsertAndSetId()
     {
+        // Arrange
         var todoToAdd = new ToDo();
-        var dbContext = CreateDbContext();
-        var repository = new PostgreToDoRepository(dbContext, _mapperMock.Object);
+        var context = CreateDbContext();
+        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
+        
+        await repository.SaveAsync(todoToAdd);
+        
+        // Act
+        var entityDb = await context.ToDos.FindAsync(todoToAdd.Id);
 
-        await repository.AddAsync(todoToAdd);
-
-        var entityAdded = await dbContext.ToDos.FirstOrDefaultAsync(todo => todo.Id == todoToAdd.Id);
-
-        Assert.NotEqual(todoToAdd.Id, Guid.Empty);
-        Assert.NotNull(entityAdded);
-        Assert.Equal(todoToAdd.Id, entityAdded.Id);
+        // Assert
+        Assert.NotEqual(Guid.Empty, todoToAdd.Id);
+        Assert.NotNull(entityDb);
+        Assert.Equal(todoToAdd.Id, entityDb.Id);
     }
 
-    [Fact]
-    public async Task AddAsync_WhenTodoHasDefinedId_ShouldThrowInvalidOperationException()
+    [Theory]
+    [MemberData(nameof(GetValidToDoTestCases))]
+    public async Task SaveAsync_UpdatesExistingTodo_WithValidData(IToDo todoToUpdate)
     {
-        var todoToAdd = new ToDo
+        // Arrange
+        var existingEntity = new PostgreToDoEntity
         {
             Id = Guid.NewGuid(),
         };
 
-        var dbContext = CreateDbContext();
-        var repository = new PostgreToDoRepository(dbContext, _mapperMock.Object);
+        todoToUpdate.Id = existingEntity.Id;
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.AddAsync(todoToAdd));
+        var context = CreateDbContext();
+        await context.ToDos.AddAsync(existingEntity);
+        await context.SaveChangesAsync();
+
+        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
+
+        // Act
+        await repository.SaveAsync(todoToUpdate);
+
+        // Assert
+        var entityInDb = await context.ToDos.FindAsync(todoToUpdate.Id);
+        
+        Assert.NotNull(entityInDb);
+        Assert.Equal(todoToUpdate.Title, entityInDb.Title);
+        Assert.Equal(todoToUpdate.Description, entityInDb.Description);
+        Assert.Equal(todoToUpdate.CompletionDatePlanned, entityInDb.CompletionDatePlanned);
+        Assert.Equal(todoToUpdate.CompletionDateActual, entityInDb.CompletionDateActual);
+        Assert.Equal(todoToUpdate.State.Type, entityInDb.StateType);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenTodoIsNull_ShouldThrowArgumentNullException()
+    {
+        // Arrange
+        var context = CreateDbContext();
+        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.SaveAsync(null!));
     }
 
     [Fact]
@@ -139,72 +171,6 @@ public class PostgreToDoRepositoryTests
         Assert.Contains(list, t => t.Id == entity2.Id);
     }
 
-    [Theory]
-    [MemberData(nameof(GetUpdateTodoTestCases))]
-    public async Task UpdateAsync_ExistingTodo_ShouldUpdateEntityInDatabase(IToDo todoUpdated)
-    {
-        var id = Guid.NewGuid();
-
-        todoUpdated.Id = id;
-        
-        var entityExisting = new PostgreToDoEntity
-        {
-            Id = id
-        };
-
-        var context = CreateDbContext();
-        await context.ToDos.AddAsync(entityExisting);
-        await context.SaveChangesAsync();
-
-        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
-
-        await repository.UpdateAsync(todoUpdated);
-
-        var entityDb = await context.ToDos.FindAsync(entityExisting.Id);
-        Assert.NotNull(entityDb);
-        Assert.Equal(todoUpdated.Title, entityDb.Title);
-        Assert.Equal(todoUpdated.Description, entityDb.Description);
-        Assert.Equal(todoUpdated.CompletionDatePlanned, entityDb.CompletionDatePlanned);
-        Assert.Equal(todoUpdated.CompletionDateActual, entityDb.CompletionDateActual);
-        Assert.Equal(todoUpdated.State.Type, entityDb.StateType);
-    }
-
-    [Fact]
-    public async Task UpdateAsync_NullTodo_ShouldThrowArgumentNullException()
-    {
-        var context = CreateDbContext();
-        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
-
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.UpdateAsync(null!));
-    }
-    
-    [Fact]
-    public async Task UpdateAsync_WhenTodoIdIsEmpty_ShouldThrowInvalidOperationException()
-    {
-        // Arrange
-        var todo = new ToDo { Id = Guid.Empty };
-
-        var context = CreateDbContext();
-        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.UpdateAsync(todo));
-    }
-
-    [Fact]
-    public async Task UpdateAsync_NonExistingTodoId_ShouldThrowInvalidOperationException()
-    {
-        var todo = new ToDo
-        {
-            Id = Guid.NewGuid(), // ID, которого точно нет в БД
-        };
-
-        var context = CreateDbContext();
-        var repository = new PostgreToDoRepository(context, _mapperMock.Object);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.UpdateAsync(todo));
-    }
-
     [Fact]
     public async Task RemoveAsync_ExistingId_ShouldDeleteEntityFromDatabase()
     {
@@ -278,7 +244,8 @@ public class PostgreToDoRepositoryTests
     {
         var mapperMock = new Mock<IToDoEntityMapper>();
 
-        mapperMock.Setup(m => m.ToEntity(It.IsAny<IToDo>()))
+        mapperMock
+            .Setup(m => m.ToEntity(It.IsAny<IToDo>()))
             .Returns((IToDo todo) => new PostgreToDoEntity
             {
                 Id = Guid.NewGuid(),
@@ -286,7 +253,8 @@ public class PostgreToDoRepositoryTests
                 Description = todo.Description
             });
 
-        mapperMock.Setup(m => m.ToDomainModel(It.IsAny<PostgreToDoEntity>()))
+        mapperMock
+            .Setup(m => m.ToDomainModel(It.IsAny<PostgreToDoEntity>()))
             .Returns((PostgreToDoEntity entity) => new ToDo
             {
                 Id = entity.Id,
