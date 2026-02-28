@@ -23,11 +23,6 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 
     public async Task<IToDo?> GetToDoByIdAsync(Guid id)
     {
-        if (id == Guid.Empty)
-        {
-            return null;
-        }
-
         return await toDoRepository.GetByIdAsync(id);
     }
 
