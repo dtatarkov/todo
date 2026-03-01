@@ -15,6 +15,14 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
 
         return todo;
     }
+    
+    public async Task UpdateToDoAsync(ToDoUpdateDto data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+
+        var todoOwner = toDoOwnerFactory.Create();
+        await todoOwner.UpdateToDoAsync(data);
+    }
 
     public async Task CompleteToDoAsync(Guid todoId)
     {
