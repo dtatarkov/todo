@@ -2,7 +2,7 @@ using Core.Enums;
 
 namespace Core.Entities;
 
-public class ToDo: IToDo
+public class ToDo : IToDo
 {
     public Guid Id { get; set; } = Guid.Empty;
     public string Title { get; set; } = string.Empty;
@@ -15,5 +15,18 @@ public class ToDo: IToDo
     public async Task CompleteAsync()
     {
         await State.CompleteAsync(this);
+    }
+
+    public IToDo Clone()
+    {
+        return new ToDo
+        {
+            Id = Id,
+            Title = Title,
+            Description = Description,
+            CompletionDatePlanned = CompletionDatePlanned,
+            CompletionDateActual = CompletionDateActual,
+            State = State,
+        };
     }
 }

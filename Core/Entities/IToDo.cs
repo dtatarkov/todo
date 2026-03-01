@@ -11,4 +11,5 @@ public interface IToDo
     bool IsCompleted { get; }
     
     Task CompleteAsync();
+    IToDo Clone();
 }
