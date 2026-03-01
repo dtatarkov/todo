@@ -9,12 +9,7 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
     {
         ArgumentNullException.ThrowIfNull(data);
 
-        var todo = new ToDo
-        {
-            Title = data.Title,
-            Description = data.Description,
-            CompletionDatePlanned = data.CompletionDatePlanned,
-        };
+        var todo = CreateTodoFromDto(data);
 
         await toDoRepository.SaveAsync(todo);
 
@@ -47,20 +42,7 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
             throw new InvalidOperationException($"ToDo with Id = {data.Id} not found");
         }
 
-        if (data.Title != null)
-        {
-            todo.Title = data.Title;
-        }
-
-        if (data.Description != null)
-        {
-            todo.Description = data.Description;
-        }
-
-        if (data.CompletionDatePlanned != null)
-        {
-            todo.CompletionDatePlanned = data.CompletionDatePlanned;
-        }
+        UpdateTodoFromDto(todo, data);
 
         await toDoRepository.SaveAsync(todo);
     }
@@ -75,5 +57,33 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
         }
 
         await toDoRepository.RemoveAsync(existingTodo);
+    }
+    
+    private static ToDo CreateTodoFromDto(ToDoAddDto data)
+    {
+        return new ToDo
+        {
+            Title = data.Title,
+            Description = data.Description,
+            CompletionDatePlanned = data.CompletionDatePlanned
+        };
+    }
+
+    private static void UpdateTodoFromDto(IToDo todo, ToDoUpdateDto data)
+    {
+        if (data.Title != null)
+        {
+            todo.Title = data.Title;
+        }
+
+        if (data.Description != null)
+        {
+            todo.Description = data.Description;
+        }
+
+        if (data.CompletionDatePlanned != null)
+        {
+            todo.CompletionDatePlanned = data.CompletionDatePlanned;
+        }
     }
 }
