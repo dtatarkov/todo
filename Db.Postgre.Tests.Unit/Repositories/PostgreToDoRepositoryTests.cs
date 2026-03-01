@@ -174,24 +174,22 @@ public class PostgreToDoRepositoryTests
     [Fact]
     public async Task RemoveAsync_ExistingId_ShouldDeleteEntityFromDatabase()
     {
+        // Arrange
         var entity = new PostgreToDoEntity
         {
             Id = Guid.NewGuid()
         };
-
-        var todo = new ToDo
-        {
-            Id = entity.Id
-        };
-
+        
         var context = CreateDbContext();
         await context.ToDos.AddAsync(entity);
         await context.SaveChangesAsync();
 
         var repository = new PostgreToDoRepository(context, _mapperMock.Object);
 
-        await repository.RemoveAsync(todo);
+        // Act
+        await repository.RemoveAsync(entity.Id);
 
+        // Assert
         var deletedEntity = await context.ToDos.FindAsync(entity.Id);
         Assert.Null(deletedEntity);
     }
@@ -199,29 +197,24 @@ public class PostgreToDoRepositoryTests
     [Fact]
     public async Task RemoveAsync_NonExistingId_ShouldThrowInvalidOperationException()
     {
+        // Arrange
         var context = CreateDbContext();
         var repository = new PostgreToDoRepository(context, _mapperMock.Object);
+        var nonExistentId = Guid.NewGuid();
 
-        var todo = new ToDo
-        {
-            Id = Guid.NewGuid(),
-        };
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.RemoveAsync(todo));
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.RemoveAsync(nonExistentId));
     }
 
     [Fact]
     public async Task RemoveAsync_EmptyId_ShouldThrowInvalidOperationException()
     {
+        // Arrange
         var context = CreateDbContext();
         var repository = new PostgreToDoRepository(context, _mapperMock.Object);
 
-        var todo = new ToDo
-        {
-            Id = Guid.Empty,
-        };
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.RemoveAsync(todo));
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.RemoveAsync(Guid.Empty));
     }
 
     /// <summary>

@@ -153,7 +153,7 @@ public class ToDoOwnerTests
         };
 
         var existingToDoSnapshot = existingTodo.Clone();
-        
+
         updateData.Id = existingId;
 
         todoRepositoryMock
@@ -328,37 +328,10 @@ public class ToDoOwnerTests
 
         var existingId = Guid.NewGuid();
 
-        var existingTodo = new ToDo
-        {
-            Id = existingId
-        };
-
-        todoRepositoryMock
-            .Setup(repo => repo.GetByIdAsync(existingId))
-            .ReturnsAsync(existingTodo);
-
         // Act
         await todoOwner.RemoveToDoAsync(existingId);
 
         // Assert
-        todoRepositoryMock.Verify(repo => repo.GetByIdAsync(existingId), Times.Once);
-        todoRepositoryMock.Verify(repo => repo.RemoveAsync(existingTodo), Times.Once);
-    }
-
-    [Fact]
-    public async Task RemoveToDoAsync_ThrowsInvalidOperationException_WhenTodoDoesNotExist()
-    {
-        // Arrange
-        var todoRepositoryMock = new Mock<IToDoRepository>();
-        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
-        var nonExistentId = Guid.NewGuid();
-
-        todoRepositoryMock
-            .Setup(repo => repo.GetByIdAsync(nonExistentId))
-            .ReturnsAsync((IToDo?)null);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => todoOwner.RemoveToDoAsync(nonExistentId));
-        todoRepositoryMock.Verify(repo => repo.RemoveAsync(It.IsAny<IToDo>()), Times.Never);
+        todoRepositoryMock.Verify(repo => repo.RemoveAsync(existingId), Times.Once);
     }
 }

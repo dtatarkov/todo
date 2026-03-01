@@ -49,18 +49,18 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
         return todos;
     }
 
-    public async Task RemoveAsync(IToDo todo)
+    public async Task RemoveAsync(Guid id)
     {
-        if (todo.Id == Guid.Empty)
+        if (id == Guid.Empty)
         {
-            throw new InvalidOperationException($"Todo with Id = {todo.Id} does not exist");
+            throw new InvalidOperationException($"Todo with Id = {id} does not exist");
         }
 
-        var entity = await dbContext.ToDos.FindAsync(todo.Id);
+        var entity = await dbContext.ToDos.FindAsync(id);
 
         if (entity == null)
         {
-            throw new InvalidOperationException($"Todo with Id = {todo.Id} does not exist");
+            throw new InvalidOperationException($"Todo with Id = {id} does not exist");
         }
 
         dbContext.ToDos.Remove(entity);

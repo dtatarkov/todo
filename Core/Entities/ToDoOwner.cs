@@ -49,14 +49,7 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 
     public async Task RemoveToDoAsync(Guid id)
     {
-        var existingTodo = await toDoRepository.GetByIdAsync(id);
-        
-        if (existingTodo == null)
-        {
-            throw new InvalidOperationException($"ToDo with Id = {id} not found");
-        }
-
-        await toDoRepository.RemoveAsync(existingTodo);
+        await toDoRepository.RemoveAsync(id);
     }
     
     private static ToDo CreateTodoFromDto(ToDoAddDto data)
