@@ -1,9 +1,21 @@
+using Core.DTO;
+using Core.Entities;
 using Core.Factories;
 
 namespace Core.Services;
 
-public class CompleteToDoService(IToDoOwnerFactory toDoOwnerFactory) : ICompleteToDoService
+public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
 {
+    public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        
+        var todoOwner = toDoOwnerFactory.Create();
+        var todo = await todoOwner.AddToDoAsync(data);
+
+        return todo;
+    }
+
     public async Task CompleteToDoAsync(Guid todoId)
     {
         if (todoId == Guid.Empty)
