@@ -1,4 +1,5 @@
 using Core.Entities;
+using Core.Exceptions;
 using Core.Repositories;
 using Db.Postgre.Context;
 using Db.Postgre.Entities;
@@ -54,14 +55,14 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
     {
         if (id == Guid.Empty)
         {
-            throw new InvalidOperationException($"Todo with Id = {id} does not exist");
+            throw new EntityNotFoundException(nameof(ToDo), id);
         }
 
         var entityExists = await dbContext.ToDos.AnyAsync(todo => todo.Id == id);
 
         if (!entityExists)
         {
-            throw new InvalidOperationException($"Todo with Id = {id} does not exist");
+            throw new EntityNotFoundException(nameof(ToDo), id);
         }
 
         var entity = dbContext.ToDos.Local.FirstOrDefault(todo => todo.Id == id);
@@ -96,7 +97,7 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
         
         if (entity == null)
         {
-            throw new InvalidOperationException($"Todo with Id = {todo.Id} does not exist");
+            throw new EntityNotFoundException(nameof(ToDo), todo.Id);
         }
 
         entity.Title = todo.Title;

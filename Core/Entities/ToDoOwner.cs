@@ -1,4 +1,5 @@
 using Core.DTO;
+using Core.Exceptions;
 using Core.Repositories;
 
 namespace Core.Entities;
@@ -39,7 +40,7 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
         
         if (todo == null)
         {
-            throw new InvalidOperationException($"ToDo with Id = {data.Id} not found");
+            throw new EntityNotFoundException(nameof(ToDo), data.Id);
         }
 
         UpdateTodoFromDto(todo, data);

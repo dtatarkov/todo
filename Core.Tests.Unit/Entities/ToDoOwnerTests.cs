@@ -1,6 +1,6 @@
 using Core.DTO;
 using Core.Entities;
-using Core.Enums;
+using Core.Exceptions;
 using Core.Repositories;
 using Moq;
 
@@ -150,7 +150,7 @@ public class ToDoOwnerTests
     }
 
     [Fact]
-    public async Task UpdateToDoAsync_ThrowsInvalidOperationException_WhenTodoDoesNotExist()
+    public async Task UpdateToDoAsync_ThrowsEntityNotFoundException_WhenTodoDoesNotExist()
     {
         // Arrange
         var todoRepositoryMock = new Mock<IToDoRepository>();
@@ -169,7 +169,7 @@ public class ToDoOwnerTests
             .ReturnsAsync((IToDo?)null);
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => todoOwner.UpdateToDoAsync(updateData));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => todoOwner.UpdateToDoAsync(updateData));
         todoRepositoryMock.Verify(repo => repo.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 

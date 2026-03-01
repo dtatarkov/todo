@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Enums;
+using Core.Exceptions;
 using Db.Postgre.Context;
 using Db.Postgre.Entities;
 using Db.Postgre.Mappers;
@@ -195,7 +196,7 @@ public class PostgreToDoRepositoryTests
     }
 
     [Fact]
-    public async Task RemoveAsync_NonExistingId_ShouldThrowInvalidOperationException()
+    public async Task RemoveAsync_NonExistingId_ShouldThrowEntityNotFoundException()
     {
         // Arrange
         var context = CreateDbContext();
@@ -203,18 +204,18 @@ public class PostgreToDoRepositoryTests
         var nonExistentId = Guid.NewGuid();
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.RemoveAsync(nonExistentId));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.RemoveAsync(nonExistentId));
     }
 
     [Fact]
-    public async Task RemoveAsync_EmptyId_ShouldThrowInvalidOperationException()
+    public async Task RemoveAsync_EmptyId_ShouldThrowEntityNotFoundException()
     {
         // Arrange
         var context = CreateDbContext();
         var repository = new PostgreToDoRepository(context, _mapperMock.Object);
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.RemoveAsync(Guid.Empty));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.RemoveAsync(Guid.Empty));
     }
 
     /// <summary>
