@@ -1,6 +1,7 @@
 using Core.Entities;
 using Core.Repositories;
 using Db.Postgre.Context;
+using Db.Postgre.Entities;
 using Db.Postgre.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,11 +57,23 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
             throw new InvalidOperationException($"Todo with Id = {id} does not exist");
         }
 
-        var entity = await dbContext.ToDos.FindAsync(id);
+        var entityExists = await dbContext.ToDos.AnyAsync(todo => todo.Id == id);
+
+        if (!entityExists)
+        {
+            throw new InvalidOperationException($"Todo with Id = {id} does not exist");
+        }
+
+        var entity = dbContext.ToDos.Local.FirstOrDefault(todo => todo.Id == id);
 
         if (entity == null)
         {
-            throw new InvalidOperationException($"Todo with Id = {id} does not exist");
+            entity = new PostgreToDoEntity()
+            {
+                Id = id
+            };
+            
+            dbContext.ToDos.Attach(entity);
         }
 
         dbContext.ToDos.Remove(entity);
