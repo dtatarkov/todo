@@ -35,6 +35,11 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
     {
         ArgumentNullException.ThrowIfNull(data);
 
+        if (!data.HasData())
+        {
+            throw new ArgumentException("data is empty", nameof(data));
+        }
+
         var todo = await toDoRepository.GetByIdAsync(data.Id);
         
         if (todo == null)
@@ -42,9 +47,20 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
             throw new InvalidOperationException($"ToDo with Id = {data.Id} not found");
         }
 
-        todo.Title = data.Title;
-        todo.Description = data.Description;
-        todo.CompletionDatePlanned = data.CompletionDatePlanned;
+        if (data.Title != null)
+        {
+            todo.Title = data.Title;
+        }
+
+        if (data.Description != null)
+        {
+            todo.Description = data.Description;
+        }
+
+        if (data.CompletionDatePlanned != null)
+        {
+            todo.CompletionDatePlanned = data.CompletionDatePlanned;
+        }
 
         await toDoRepository.SaveAsync(todo);
     }

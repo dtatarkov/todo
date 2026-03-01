@@ -1,5 +1,6 @@
 using Core.DTO;
 using Core.Entities;
+using Core.Enums;
 using Core.Repositories;
 using Moq;
 
@@ -7,6 +8,54 @@ namespace Core.Tests.Unit.Entities;
 
 public class ToDoOwnerTests
 {
+    public static IEnumerable<object[]> GetUpdateFieldsTestData()
+    {
+        var id = Guid.Empty;
+        var now = DateTimeOffset.Now;
+
+        // Сценарий: обновляется только Title
+        yield return
+        [
+            new ToDoUpdateDto
+            {
+                Id = id,
+                Title = "Updated Title",
+            },
+        ];
+
+        // Сценарий: обновляется только Description
+        yield return new object[]
+        {
+            new ToDoUpdateDto
+            {
+                Id = id,
+                Description = "Updated Description",
+            },
+        };
+
+        // Сценарий: обновляется только CompletionDatePlanned
+        yield return new object[]
+        {
+            new ToDoUpdateDto
+            {
+                Id = id,
+                CompletionDatePlanned = now.AddDays(10)
+            },
+        };
+
+        // Сценарий: обновляются все поля
+        yield return new object[]
+        {
+            new ToDoUpdateDto
+            {
+                Id = id,
+                Title = "Updated Title",
+                Description = "Updated Description",
+                CompletionDatePlanned = now.AddDays(10)
+            },
+        };
+    }
+
     [Fact]
     public async Task AddToDoReturnsToDoIfDataIsValid()
     {
@@ -84,6 +133,62 @@ public class ToDoOwnerTests
         )), Times.Once);
     }
 
+    [Theory]
+    [MemberData(nameof(GetUpdateFieldsTestData))]
+    public async Task UpdateToDoAsync_UpdatesOnlyNonNullFields(ToDoUpdateDto updateData)
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+
+        var existingId = Guid.NewGuid();
+        var now = DateTimeOffset.Now;
+
+        var existingTodo = new ToDo
+        {
+            Id = existingId,
+            Title = "Original Title",
+            Description = "Original Description",
+            CompletionDatePlanned = now.AddDays(-1),
+        };
+
+        var existingToDoSnapshot = existingTodo.Clone();
+        
+        updateData.Id = existingId;
+
+        todoRepositoryMock
+            .Setup(repo => repo.GetByIdAsync(existingId))
+            .ReturnsAsync(existingTodo);
+
+        // Act
+        await todoOwner.UpdateToDoAsync(updateData);
+
+        // Assert
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.Is<IToDo>(t =>
+            t.Title == (updateData.Title ?? existingToDoSnapshot.Title) &&
+            t.Description == (updateData.Description ?? existingToDoSnapshot.Description) &&
+            t.CompletionDatePlanned == (updateData.CompletionDatePlanned ?? existingToDoSnapshot.CompletionDatePlanned)
+        )), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateToDoAsync_ThrowsArgumentException_WhenDataHasNoChanges()
+    {
+        // Arrange
+        var todoRepositoryMock = new Mock<IToDoRepository>();
+        var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
+
+        var updateData = new ToDoUpdateDto
+        {
+            Id = Guid.NewGuid()
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(() => todoOwner.UpdateToDoAsync(updateData));
+        todoRepositoryMock.Verify(repo => repo.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.IsAny<IToDo>()), Times.Never);
+    }
+
     [Fact]
     public async Task UpdateToDoAsync_ThrowsInvalidOperationException_WhenTodoDoesNotExist()
     {
@@ -95,7 +200,8 @@ public class ToDoOwnerTests
 
         var updateData = new ToDoUpdateDto
         {
-            Id = nonExistentId
+            Id = nonExistentId,
+            Title = "New Title"
         };
 
         todoRepositoryMock
@@ -221,7 +327,7 @@ public class ToDoOwnerTests
         var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
 
         var existingId = Guid.NewGuid();
-        
+
         var existingTodo = new ToDo
         {
             Id = existingId
