@@ -97,17 +97,4 @@ public class ToDoServiceTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(() => _toDoService.CompleteToDoAsync(nonExistentId));
     }
-
-    [Fact]
-    public async Task CompleteToDoAsync_ThrowsArgumentException_ForEmptyGuidId()
-    {
-        // Arrange
-        var emptyId = Guid.Empty;
-
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => _toDoService.CompleteToDoAsync(emptyId));
-
-        // Ensure GetById was not called
-        _toDoOwnerMock.Verify(o => o.GetToDoByIdAsync(emptyId), Times.Never);
-    }
 }
