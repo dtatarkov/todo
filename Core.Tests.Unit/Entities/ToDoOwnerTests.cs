@@ -8,54 +8,6 @@ namespace Core.Tests.Unit.Entities;
 
 public class ToDoOwnerTests
 {
-    public static IEnumerable<object[]> GetUpdateFieldsTestData()
-    {
-        var id = Guid.Empty;
-        var now = DateTimeOffset.Now;
-
-        // Сценарий: обновляется только Title
-        yield return
-        [
-            new ToDoUpdateDto
-            {
-                Id = id,
-                Title = "Updated Title",
-            },
-        ];
-
-        // Сценарий: обновляется только Description
-        yield return
-        [
-            new ToDoUpdateDto
-            {
-                Id = id,
-                Description = "Updated Description",
-            }
-        ];
-
-        // Сценарий: обновляется только CompletionDatePlanned
-        yield return
-        [
-            new ToDoUpdateDto
-            {
-                Id = id,
-                CompletionDatePlanned = now.AddDays(10)
-            }
-        ];
-
-        // Сценарий: обновляются все поля
-        yield return
-        [
-            new ToDoUpdateDto
-            {
-                Id = id,
-                Title = "Updated Title",
-                Description = "Updated Description",
-                CompletionDatePlanned = now.AddDays(10)
-            }
-        ];
-    }
-
     [Fact]
     public async Task AddToDoReturnsToDoIfDataIsValid()
     {
@@ -89,29 +41,30 @@ public class ToDoOwnerTests
 
         todoRepositoryMock.Verify(repo => repo.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
-
-    [Theory]
-    [MemberData(nameof(GetUpdateFieldsTestData))]
-    public async Task UpdateToDoAsync_UpdatesOnlyNonNullFields(ToDoUpdateDto updateData)
+    
+    [Fact]
+    public async Task UpdateToDoAsync_UpdatesExistingTodo_WhenDataIsValid()
     {
         // Arrange
         var todoRepositoryMock = new Mock<IToDoRepository>();
         var todoOwner = new ToDoOwner(todoRepositoryMock.Object);
 
         var existingId = Guid.NewGuid();
-        var now = DateTimeOffset.Now;
-
+        
         var existingTodo = new ToDo
         {
             Id = existingId,
-            Title = "Original Title",
-            Description = "Original Description",
-            CompletionDatePlanned = now.AddDays(-1),
+            Title = "Old Title",
+            Description = "Old Description"
         };
 
-        var existingToDoSnapshot = existingTodo.Clone();
-
-        updateData.Id = existingId;
+        var updateData = new ToDoUpdateDto
+        {
+            Id = existingId,
+            Title = "Updated Title",
+            Description = "Updated Description",
+            CompletionDatePlanned = DateTimeOffset.Now,
+        };
 
         todoRepositoryMock
             .Setup(repo => repo.GetByIdAsync(existingId))
@@ -121,14 +74,11 @@ public class ToDoOwnerTests
         await todoOwner.UpdateToDoAsync(updateData);
 
         // Assert
-        todoRepositoryMock.Verify(repo => repo.GetByIdAsync(existingId), Times.Once);
+        Assert.Equal(existingTodo.Title, updateData.Title);
+        Assert.Equal(existingTodo.Description, updateData.Description);
+        Assert.Equal(existingTodo.CompletionDatePlanned, updateData.CompletionDatePlanned);
         
-        todoRepositoryMock.Verify(repo => repo.SaveAsync(It.Is<IToDo>(t =>
-            t.Id == existingId &&
-            t.Title == (updateData.Title ?? existingToDoSnapshot.Title) &&
-            t.Description == (updateData.Description ?? existingToDoSnapshot.Description) &&
-            t.CompletionDatePlanned == (updateData.CompletionDatePlanned ?? existingToDoSnapshot.CompletionDatePlanned)
-        )), Times.Once);
+        todoRepositoryMock.Verify(repo => repo.SaveAsync(existingTodo), Times.Once);
     }
 
     [Fact]

@@ -1,3 +1,4 @@
+using Core.DTO;
 using Core.Entities;
 using Core.Enums;
 
@@ -53,7 +54,7 @@ public class ToDoTests
     {
         // Arrange
         var now = DateTimeOffset.Now;
-        
+
         var original = new ToDo
         {
             Id = Guid.NewGuid(),
@@ -76,5 +77,145 @@ public class ToDoTests
         Assert.Equal(original.CompletionDateActual, clone.CompletionDateActual);
         Assert.Same(original.State, clone.State);
         Assert.Equal(original.IsCompleted, clone.IsCompleted);
+    }
+
+    [Fact]
+    public void CreateFromData_CreatesValidToDo()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+
+        var dto = new ToDoAddDto
+        {
+            Title = "New Task",
+            Description = "Description",
+            CompletionDatePlanned = now.AddDays(1)
+        };
+
+        // Act
+        var todo = ToDo.CreateFromData(dto);
+
+        // Assert
+        Assert.Equal(Guid.Empty, todo.Id);
+        Assert.Equal(dto.Title, todo.Title);
+        Assert.Equal(dto.Description, todo.Description);
+        Assert.Equal(dto.CompletionDatePlanned, todo.CompletionDatePlanned);
+        Assert.Equal(ToDoStateType.Initial, todo.State.Type);
+    }
+
+    [Fact]
+    public void CreateFromData_ThrowsArgumentNullException_WhenDtoIsNull()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => ToDo.CreateFromData(null!));
+    }
+
+    [Theory]
+    [MemberData(nameof(GetUpdateFieldsTestData))]
+    public void UpdateFromData_UpdatesNonNullFields(ToDoUpdateDto updateDto)
+    {
+        // Arrange
+        var todo = new ToDo
+        {
+            Title = "Old Title",
+            Description = "Old Desc",
+            CompletionDatePlanned = DateTimeOffset.Now.AddDays(-1)
+        };
+
+        var todoClone = todo.Clone();
+
+        // Act
+        todo.UpdateFromData(updateDto);
+
+        // Assert
+        Assert.Equal(todo.Title, updateDto.Title ?? todoClone.Title);
+        Assert.Equal(todo.Description, updateDto.Description ?? todoClone.Description);
+        Assert.Equal(todo.CompletionDatePlanned, updateDto.CompletionDatePlanned ?? todoClone.CompletionDatePlanned);
+    }
+
+    [Fact]
+    public void UpdateFromData_ThrowsArgumentNullException_WhenDtoIsNull()
+    {
+        // Arrange
+        var todo = new ToDo();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => todo.UpdateFromData(null!));
+    }
+
+    [Fact]
+    public void GetData_ReturnsCorrectDto()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        
+        var todo = new ToDo
+        {
+            Id = Guid.NewGuid(),
+            Title = "Task",
+            Description = "Desc",
+            CompletionDatePlanned = now.AddDays(-1),
+            CompletionDateActual = now,
+            State = ToDoState.GetState(ToDoStateType.Completed)
+        };
+    
+        // Act
+        var dto = todo.GetData();
+    
+        // Assert
+        Assert.Equal(todo.Id, dto.Id);
+        Assert.Equal(todo.Title, dto.Title);
+        Assert.Equal(todo.Description, dto.Description);
+        Assert.Equal(todo.CompletionDatePlanned, dto.CompletionDatePlanned);
+        Assert.Equal(todo.CompletionDateActual, dto.CompletionDateActual);
+        Assert.Equal(todo.State.Type, dto.State);
+    }
+
+    public static IEnumerable<object[]> GetUpdateFieldsTestData()
+    {
+        var id = Guid.Empty;
+        var now = DateTimeOffset.Now;
+
+        // Сценарий: обновляется только Title
+        yield return
+        [
+            new ToDoUpdateDto
+            {
+                Id = id,
+                Title = "Updated Title",
+            },
+        ];
+
+        // Сценарий: обновляется только Description
+        yield return
+        [
+            new ToDoUpdateDto
+            {
+                Id = id,
+                Description = "Updated Description",
+            }
+        ];
+
+        // Сценарий: обновляется только CompletionDatePlanned
+        yield return
+        [
+            new ToDoUpdateDto
+            {
+                Id = id,
+                CompletionDatePlanned = now.AddDays(10)
+            }
+        ];
+
+        // Сценарий: обновляются все поля
+        yield return
+        [
+            new ToDoUpdateDto
+            {
+                Id = id,
+                Title = "Updated Title",
+                Description = "Updated Description",
+                CompletionDatePlanned = now.AddDays(10)
+            }
+        ];
     }
 }

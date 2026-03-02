@@ -1,3 +1,5 @@
+using Core.DTO;
+
 namespace Core.Entities;
 
 public interface IToDo
@@ -12,4 +14,6 @@ public interface IToDo
     
     Task CompleteAsync();
     IToDo Clone();
+    void UpdateFromData(ToDoUpdateDto data);
+    ToDoGetDto GetData();
 }
