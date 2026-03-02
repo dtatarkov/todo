@@ -15,5 +15,6 @@ public interface IToDo
     Task CompleteAsync();
     IToDo Clone();
     void UpdateFromData(ToDoUpdateDto data);
+    Task UpdateFromDataAsync(ToDoUpdateDto data);
     ToDoGetDto GetData();
 }

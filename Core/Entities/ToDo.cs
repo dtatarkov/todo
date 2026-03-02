@@ -45,6 +45,7 @@ public class ToDo : IToDo
         };
     }
     
+    [Obsolete]
     public void UpdateFromData(ToDoUpdateDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -63,6 +64,30 @@ public class ToDo : IToDo
         {
             CompletionDatePlanned = data.CompletionDatePlanned;
         }
+    }
+    
+    public async Task UpdateFromDataAsync(ToDoUpdateDto data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(Owner);
+        data.ThrowIfEmpty();
+
+        if (data.Title is not null)
+        {
+            Title = data.Title;
+        }
+
+        if (data.Description is not null)
+        {
+            Description = data.Description;
+        }
+
+        if (data.CompletionDatePlanned is not null)
+        {
+            CompletionDatePlanned = data.CompletionDatePlanned;
+        }
+
+        await Owner.SaveAsync(this);
     }
 
     public ToDoGetDto GetData()

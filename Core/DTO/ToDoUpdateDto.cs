@@ -11,4 +11,12 @@ public class ToDoUpdateDto
     {
         return Title != null || Description != null || CompletionDatePlanned != null;
     }
+
+    public void ThrowIfEmpty()
+    {
+        if (!HasData())
+        {
+            throw new InvalidOperationException("Update data is empty.");
+        }
+    }
 }

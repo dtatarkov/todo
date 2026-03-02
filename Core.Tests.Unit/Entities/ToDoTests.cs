@@ -1,6 +1,8 @@
 using Core.DTO;
 using Core.Entities;
 using Core.Enums;
+using Core.Tests.Unit.TestData;
+using Moq;
 
 namespace Core.Tests.Unit.Entities;
 
@@ -141,6 +143,54 @@ public class ToDoTests
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => todo.UpdateFromData(null!));
+    }
+    
+    [Theory]
+    [MemberData(nameof(GetUpdateFieldsTestData))]
+    public async Task UpdateFromDataAsync_UpdatesOnlyProvidedFields(ToDoUpdateDto updateDto)
+    {
+        var ownerMock = new Mock<IToDoOwner>();
+        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+        var todoClone = todo.Clone();
+
+        // Act
+        await todo.UpdateFromDataAsync(updateDto);
+
+        // Assert
+        Assert.Equal(todo.Title, updateDto.Title ?? todoClone.Title);
+        Assert.Equal(todo.Description, updateDto.Description ?? todoClone.Description);
+        Assert.Equal(todo.CompletionDatePlanned, updateDto.CompletionDatePlanned ?? todoClone.CompletionDatePlanned);
+        Assert.Equal(updateDto.Title ?? todoClone.Title, todo.Title);
+        Assert.Equal(updateDto.Description ?? todoClone.Description, todo.Description);
+        Assert.Equal(updateDto.CompletionDatePlanned ?? todoClone.CompletionDatePlanned, todo.CompletionDatePlanned);
+        
+        ownerMock.Verify(o => o.SaveAsync(It.Is<IToDo>(t => t == todo)), Times.Once);
+    }
+    
+    [Fact]
+    public async Task UpdateToDoAsync_ThrowsArgumentException_WhenDataHasNoChanges()
+    {
+        // Arrange
+        var ownerMock = new Mock<IToDoOwner>();
+        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+
+        var updateData = ToDoUpdateDtoTestData.GetEmpty();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => todo.UpdateFromDataAsync(updateData));
+        ownerMock.Verify(owner => owner.SaveAsync(It.IsAny<IToDo>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateToDoAsync_ThrowsArgumentNullException_WhenDataIsNull()
+    {
+        // Arrange
+        var ownerMock = new Mock<IToDoOwner>();
+        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() => todo.UpdateFromDataAsync(null!));
+        ownerMock.Verify(owner => owner.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 
     [Fact]

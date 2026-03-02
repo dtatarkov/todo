@@ -14,4 +14,12 @@ public static class ToDoUpdateDtoTestData
             CompletionDatePlanned = DateTimeOffset.Now.AddDays(10)
         };
     }
+    
+    public static ToDoUpdateDto GetEmpty(Guid? id = null)
+    {
+        return new ToDoUpdateDto
+        {
+            Id = id ?? Guid.NewGuid(),
+        };
+    }
 }
