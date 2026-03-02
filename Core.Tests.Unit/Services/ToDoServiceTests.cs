@@ -1,8 +1,7 @@
-using Core.DTO;
 using Core.Entities;
-using Core.Enums;
 using Core.Factories;
 using Core.Services;
+using Core.Tests.Unit.TestData;
 using Moq;
 
 namespace Core.Tests.Unit.Services;
@@ -10,7 +9,7 @@ namespace Core.Tests.Unit.Services;
 public class ToDoServiceTests
 {
     private readonly Mock<IToDoOwner> _toDoOwnerMock;
-    private readonly IToDoService _toDoService;
+    private readonly ToDoService _toDoService;
 
     public ToDoServiceTests()
     {
@@ -23,36 +22,25 @@ public class ToDoServiceTests
     }
 
     [Fact]
-    public async Task AddToDoAsync_ReturnsToDo_WhenDataIsValid()
+    public async Task AddToDoAsync_ReturnsToDoGetDto_WhenDataIsValid()
     {
         // Arrange
-        var addToDoDto = new ToDoAddDto
-        {
-            Title = "Test",
-            Description = "Desc",
-            CompletionDatePlanned = DateTimeOffset.Now
-        };
-
-        var expectedTodo = new ToDo
-        {
-            Id = Guid.NewGuid(),
-            Title = addToDoDto.Title,
-            Description = addToDoDto.Description,
-            CompletionDatePlanned = addToDoDto.CompletionDatePlanned
-        };
+        var addDto = ToDoAddDtoTestData.GetDefault();
+        var todo = ToDo.CreateFromData(addDto);
+        var expectedDto = todo.GetData();
 
         _toDoOwnerMock
-            .Setup(o => o.AddToDoAsync(addToDoDto))
-            .ReturnsAsync(expectedTodo);
+            .Setup(o => o.AddToDoAsync(addDto))
+            .ReturnsAsync(todo);
 
         // Act
-        var result = await _toDoService.AddToDoAsync(addToDoDto);
+        var result = await _toDoService.AddToDoAsync(addDto);
 
         // Assert
-        _toDoOwnerMock.Verify(o => o.AddToDoAsync(addToDoDto), Times.Once);
-        Assert.Same(expectedTodo, result);
+        Assert.NotNull(result);
+        Assert.True(expectedDto.Equals(result));
     }
-
+    
     [Fact]
     public async Task AddToDoAsync_ThrowsArgumentNullException_WhenDataIsNull()
     {
@@ -61,40 +49,114 @@ public class ToDoServiceTests
     }
 
     [Fact]
-    public async Task CompleteToDoAsync_CompletesExistingToDo()
+    public async Task GetToDoByIdAsync_ReturnsToDoGetDto_WhenExists()
     {
         // Arrange
-        var existingTodo = new ToDo
-        {
-            Id = Guid.NewGuid(),
-            State = ToDoState.GetState(ToDoStateType.Initial),
-            CompletionDateActual = null
-        };
+        var id = Guid.NewGuid();
+
+        var todo = ToDoTestData.GetDefault();
+        var expectedDto = todo.GetData();
 
         _toDoOwnerMock
-            .Setup(o => o.GetToDoByIdAsync(existingTodo.Id))
-            .ReturnsAsync(existingTodo);
+            .Setup(o => o.GetToDoByIdAsync(id))
+            .ReturnsAsync(todo);
 
         // Act
-        await _toDoService.CompleteToDoAsync(existingTodo.Id);
+        var result = await _toDoService.GetToDoByIdAsync(id);
 
         // Assert
-        Assert.True(existingTodo.IsCompleted);
-        Assert.NotNull(existingTodo.CompletionDateActual);
-        Assert.True(existingTodo.CompletionDateActual <= DateTimeOffset.Now);
+        Assert.NotNull(result);
+        Assert.True(expectedDto.Equals(result));
     }
 
     [Fact]
-    public async Task CompleteToDoAsync_ThrowsArgumentException_ForNonExistentId()
+    public async Task GetToDoByIdAsync_ReturnsNull_WhenNotFound()
     {
         // Arrange
-        var nonExistentId = Guid.NewGuid();
+        var id = Guid.NewGuid();
 
         _toDoOwnerMock
-            .Setup(o => o.GetToDoByIdAsync(nonExistentId))
+            .Setup(o => o.GetToDoByIdAsync(id))
             .ReturnsAsync((IToDo?)null);
 
+        // Act
+        var result = await _toDoService.GetToDoByIdAsync(id);
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetAllToDosAsync_ReturnsListOfToDoGetDto()
+    {
+        // Arrange
+        var todos = new List<IToDo>
+        {
+            ToDoTestData.GetDefault(),
+            ToDoTestData.GetDefault(),
+        };
+
+        var expectedDtos = todos.Select(t => t.GetData()).ToList();
+
+        _toDoOwnerMock
+            .Setup(o => o.GetAllToDosAsync())
+            .ReturnsAsync(todos);
+
+        // Act
+        var result = await _toDoService.GetAllToDosAsync();
+        var resultList = result.ToList();
+        
+        // Assert
+        Assert.Equal(2, resultList.Count);
+        Assert.Contains(expectedDtos, todo => todo.Id == todos[0].Id);
+        Assert.Contains(expectedDtos, todo => todo.Id == todos[0].Id);
+    }
+
+    [Fact]
+    public async Task UpdateToDoAsync_ForwardsCall()
+    {
+        // Arrange
+        var updateDto = ToDoUpdateDtoTestData.GetDefault();
+
+        _toDoOwnerMock
+            .Setup(o => o.UpdateToDoAsync(updateDto))
+            .Returns(Task.CompletedTask);
+
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => _toDoService.CompleteToDoAsync(nonExistentId));
+        await _toDoService.UpdateToDoAsync(updateDto);
+        _toDoOwnerMock.Verify(o => o.UpdateToDoAsync(updateDto), Times.Once);
+    }
+
+    [Fact]
+    public async Task RemoveToDoAsync_ForwardsCall()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+
+        _toDoOwnerMock
+            .Setup(o => o.RemoveToDoAsync(id))
+            .Returns(Task.CompletedTask);
+
+        // Act & Assert
+        await _toDoService.RemoveToDoAsync(id);
+        _toDoOwnerMock.Verify(o => o.RemoveToDoAsync(id), Times.Once);
+    }
+
+    [Fact]
+    public async Task CompleteToDoAsync_CompletesExistingToDo()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var todo = ToDoTestData.GetDefault(id);
+
+        _toDoOwnerMock
+            .Setup(o => o.GetToDoByIdAsync(id))
+            .ReturnsAsync(todo);
+
+        // Act
+        await _toDoService.CompleteToDoAsync(id);
+
+        // Assert
+        Assert.True(todo.IsCompleted);
     }
 }

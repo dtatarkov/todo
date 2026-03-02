@@ -1,37 +1,41 @@
 using Core.DTO;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Factories;
 
 namespace Core.Services;
 
 public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
 {
-    public async Task<IToDo?> GetToDoByIdAsync(Guid id)
+    public async Task<ToDoGetDto> AddToDoAsync(ToDoAddDto data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+
+        var todoOwner = toDoOwnerFactory.Create();
+        var todo = await todoOwner.AddToDoAsync(data);
+        var todoDto = todo.GetData();
+
+        return todoDto;
+    }
+
+    public async Task<ToDoGetDto?> GetToDoByIdAsync(Guid id)
     {
         var todoOwner = toDoOwnerFactory.Create();
         var todo = await todoOwner.GetToDoByIdAsync(id);
+        var todoDto = todo?.GetData();
 
-        return todo;
+        return todoDto;
     }
-    
-    public async Task<IEnumerable<IToDo>> GetAllToDosAsync()
+
+    public async Task<IEnumerable<ToDoGetDto>> GetAllToDosAsync()
     {
         var todoOwner = toDoOwnerFactory.Create();
         var todos = await todoOwner.GetAllToDosAsync();
+        var todoDtos = todos.Select(t => t.GetData()).ToList();
 
-        return todos;
+        return todoDtos;
     }
-    
-    public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
-    {
-        ArgumentNullException.ThrowIfNull(data);
-        
-        var todoOwner = toDoOwnerFactory.Create();
-        var todo = await todoOwner.AddToDoAsync(data);
 
-        return todo;
-    }
-    
     public async Task UpdateToDoAsync(ToDoUpdateDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -39,7 +43,7 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         var todoOwner = toDoOwnerFactory.Create();
         await todoOwner.UpdateToDoAsync(data);
     }
-    
+
     public async Task RemoveToDoAsync(Guid id)
     {
         var todoOwner = toDoOwnerFactory.Create();
@@ -53,7 +57,7 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
 
         if (todo == null)
         {
-            throw new ArgumentException($"ToDo with ID {todoId} not found.");
+            throw new EntityNotFoundException(nameof(ToDo), todoId);
         }
 
         await todo.CompleteAsync();
