@@ -12,6 +12,20 @@ public class ToDo : IToDo
     public DateTimeOffset? CompletionDateActual { get; set; }
     public IToDoState State { get; set; } = ToDoState.GetState(ToDoStateType.Initial);
     public bool IsCompleted => State.Type == ToDoStateType.Completed;
+    
+    // Пустой конструктор — для создания без владельца
+    public ToDo()
+    {
+    }
+
+    // Конструктор с указанием владельца
+    public ToDo(IToDoOwner? owner) : this()
+    {
+        Owner = owner;
+    }
+    
+    // Свойство для установки владельца
+    public IToDoOwner? Owner { get; set; }
 
     public async Task CompleteAsync()
     {
@@ -20,7 +34,7 @@ public class ToDo : IToDo
 
     public IToDo Clone()
     {
-        return new ToDo
+        return new ToDo(Owner)
         {
             Id = Id,
             Title = Title,
