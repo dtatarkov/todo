@@ -6,6 +6,13 @@ namespace Core.Entities;
 
 public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 {
+    public async Task SaveAsync(IToDo todo)
+    {
+        ArgumentNullException.ThrowIfNull(todo);
+
+        await toDoRepository.SaveAsync(todo);
+    }
+    
     public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
