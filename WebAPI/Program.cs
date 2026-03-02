@@ -3,6 +3,7 @@ using Db.Postgre.Context;
 using Db.Postgre.Mappers;
 using Db.Postgre.Repositories;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.ExceptionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +17,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Main"),
         npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()));
 
-var connectionString = builder.Configuration.GetConnectionString("Main");
-
 // Регистрируем репозиторий
 builder.Services.AddScoped<IToDoRepository, PostgreToDoRepository>();
 builder.Services.AddScoped<IToDoEntityMapper, ToDoEntityMapper>();
+
+// Регистрируем фильтр исключений глобально
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ArgumentNullExceptionFilter>();
+    options.Filters.Add<InvalidOperationExceptionFilter>();
+    options.Filters.Add<EntityNotFoundExceptionFilter>();
+});
+
+// Регистрируем контроллеры
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -33,29 +43,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
