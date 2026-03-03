@@ -18,7 +18,6 @@ interface IToDo {
 
 interface IToDoOwner {
     +SaveAsync(IToDo) : Task
-    +AddToDoAsync(ToDoAddDto) : Task<IToDo>
     +GetToDoByIdAsync(Guid) : Task<IToDo?>
     +GetAllToDosAsync() : Task<IEnumerable<IToDo>>
     +RemoveToDoAsync(Guid) : Task
@@ -39,6 +38,15 @@ interface IToDoEntityMapper {
 interface IToDoState {
     +Type : ToDoStateType
     +CompleteAsync(IToDo) : Task
+}
+
+interface IToDoService {
+    +GetToDoByIdAsync(Guid) : Task<ToDoGetDto?>
+    +GetAllToDosAsync() : Task<IEnumerable<ToDoGetDto>>
+    +AddToDoAsync(ToDoAddDto) : Task<ToDoGetDto>
+    +UpdateToDoAsync(Guid, ToDoUpdateDto) : Task
+    +RemoveToDoAsync(Guid) : Task
+    +CompleteToDoAsync(Guid) : Task
 }
 
 ' Классы
@@ -72,22 +80,6 @@ class ToDo {
     +GetData() : ToDoGetDto
 }
 
-class ToDoState {
-    +GetState(ToDoStateType) : IToDoState
-}
-
-class ToDoStateInitial {
-    +Instance : ToDoStateInitial
-    +Type : ToDoStateType
-    +CompleteAsync(IToDo) : Task
-}
-
-class ToDoStateCompleted {
-    +Instance : ToDoStateCompleted
-    +Type : ToDoStateType
-    +CompleteAsync(IToDo) : Task
-}
-
 class PostgreToDoEntity {
     +Id : Guid
     +Title : string
@@ -97,13 +89,16 @@ class PostgreToDoEntity {
     +StateType : ToDoStateType
 }
 
+class ToDoService {
+    -toDoOwnerFactory : IToDoOwnerFactory
+}
+
 ' Отношения реализации
 ToDoOwner ..|> IToDoOwner
 PostgreToDoRepository ..|> IToDoRepository
 ToDoEntityMapper ..|> IToDoEntityMapper
 ToDo ..|> IToDo
-ToDoStateInitial ..|> IToDoState
-ToDoStateCompleted ..|> IToDoState
+ToDoService ..|> IToDoService
 
 ' Агрегация и зависимости
 ToDoOwner "1" *-- "1" IToDoRepository : использует
@@ -122,10 +117,10 @@ ToDoEntityMapper ..> PostgreToDoEntity : создаёт из домена
 PostgreToDoRepository ..> PostgreToDoEntity : работает с EF Core сущностью
 PostgreToDoRepository ..> ToDoEntityMapper : преобразует данные
 
-' Состояния
-ToDoState <.. IToDoState : возвращает через GetState()
-ToDoState --> ToDoStateInitial : Initial
-ToDoState --> ToDoStateCompleted : Completed
+ToDoService "1" *-- "1" IToDoOwnerFactory : использует фабрику
+ToDoService ..> IToDoOwner : через factory.Create()
+ToDoService ..> IToDo : для получения данных и обновления
+ToDoService ..> ToDo : использует методы доменной модели
 
 ' Пояснения
 note right of ToDo::CompleteAsync
@@ -137,12 +132,6 @@ note right of IToDoState::CompleteAsync
     Изменяет состояние задачи,
     например: устанавливает CompletionDateActual
     и переключает State на Completed.
-end note
-
-note right of ToDoState::GetState
-    Фабричный метод:
-    возвращает нужный экземпляр
-    состояния по типу.
 end note
 
 note right of PostgreToDoRepository::SaveAsync
@@ -157,6 +146,12 @@ note right of ToDoEntityMapper
     - PostgreToDoEntity (EF Core модель)
     - IToDo (доменная модель)
     Обеспечивает чистоту слоя данных
+end note
+
+note right of ToDoService
+    Основной сервис для бизнес-логики.
+    Не работает напрямую с репозиторием —
+    использует IToDoOwner через фабрику.
 end note
 
 @enduml
