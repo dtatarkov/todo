@@ -4,12 +4,12 @@ namespace Core.DTO;
 
 public class ToDoGetDto
 {
-    public Guid Id { get; set; } = Guid.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public DateTimeOffset? CompletionDatePlanned { get; set; }
-    public DateTimeOffset? CompletionDateActual { get; set; }
-    public ToDoStateType State { get; set; }
+    public Guid Id { get; init; } = Guid.Empty;
+    public string Title { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public DateTimeOffset? CompletionDatePlanned { get; init; }
+    public DateTimeOffset? CompletionDateActual { get; init; }
+    public ToDoStateType State { get; init; }
 
     public bool Equals(ToDoGetDto another)
     {

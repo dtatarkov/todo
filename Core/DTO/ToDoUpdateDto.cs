@@ -2,9 +2,9 @@ namespace Core.DTO;
 
 public class ToDoUpdateDto
 {
-    public string? Title { get; set; }
-    public string? Description { get; set; }
-    public DateTimeOffset? CompletionDatePlanned { get; set; }
+    public string? Title { get; init; }
+    public string? Description { get; init; }
+    public DateTimeOffset? CompletionDatePlanned { get; init; }
     
     public bool HasData()
     {
