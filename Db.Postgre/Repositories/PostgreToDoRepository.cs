@@ -43,7 +43,7 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
         return todo;
     }
 
-    public async Task<IEnumerable<IToDo>> GetAllAsync()
+    public async Task<ICollection<IToDo>> GetAllAsync()
     {
         var entities = await dbContext.ToDos.ToListAsync();
         var todos = entities.Select(entityMapper.ToDomainModel).ToList();

@@ -33,14 +33,12 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
     {
         var todos = await toDoRepository.GetAllAsync();
 
-        var todosWithOwner = todos.Select(todo =>
+        foreach (var todo in todos)
         {
             todo.Owner = this;
+        }
 
-            return todo;
-        });
-
-        return todosWithOwner;
+        return todos;
     }
 
     public async Task RemoveToDoAsync(Guid todoId)
