@@ -1,5 +1,4 @@
 using Core.DTO;
-using Core.Exceptions;
 using Core.Repositories;
 
 namespace Core.Entities;
@@ -12,7 +11,7 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 
         await toDoRepository.SaveAsync(todo);
     }
-    
+
     public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -26,12 +25,28 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
 
     public async Task<IToDo?> GetToDoByIdAsync(Guid id)
     {
-        return await toDoRepository.GetByIdAsync(id);
+        var todo = await toDoRepository.GetByIdAsync(id);
+
+        if (todo is not null)
+        {
+            todo.Owner = this;
+        }
+
+        return todo;
     }
 
     public async Task<IEnumerable<IToDo>> GetAllToDosAsync()
     {
-        return await toDoRepository.GetAllAsync();
+        var todos = await toDoRepository.GetAllAsync();
+
+        var todosWithOwner = todos.Select(todo =>
+        {
+            todo.Owner = this;
+
+            return todo;
+        });
+
+        return todosWithOwner;
     }
 
     public async Task RemoveToDoAsync(Guid id)

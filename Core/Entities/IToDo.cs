@@ -10,6 +10,7 @@ public interface IToDo
     DateTimeOffset? CompletionDatePlanned { get; set; }
     DateTimeOffset? CompletionDateActual { get; set; }
     IToDoState State { get; set; }
+    IToDoOwner? Owner { get; set; }
     bool IsCompleted { get; }
     
     Task CompleteAsync();
