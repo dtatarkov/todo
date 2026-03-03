@@ -190,7 +190,6 @@ public class ToDoTests
 
     public static IEnumerable<object[]> GetUpdateFieldsTestData()
     {
-        var id = Guid.Empty;
         var now = DateTimeOffset.Now;
 
         // Сценарий: обновляется только Title
@@ -198,7 +197,6 @@ public class ToDoTests
         [
             new ToDoUpdateDto
             {
-                Id = id,
                 Title = "Updated Title",
             },
         ];
@@ -208,7 +206,6 @@ public class ToDoTests
         [
             new ToDoUpdateDto
             {
-                Id = id,
                 Description = "Updated Description",
             }
         ];
@@ -218,7 +215,6 @@ public class ToDoTests
         [
             new ToDoUpdateDto
             {
-                Id = id,
                 CompletionDatePlanned = now.AddDays(10)
             }
         ];
@@ -228,7 +224,6 @@ public class ToDoTests
         [
             new ToDoUpdateDto
             {
-                Id = id,
                 Title = "Updated Title",
                 Description = "Updated Description",
                 CompletionDatePlanned = now.AddDays(10)

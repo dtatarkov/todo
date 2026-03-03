@@ -24,16 +24,16 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     /// <summary>
     /// Получает задачу по идентификатору.
     /// </summary>
-    [HttpGet("{id:guid}")]
+    [HttpGet("{todoId:guid}")]
     [ProducesResponseType(typeof(ToDoGetDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ToDoGetDto?>> GetById(Guid id)
+    public async Task<ActionResult<ToDoGetDto?>> GetById(Guid todoId)
     {
-        var todo = await toDoService.GetToDoByIdAsync(id);
+        var todo = await toDoService.GetToDoByIdAsync(todoId);
 
         if (todo == null)
         {
-            return NotFound(new { message = $"ToDo with ID {id} not found." });
+            return NotFound(new { message = $"ToDo with ID {todoId} not found." });
         }
 
         return Ok(todo);
@@ -53,37 +53,37 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     /// <summary>
     /// Обновляет существующую задачу.
     /// </summary>
-    [HttpPut]
+    [HttpPut("{todoId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateToDo([FromBody] ToDoUpdateDto data)
+    public async Task<IActionResult> UpdateToDo(Guid todoId, [FromBody] ToDoUpdateDto data)
     {
-        await toDoService.UpdateToDoAsync(data);
+        await toDoService.UpdateToDoAsync(todoId, data);
         return NoContent();
     }
 
     /// <summary>
     /// Удаляет задачу по идентификатору.
     /// </summary>
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{todoId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteToDo(Guid id)
+    public async Task<IActionResult> DeleteToDo(Guid todoId)
     {
-        await toDoService.RemoveToDoAsync(id);
+        await toDoService.RemoveToDoAsync(todoId);
         return NoContent();
     }
 
     /// <summary>
     /// Завершает задачу.
     /// </summary>
-    [HttpPost("{id:guid}/complete")]
+    [HttpPost("{todoId:guid}/complete")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CompleteToDo(Guid id)
+    public async Task<IActionResult> CompleteToDo(Guid todoId)
     {
-        await toDoService.CompleteToDoAsync(id);
+        await toDoService.CompleteToDoAsync(todoId);
         return NoContent();
     }
 }

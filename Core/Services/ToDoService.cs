@@ -36,14 +36,14 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         return todoDtos;
     }
 
-    public async Task UpdateToDoAsync(ToDoUpdateDto data)
+    public async Task UpdateToDoAsync(Guid todoId, ToDoUpdateDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
 
         var todoOwner = toDoOwnerFactory.Create();
-        var todo = await todoOwner.GetToDoByIdAsync(data.Id);
+        var todo = await todoOwner.GetToDoByIdAsync(todoId);
 
-        EntityNotFoundException.ThrowIfNull(todo, nameof(ToDo), data.Id);
+        EntityNotFoundException.ThrowIfNull(todo, nameof(ToDo), todoId);
 
         await todo!.UpdateFromDataAsync(data);
     }
