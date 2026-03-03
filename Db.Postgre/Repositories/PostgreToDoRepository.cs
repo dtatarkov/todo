@@ -95,10 +95,7 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
     {
         var entity = await dbContext.ToDos.FindAsync(todo.Id);
         
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(nameof(ToDo), todo.Id);
-        }
+        EntityNotFoundException.ThrowIfNull(entity, nameof(ToDo), todo.Id);
 
         entity.Title = todo.Title;
         entity.Description = todo.Description;
