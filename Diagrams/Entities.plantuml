@@ -1,0 +1,124 @@
+@startuml
+
+' Интерфейсы
+interface IToDo {
+    +Id : Guid
+    +Title : string
+    +Description : string
+    +CompletionDatePlanned : DateTimeOffset?
+    +CompletionDateActual : DateTimeOffset?
+    +State : IToDoState
+    +Owner : IToDoOwner
+    +IsCompleted : bool
+    +CompleteAsync() : Task
+    +Clone() : IToDo
+    +UpdateFromDataAsync(ToDoUpdateDto) : Task
+    +GetData() : ToDoGetDto
+}
+
+interface IToDoOwner {
+    +SaveAsync(IToDo) : Task
+    +AddToDoAsync(ToDoAddDto) : Task<IToDo>
+    +GetToDoByIdAsync(Guid) : Task<IToDo?>
+    +GetAllToDosAsync() : Task<IEnumerable<IToDo>>
+    +RemoveToDoAsync(Guid) : Task
+}
+
+interface IToDoRepository {
+    +SaveAsync(IToDo) : Task
+    +GetByIdAsync(Guid) : Task<IToDo?>
+    +GetAllAsync() : Task<IEnumerable<IToDo>>
+    +RemoveAsync(Guid) : Task
+}
+
+interface IToDoState {
+    +Type : ToDoStateType
+    +CompleteAsync(IToDo) : Task
+}
+
+' Классы
+class ToDoOwner {
+    -toDoRepository : IToDoRepository
+}
+
+class PostgreToDoRepository {
+    -dbContext : AppDbContext
+    -entityMapper : IToDoEntityMapper
+}
+
+class ToDo {
+    -Id : Guid
+    -Title : string
+    -Description : string
+    -CompletionDatePlanned : DateTimeOffset?
+    -CompletionDateActual : DateTimeOffset?
+    -State : IToDoState
+    -Owner : IToDoOwner
+    +IsCompleted : bool
+    +Owner {get/set} : IToDoOwner
+    +CompleteAsync() : Task
+    +Clone() : IToDo
+    +UpdateFromDataAsync(ToDoUpdateDto) : Task
+    +GetData() : ToDoGetDto
+}
+
+class ToDoState {
+    +GetState(ToDoStateType) : IToDoState
+}
+
+class ToDoStateInitial {
+    +Instance : ToDoStateInitial
+    +Type : ToDoStateType
+    +CompleteAsync(IToDo) : Task
+}
+
+class ToDoStateCompleted {
+    +Instance : ToDoStateCompleted
+    +Type : ToDoStateType
+    +CompleteAsync(IToDo) : Task
+}
+
+' Отношения реализации
+ToDoOwner ..|> IToDoOwner
+PostgreToDoRepository ..|> IToDoRepository
+ToDo ..|> IToDo
+ToDoStateInitial ..|> IToDoState
+ToDoStateCompleted ..|> IToDoState
+
+' Абстрактная фабрика состояний
+ToDoState <.. IToDoState : возвращает через GetState()
+
+' Агрегация и зависимости
+ToDoOwner "1" *-- "1" IToDoRepository : использует
+ToDo "1" --> "0..1" IToDoOwner : имеет ссылку на Owner
+ToDo "1" --> "1" IToDoState : делегирует поведение
+IToDoState ..> ToDo : принимает в CompleteAsync
+
+' Состояния
+ToDoState --> ToDoStateInitial : Initial
+ToDoState --> ToDoStateCompleted : Completed
+
+' Использование репозитория
+ToDoOwner ..> PostgreToDoRepository : через DI
+ToDoOwner ..> ToDo : создаёт и возвращает
+PostgreToDoRepository ..> ToDo : маппит через IToDoEntityMapper
+
+' Пояснения
+note right of ToDo::CompleteAsync
+    Делегирует выполнение
+    текущему состоянию (State.CompleteAsync)
+end note
+
+note right of IToDoState::CompleteAsync
+    Изменяет состояние задачи,
+    например: устанавливает CompletionDateActual
+    и переключает State на Completed.
+end note
+
+note right of ToDoState::GetState
+    Фабричный метод:
+    возвращает нужный экземпляр
+    состояния по типу.
+end note
+
+@enduml
