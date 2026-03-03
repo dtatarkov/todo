@@ -12,7 +12,10 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         ArgumentNullException.ThrowIfNull(data);
 
         var todoOwner = toDoOwnerFactory.Create();
-        var todo = await todoOwner.AddToDoAsync(data);
+        var todo = ToDo.CreateFromData(data);
+        
+        await todoOwner.SaveAsync(todo);
+
         var todoDto = todo.GetData();
 
         return todoDto;

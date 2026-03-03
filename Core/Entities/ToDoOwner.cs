@@ -9,18 +9,12 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
     {
         ArgumentNullException.ThrowIfNull(todo);
 
-        await toDoRepository.SaveAsync(todo);
-    }
-
-    public async Task<IToDo> AddToDoAsync(ToDoAddDto data)
-    {
-        ArgumentNullException.ThrowIfNull(data);
-
-        var todo = ToDo.CreateFromData(data);
+        if (todo.Owner is not null && todo.Id == Guid.Empty)
+        {
+            throw new InvalidOperationException("ToDo already has owner");
+        }
 
         await toDoRepository.SaveAsync(todo);
-
-        return todo;
     }
 
     public async Task<IToDo?> GetToDoByIdAsync(Guid todoId)

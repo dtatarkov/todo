@@ -28,11 +28,12 @@ public class ToDoServiceTests
         // Arrange
         var addDto = ToDoAddDtoTestData.GetDefault();
         var todo = ToDo.CreateFromData(addDto);
+
         var expectedDto = todo.GetData();
 
         _toDoOwnerMock
-            .Setup(o => o.AddToDoAsync(addDto))
-            .ReturnsAsync(todo);
+            .Setup(o => o.SaveAsync(It.IsAny<IToDo>()))
+            .Returns(Task.CompletedTask);
 
         // Act
         var result = await _toDoService.AddToDoAsync(addDto);
@@ -40,6 +41,8 @@ public class ToDoServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.True(expectedDto.Equals(result));
+        
+        _toDoOwnerMock.Verify(o => o.SaveAsync(It.Is<IToDo>(t => t.Id == todo.Id)), Times.Once);
     }
     
     [Fact]
@@ -47,6 +50,9 @@ public class ToDoServiceTests
     {
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => _toDoService.AddToDoAsync(null!));
+    
+        // Убедимся, что SaveAsync не был вызван
+        _toDoOwnerMock.Verify(o => o.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 
     [Fact]
