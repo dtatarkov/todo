@@ -41,7 +41,11 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         ArgumentNullException.ThrowIfNull(data);
 
         var todoOwner = toDoOwnerFactory.Create();
-        await todoOwner.UpdateToDoAsync(data);
+        var todo = await todoOwner.GetToDoByIdAsync(data.Id);
+
+        EntityNotFoundException.ThrowIfNull(todo, nameof(ToDo), data.Id);
+
+        await todo!.UpdateFromDataAsync(data);
     }
 
     public async Task RemoveToDoAsync(Guid id)

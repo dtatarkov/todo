@@ -1,4 +1,5 @@
 using Core.Entities;
+using Core.Exceptions;
 using Core.Factories;
 using Core.Services;
 using Core.Tests.Unit.TestData;
@@ -113,18 +114,39 @@ public class ToDoServiceTests
     }
 
     [Fact]
-    public async Task UpdateToDoAsync_ForwardsCall()
+    public async Task UpdateToDoAsync_UpdatesTodoWhenDataIsValid()
     {
         // Arrange
         var updateDto = ToDoUpdateDtoTestData.GetDefault();
+        var todo = ToDoTestData.GetDefault(updateDto.Id, _toDoOwnerMock.Object);
 
         _toDoOwnerMock
-            .Setup(o => o.UpdateToDoAsync(updateDto))
-            .Returns(Task.CompletedTask);
+            .Setup(o => o.GetToDoByIdAsync(updateDto.Id))
+            .ReturnsAsync(todo);
+
+        // Act
+        await _toDoService.UpdateToDoAsync(updateDto);
+
+        // Assert
+        _toDoOwnerMock.Verify(o => o.GetToDoByIdAsync(updateDto.Id), Times.Once);
+        _toDoOwnerMock.Verify(o => o.SaveAsync(todo), Times.Once);
+    }
+    
+    [Fact]
+    public async Task UpdateToDoAsync_ThrowsEntityNotFoundException_WhenToDoDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+        var updateDto = ToDoUpdateDtoTestData.GetDefault(nonExistentId);
+
+        _toDoOwnerMock
+            .Setup(o => o.GetToDoByIdAsync(nonExistentId))
+            .ReturnsAsync((IToDo?)null);
 
         // Act & Assert
-        await _toDoService.UpdateToDoAsync(updateDto);
-        _toDoOwnerMock.Verify(o => o.UpdateToDoAsync(updateDto), Times.Once);
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => _toDoService.UpdateToDoAsync(updateDto));
+    
+        _toDoOwnerMock.Verify(o => o.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 
     [Fact]

@@ -33,27 +33,6 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
     {
         return await toDoRepository.GetAllAsync();
     }
-    
-    public async Task UpdateToDoAsync(ToDoUpdateDto data)
-    {
-        ArgumentNullException.ThrowIfNull(data);
-
-        if (!data.HasData())
-        {
-            throw new ArgumentException("data is empty", nameof(data));
-        }
-
-        var todo = await toDoRepository.GetByIdAsync(data.Id);
-        
-        if (todo == null)
-        {
-            throw new EntityNotFoundException(nameof(ToDo), data.Id);
-        }
-
-        todo.UpdateFromData(data);
-
-        await toDoRepository.SaveAsync(todo);
-    }
 
     public async Task RemoveToDoAsync(Guid id)
     {
