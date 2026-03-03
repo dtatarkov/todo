@@ -53,17 +53,16 @@ public class ToDoServiceTests
     public async Task GetToDoByIdAsync_ReturnsToDoGetDto_WhenExists()
     {
         // Arrange
-        var id = Guid.NewGuid();
-
+        var todoId = Guid.NewGuid();
         var todo = ToDoTestData.GetDefault();
         var expectedDto = todo.GetData();
 
         _toDoOwnerMock
-            .Setup(o => o.GetToDoByIdAsync(id))
+            .Setup(o => o.GetToDoByIdAsync(todoId))
             .ReturnsAsync(todo);
 
         // Act
-        var result = await _toDoService.GetToDoByIdAsync(id);
+        var result = await _toDoService.GetToDoByIdAsync(todoId);
 
         // Assert
         Assert.NotNull(result);
@@ -74,14 +73,14 @@ public class ToDoServiceTests
     public async Task GetToDoByIdAsync_ReturnsNull_WhenNotFound()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var todoId = Guid.NewGuid();
 
         _toDoOwnerMock
-            .Setup(o => o.GetToDoByIdAsync(id))
+            .Setup(o => o.GetToDoByIdAsync(todoId))
             .ReturnsAsync((IToDo?)null);
 
         // Act
-        var result = await _toDoService.GetToDoByIdAsync(id);
+        var result = await _toDoService.GetToDoByIdAsync(todoId);
 
         // Assert
         Assert.Null(result);
@@ -137,15 +136,15 @@ public class ToDoServiceTests
     public async Task UpdateToDoAsync_ThrowsEntityNotFoundException_WhenToDoDoesNotExist()
     {
         // Arrange
-        var nonExistentId = Guid.NewGuid();
+        var todoId = Guid.NewGuid();
         var updateDto = ToDoUpdateDtoTestData.GetDefault();
 
         _toDoOwnerMock
-            .Setup(o => o.GetToDoByIdAsync(nonExistentId))
+            .Setup(o => o.GetToDoByIdAsync(todoId))
             .ReturnsAsync((IToDo?)null);
 
         // Act & Assert
-        await Assert.ThrowsAsync<EntityNotFoundException>(() => _toDoService.UpdateToDoAsync(nonExistentId, updateDto));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => _toDoService.UpdateToDoAsync(todoId, updateDto));
     
         _toDoOwnerMock.Verify(o => o.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
@@ -154,30 +153,30 @@ public class ToDoServiceTests
     public async Task RemoveToDoAsync_ForwardsCall()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var todoId = Guid.NewGuid();
 
         _toDoOwnerMock
-            .Setup(o => o.RemoveToDoAsync(id))
+            .Setup(o => o.RemoveToDoAsync(todoId))
             .Returns(Task.CompletedTask);
 
         // Act & Assert
-        await _toDoService.RemoveToDoAsync(id);
-        _toDoOwnerMock.Verify(o => o.RemoveToDoAsync(id), Times.Once);
+        await _toDoService.RemoveToDoAsync(todoId);
+        _toDoOwnerMock.Verify(o => o.RemoveToDoAsync(todoId), Times.Once);
     }
 
     [Fact]
     public async Task CompleteToDoAsync_CompletesExistingToDo()
     {
         // Arrange
-        var id = Guid.NewGuid();
-        var todo = ToDoTestData.GetDefault(id);
+        var todoId = Guid.NewGuid();
+        var todo = ToDoTestData.GetDefault(todoId);
 
         _toDoOwnerMock
-            .Setup(o => o.GetToDoByIdAsync(id))
+            .Setup(o => o.GetToDoByIdAsync(todoId))
             .ReturnsAsync(todo);
 
         // Act
-        await _toDoService.CompleteToDoAsync(id);
+        await _toDoService.CompleteToDoAsync(todoId);
 
         // Assert
         Assert.True(todo.IsCompleted);

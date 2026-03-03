@@ -18,10 +18,10 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         return todoDto;
     }
 
-    public async Task<ToDoGetDto?> GetToDoByIdAsync(Guid id)
+    public async Task<ToDoGetDto?> GetToDoByIdAsync(Guid todoId)
     {
         var todoOwner = toDoOwnerFactory.Create();
-        var todo = await todoOwner.GetToDoByIdAsync(id);
+        var todo = await todoOwner.GetToDoByIdAsync(todoId);
         var todoDto = todo?.GetData();
 
         return todoDto;
@@ -48,10 +48,10 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         await todo!.UpdateFromDataAsync(data);
     }
 
-    public async Task RemoveToDoAsync(Guid id)
+    public async Task RemoveToDoAsync(Guid todoId)
     {
         var todoOwner = toDoOwnerFactory.Create();
-        await todoOwner.RemoveToDoAsync(id);
+        await todoOwner.RemoveToDoAsync(todoId);
     }
 
     public async Task CompleteToDoAsync(Guid todoId)

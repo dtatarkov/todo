@@ -18,7 +18,7 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     {
         var todo = await toDoService.AddToDoAsync(data);
             
-        return CreatedAtAction(nameof(GetById), new { id = todo.Id }, todo);
+        return CreatedAtAction(nameof(GetById), new { todoId = todo.Id }, todo);
     }
 
     /// <summary>

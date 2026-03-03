@@ -5,7 +5,7 @@ namespace Core.Repositories;
 public interface IToDoRepository
 {
     Task SaveAsync(IToDo todo);
-    Task<IToDo?> GetByIdAsync(Guid id);
+    Task<IToDo?> GetByIdAsync(Guid todoId);
     Task<IEnumerable<IToDo>> GetAllAsync();
-    Task RemoveAsync(Guid id);
+    Task RemoveAsync(Guid todoId);
 }

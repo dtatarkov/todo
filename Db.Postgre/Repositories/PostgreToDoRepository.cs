@@ -24,14 +24,14 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
         }
     }
 
-    public async Task<IToDo?> GetByIdAsync(Guid id)
+    public async Task<IToDo?> GetByIdAsync(Guid todoId)
     {
-        if (id == Guid.Empty)
+        if (todoId == Guid.Empty)
         {
             return null;
         }
 
-        var entity = await dbContext.ToDos.FindAsync(id);
+        var entity = await dbContext.ToDos.FindAsync(todoId);
         
         IToDo? todo = null;
 
@@ -51,27 +51,27 @@ public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper ent
         return todos;
     }
 
-    public async Task RemoveAsync(Guid id)
+    public async Task RemoveAsync(Guid todoId)
     {
-        if (id == Guid.Empty)
+        if (todoId == Guid.Empty)
         {
-            throw new EntityNotFoundException(nameof(ToDo), id);
+            throw new EntityNotFoundException(nameof(ToDo), todoId);
         }
 
-        var entityExists = await dbContext.ToDos.AnyAsync(todo => todo.Id == id);
+        var entityExists = await dbContext.ToDos.AnyAsync(todo => todo.Id == todoId);
 
         if (!entityExists)
         {
-            throw new EntityNotFoundException(nameof(ToDo), id);
+            throw new EntityNotFoundException(nameof(ToDo), todoId);
         }
 
-        var entity = dbContext.ToDos.Local.FirstOrDefault(todo => todo.Id == id);
+        var entity = dbContext.ToDos.Local.FirstOrDefault(todo => todo.Id == todoId);
 
         if (entity == null)
         {
             entity = new PostgreToDoEntity()
             {
-                Id = id
+                Id = todoId
             };
             
             dbContext.ToDos.Attach(entity);

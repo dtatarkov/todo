@@ -23,9 +23,9 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
         return todo;
     }
 
-    public async Task<IToDo?> GetToDoByIdAsync(Guid id)
+    public async Task<IToDo?> GetToDoByIdAsync(Guid todoId)
     {
-        var todo = await toDoRepository.GetByIdAsync(id);
+        var todo = await toDoRepository.GetByIdAsync(todoId);
 
         if (todo is not null)
         {
@@ -49,8 +49,8 @@ public class ToDoOwner(IToDoRepository toDoRepository) : IToDoOwner
         return todosWithOwner;
     }
 
-    public async Task RemoveToDoAsync(Guid id)
+    public async Task RemoveToDoAsync(Guid todoId)
     {
-        await toDoRepository.RemoveAsync(id);
+        await toDoRepository.RemoveAsync(todoId);
     }
 }

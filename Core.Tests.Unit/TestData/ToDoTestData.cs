@@ -4,11 +4,11 @@ namespace Core.Tests.Unit.TestData;
 
 public static class ToDoTestData
 {
-    public static IToDo GetDefault(Guid? id = null, IToDoOwner? owner = null)
+    public static IToDo GetDefault(Guid? todoId = null, IToDoOwner? owner = null)
     {
         return new ToDo(owner)
         {
-            Id = id ?? Guid.NewGuid(),
+            Id = todoId ?? Guid.NewGuid(),
             Title = "Default Title",
             Description = "Default Description",
             CompletionDateActual = DateTime.Now.AddDays(1),

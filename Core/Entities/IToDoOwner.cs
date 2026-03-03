@@ -6,7 +6,7 @@ public interface IToDoOwner
 {
     Task SaveAsync(IToDo todo);
     Task<IToDo> AddToDoAsync(ToDoAddDto data);
-    Task<IToDo?> GetToDoByIdAsync(Guid id);
+    Task<IToDo?> GetToDoByIdAsync(Guid todoId);
     Task<IEnumerable<IToDo>> GetAllToDosAsync();
-    Task RemoveToDoAsync(Guid id);
+    Task RemoveToDoAsync(Guid todoId);
 }
