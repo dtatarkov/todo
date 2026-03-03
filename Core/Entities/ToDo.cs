@@ -45,27 +45,6 @@ public class ToDo : IToDo
         };
     }
     
-    [Obsolete]
-    public void UpdateFromData(ToDoUpdateDto data)
-    {
-        ArgumentNullException.ThrowIfNull(data);
-
-        if (data.Title != null)
-        {
-            Title = data.Title;
-        }
-
-        if (data.Description != null)
-        {
-            Description = data.Description;
-        }
-
-        if (data.CompletionDatePlanned != null)
-        {
-            CompletionDatePlanned = data.CompletionDatePlanned;
-        }
-    }
-    
     public async Task UpdateFromDataAsync(ToDoUpdateDto data)
     {
         ArgumentNullException.ThrowIfNull(data);

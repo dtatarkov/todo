@@ -114,39 +114,6 @@ public class ToDoTests
 
     [Theory]
     [MemberData(nameof(GetUpdateFieldsTestData))]
-    public void UpdateFromData_UpdatesNonNullFields(ToDoUpdateDto updateDto)
-    {
-        // Arrange
-        var todo = new ToDo
-        {
-            Title = "Old Title",
-            Description = "Old Desc",
-            CompletionDatePlanned = DateTimeOffset.Now.AddDays(-1)
-        };
-
-        var todoClone = todo.Clone();
-
-        // Act
-        todo.UpdateFromData(updateDto);
-
-        // Assert
-        Assert.Equal(todo.Title, updateDto.Title ?? todoClone.Title);
-        Assert.Equal(todo.Description, updateDto.Description ?? todoClone.Description);
-        Assert.Equal(todo.CompletionDatePlanned, updateDto.CompletionDatePlanned ?? todoClone.CompletionDatePlanned);
-    }
-
-    [Fact]
-    public void UpdateFromData_ThrowsArgumentNullException_WhenDtoIsNull()
-    {
-        // Arrange
-        var todo = new ToDo();
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => todo.UpdateFromData(null!));
-    }
-    
-    [Theory]
-    [MemberData(nameof(GetUpdateFieldsTestData))]
     public async Task UpdateFromDataAsync_UpdatesOnlyProvidedFields(ToDoUpdateDto updateDto)
     {
         var ownerMock = new Mock<IToDoOwner>();
