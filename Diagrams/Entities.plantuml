@@ -31,6 +31,11 @@ interface IToDoRepository {
     +RemoveAsync(Guid) : Task
 }
 
+interface IToDoEntityMapper {
+    +ToDomainModel(PostgreToDoEntity) : IToDo
+    +ToEntity(IToDo) : PostgreToDoEntity
+}
+
 interface IToDoState {
     +Type : ToDoStateType
     +CompleteAsync(IToDo) : Task
@@ -44,6 +49,11 @@ class ToDoOwner {
 class PostgreToDoRepository {
     -dbContext : AppDbContext
     -entityMapper : IToDoEntityMapper
+}
+
+class ToDoEntityMapper {
+    +ToDomainModel(PostgreToDoEntity) : IToDo
+    +ToEntity(IToDo) : PostgreToDoEntity
 }
 
 class ToDo {
@@ -78,30 +88,44 @@ class ToDoStateCompleted {
     +CompleteAsync(IToDo) : Task
 }
 
+class PostgreToDoEntity {
+    +Id : Guid
+    +Title : string
+    +Description : string
+    +CompletionDatePlanned : DateTimeOffset?
+    +CompletionDateActual : DateTimeOffset?
+    +StateType : ToDoStateType
+}
+
 ' Отношения реализации
 ToDoOwner ..|> IToDoOwner
 PostgreToDoRepository ..|> IToDoRepository
+ToDoEntityMapper ..|> IToDoEntityMapper
 ToDo ..|> IToDo
 ToDoStateInitial ..|> IToDoState
 ToDoStateCompleted ..|> IToDoState
 
-' Абстрактная фабрика состояний
-ToDoState <.. IToDoState : возвращает через GetState()
-
 ' Агрегация и зависимости
 ToDoOwner "1" *-- "1" IToDoRepository : использует
+
+PostgreToDoRepository "1" *-- "1" IToDoEntityMapper : использует маппер
+PostgreToDoRepository "1" *-- "1" AppDbContext : использует контекст
+
 ToDo "1" --> "0..1" IToDoOwner : имеет ссылку на Owner
 ToDo "1" --> "1" IToDoState : делегирует поведение
+
 IToDoState ..> ToDo : принимает в CompleteAsync
 
+ToDoEntityMapper ..> ToDo : создаёт из сущности
+ToDoEntityMapper ..> PostgreToDoEntity : создаёт из домена
+
+PostgreToDoRepository ..> PostgreToDoEntity : работает с EF Core сущностью
+PostgreToDoRepository ..> ToDoEntityMapper : преобразует данные
+
 ' Состояния
+ToDoState <.. IToDoState : возвращает через GetState()
 ToDoState --> ToDoStateInitial : Initial
 ToDoState --> ToDoStateCompleted : Completed
-
-' Использование репозитория
-ToDoOwner ..> PostgreToDoRepository : через DI
-ToDoOwner ..> ToDo : создаёт и возвращает
-PostgreToDoRepository ..> ToDo : маппит через IToDoEntityMapper
 
 ' Пояснения
 note right of ToDo::CompleteAsync
@@ -119,6 +143,20 @@ note right of ToDoState::GetState
     Фабричный метод:
     возвращает нужный экземпляр
     состояния по типу.
+end note
+
+note right of PostgreToDoRepository::SaveAsync
+    При сохранении:
+    - Если Id пуст — вызывает AddAsync
+    - Иначе — UpdateAsync
+    Перед сохранением использует маппер
+end note
+
+note right of ToDoEntityMapper
+    Преобразует между:
+    - PostgreToDoEntity (EF Core модель)
+    - IToDo (доменная модель)
+    Обеспечивает чистоту слоя данных
 end note
 
 @enduml
