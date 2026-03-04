@@ -3,21 +3,30 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Core.DTO;
+using Db.Postgre.Context;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace WebAPI.Tests.Integration;
 
-public class ToDoControllerIntegrationTests : IDisposable
+public class ToDoControllerIntegrationTests : IAsyncDisposable
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
     public ToDoControllerIntegrationTests()
     {
-        _factory = new WebApplicationFactory<Program>();
+        _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("ASPNETCORE_ENVIRONMENT", "Testing");
+        });
+        
         _client = _factory.CreateClient();
+        
+        ApplyMigrations();
     }
 
     [Fact]
@@ -138,9 +147,22 @@ public class ToDoControllerIntegrationTests : IDisposable
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
+        using var scope = _factory.Services.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await context.ToDos.ExecuteDeleteAsync();
+        
         _client.Dispose();
-        _factory.Dispose();
+        await _factory.DisposeAsync();
+    }
+    
+    private void ApplyMigrations()
+    {
+        using var scope = _factory.Services.CreateScope();
+        
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        context.Database.Migrate();
     }
 }
