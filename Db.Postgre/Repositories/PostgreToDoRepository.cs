@@ -93,17 +93,18 @@ public class PostgreToDoRepository(AppDbContext dbContext, IPostgreToDoEntityMap
 
     private async Task UpdateAsync(IToDo todo)
     {
-        var entity = await dbContext.ToDos.FindAsync(todo.Id);
+        var dbEntity = await dbContext.ToDos.FindAsync(todo.Id);
+        var todoEntity = entityMapper.ToEntity(todo);
         
-        EntityNotFoundException.ThrowIfNull(entity, nameof(ToDo), todo.Id);
+        EntityNotFoundException.ThrowIfNull(dbEntity, nameof(ToDo), todo.Id);
 
-        entity.Title = todo.Title;
-        entity.Description = todo.Description;
-        entity.CompletionDatePlanned = todo.CompletionDatePlanned;
-        entity.CompletionDateActual = todo.CompletionDateActual;
-        entity.StateType = todo.State.Type;
+        dbEntity.Title = todoEntity.Title;
+        dbEntity.Description = todoEntity.Description;
+        dbEntity.CompletionDatePlanned = todoEntity.CompletionDatePlanned;
+        dbEntity.CompletionDateActual = todoEntity.CompletionDateActual;
+        dbEntity.StateType = todoEntity.StateType;
 
-        dbContext.ToDos.Update(entity);
+        dbContext.ToDos.Update(dbEntity);
         await dbContext.SaveChangesAsync();
     }
 }

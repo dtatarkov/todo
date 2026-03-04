@@ -29,8 +29,8 @@ public class PostgreToDoEntityMapper : IPostgreToDoEntityMapper
             Id = todo.Id,
             Title = todo.Title,
             Description = todo.Description,
-            CompletionDatePlanned = todo.CompletionDatePlanned,
-            CompletionDateActual = todo.CompletionDateActual,
+            CompletionDatePlanned = todo.CompletionDatePlanned?.ToUniversalTime(),
+            CompletionDateActual = todo.CompletionDateActual?.ToUniversalTime(),
             StateType = todo.State.Type
         };
     }
