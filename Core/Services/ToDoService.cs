@@ -59,7 +59,7 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         await todoOwner.RemoveToDoAsync(todoId);
     }
 
-    public async Task CompleteToDoAsync(Guid todoId)
+    public async Task<ToDoGetDto> CompleteToDoAsync(Guid todoId)
     {
         var todoOwner = toDoOwnerFactory.Create();
         var todo = await todoOwner.GetToDoByIdAsync(todoId);
@@ -67,5 +67,7 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         EntityNotFoundException.ThrowIfNull(todo, nameof(ToDo), todoId);
 
         await todo.CompleteAsync();
+
+        return todo.GetData();
     }
 }

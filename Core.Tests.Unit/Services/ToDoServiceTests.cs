@@ -1,4 +1,5 @@
 using Core.Entities;
+using Core.Enums;
 using Core.Exceptions;
 using Core.Factories;
 using Core.Services;
@@ -184,7 +185,7 @@ public class ToDoServiceTests
         // Arrange
         var todoId = Guid.NewGuid();
         var todo = ToDoTestData.GetDefault(todoId);
-        
+    
         todo.Owner = _toDoOwnerMock.Object;
 
         _toDoOwnerMock
@@ -192,11 +193,14 @@ public class ToDoServiceTests
             .ReturnsAsync(todo);
 
         // Act
-        await _toDoService.CompleteToDoAsync(todoId);
+        var result = await _toDoService.CompleteToDoAsync(todoId);
 
         // Assert
+        Assert.NotNull(result);
         Assert.True(todo.IsCompleted);
-
+        Assert.Equal(ToDoStateType.Completed, todo.State.Type);
+    
         _toDoOwnerMock.Verify(o => o.SaveAsync(It.Is<IToDo>(t => t.Id == todoId)), Times.Once);
     }
+
 }
