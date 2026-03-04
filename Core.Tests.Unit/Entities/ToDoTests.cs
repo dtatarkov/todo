@@ -60,7 +60,9 @@ public class ToDoTests
     {
         // Arrange
         var ownerMock = new Mock<IToDoOwner>();
-        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+        
+        var todo = ToDoTestData.GetDefault();
+        todo.Owner = ownerMock.Object;
     
         // Act
         await todo.SaveAsync();
@@ -118,7 +120,10 @@ public class ToDoTests
     public async Task UpdateFromDataAsync_UpdatesOnlyProvidedFields(ToDoUpdateDto updateDto)
     {
         var ownerMock = new Mock<IToDoOwner>();
-        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+        
+        var todo = ToDoTestData.GetDefault();
+        todo.Owner = ownerMock.Object;
+        
         var todoClone = todo.Clone();
 
         // Act
@@ -140,7 +145,9 @@ public class ToDoTests
     {
         // Arrange
         var ownerMock = new Mock<IToDoOwner>();
-        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+        
+        var todo = ToDoTestData.GetDefault();
+        todo.Owner = ownerMock.Object;
 
         var updateData = ToDoUpdateDtoTestData.GetEmpty();
 
@@ -154,7 +161,9 @@ public class ToDoTests
     {
         // Arrange
         var ownerMock = new Mock<IToDoOwner>();
-        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+        
+        var todo = ToDoTestData.GetDefault();
+        todo.Owner = ownerMock.Object;
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => todo.UpdateFromDataAsync(null!));

@@ -10,9 +10,9 @@ public static class ToDoTestData
         return new ToDo();
     }
     
-    public static IToDo GetDefault(Guid? todoId = null, IToDoOwner? owner = null)
+    public static IToDo GetDefault(Guid? todoId = null)
     {
-        return new ToDo(owner)
+        return new ToDo
         {
             Id = todoId ?? Guid.NewGuid(),
             Title = "Default Title",
@@ -21,14 +21,9 @@ public static class ToDoTestData
         };
     }
     
-    public static IToDo GetDefault(IToDoOwner owner)
+    public static IToDo GetCompleted(Guid? todoId = null)
     {
-        return GetDefault(null, owner);
-    }
-    
-    public static IToDo GetCompleted(Guid? todoId = null, IToDoOwner? owner = null)
-    {
-        return new ToDo(owner)
+        return new ToDo
         {
             Id = todoId ?? Guid.NewGuid(),
             Title = "Completed Title",

@@ -124,7 +124,9 @@ public class ToDoServiceTests
         // Arrange
         var todoId = Guid.NewGuid();
         var updateDto = ToDoUpdateDtoTestData.GetDefault();
-        var todo = ToDoTestData.GetDefault(todoId, _toDoOwnerMock.Object);
+        
+        var todo = ToDoTestData.GetDefault(todoId);
+        todo.Owner = _toDoOwnerMock.Object;
 
         _toDoOwnerMock
             .Setup(o => o.GetToDoByIdAsync(todoId))

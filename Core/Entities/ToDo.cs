@@ -20,7 +20,7 @@ public class ToDo : IToDo
     }
 
     // Конструктор с указанием владельца
-    public ToDo(IToDoOwner? owner) : this()
+    private ToDo(IToDoOwner? owner) : this()
     {
         Owner = owner;
     }
