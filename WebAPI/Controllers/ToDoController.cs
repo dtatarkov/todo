@@ -27,7 +27,7 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     [HttpGet("{todoId:guid}")]
     [ProducesResponseType(typeof(ToDoGetDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ToDoGetDto?>> GetById(Guid todoId)
+    public async Task<ActionResult<ToDoGetDto?>> GetById([FromRoute] Guid todoId)
     {
         var todo = await toDoService.GetToDoByIdAsync(todoId);
 
@@ -57,7 +57,7 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateToDo(Guid todoId, [FromBody] ToDoUpdateDto data)
+    public async Task<IActionResult> UpdateToDo([FromRoute] Guid todoId, [FromBody] ToDoUpdateDto data)
     {
         await toDoService.UpdateToDoAsync(todoId, data);
         return NoContent();
@@ -69,7 +69,7 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     [HttpDelete("{todoId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteToDo(Guid todoId)
+    public async Task<IActionResult> DeleteToDo([FromRoute] Guid todoId)
     {
         await toDoService.RemoveToDoAsync(todoId);
         return NoContent();
@@ -81,7 +81,7 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     [HttpPost("{todoId:guid}/complete")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CompleteToDo(Guid todoId)
+    public async Task<IActionResult> CompleteToDo([FromRoute] Guid todoId)
     {
         await toDoService.CompleteToDoAsync(todoId);
         return NoContent();
