@@ -50,6 +50,30 @@ public class ToDoTests
         // Assert
         Assert.False(todo.IsCompleted);
     }
+    
+    [Fact]
+    public async Task SaveAsync_ThrowsArgumentNullException_WhenOwnerIsNull()
+    {
+        // Arrange
+        var todo = new ToDo();
+    
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() => todo.SaveAsync());
+    }
+
+    [Fact]
+    public async Task SaveAsync_CallsOwnerSaveAsync_WhenOwnerExists()
+    {
+        // Arrange
+        var ownerMock = new Mock<IToDoOwner>();
+        var todo = ToDoTestData.GetDefault(ownerMock.Object);
+    
+        // Act
+        await todo.SaveAsync();
+    
+        // Assert
+        ownerMock.Verify(o => o.SaveAsync(todo), Times.Once);
+    }
 
     [Fact]
     public void Clone_ReturnsNewInstance_WithSamePropertyValues()

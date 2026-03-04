@@ -41,16 +41,16 @@ public class ToDoServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.True(expectedDto.Equals(result));
-        
+
         _toDoOwnerMock.Verify(o => o.SaveAsync(It.Is<IToDo>(t => t.Id == todo.Id)), Times.Once);
     }
-    
+
     [Fact]
     public async Task AddToDoAsync_ThrowsArgumentNullException_WhenDataIsNull()
     {
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => _toDoService.AddToDoAsync(null!));
-    
+
         // Убедимся, что SaveAsync не был вызван
         _toDoOwnerMock.Verify(o => o.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
@@ -111,7 +111,7 @@ public class ToDoServiceTests
         // Act
         var result = await _toDoService.GetAllToDosAsync();
         var resultList = result.ToList();
-        
+
         // Assert
         Assert.Equal(2, resultList.Count);
         Assert.Contains(expectedDtos, todo => todo.Id == todos[0].Id);
@@ -137,7 +137,7 @@ public class ToDoServiceTests
         _toDoOwnerMock.Verify(o => o.GetToDoByIdAsync(todoId), Times.Once);
         _toDoOwnerMock.Verify(o => o.SaveAsync(todo), Times.Once);
     }
-    
+
     [Fact]
     public async Task UpdateToDoAsync_ThrowsEntityNotFoundException_WhenToDoDoesNotExist()
     {
@@ -151,7 +151,7 @@ public class ToDoServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(() => _toDoService.UpdateToDoAsync(todoId, updateDto));
-    
+
         _toDoOwnerMock.Verify(o => o.SaveAsync(It.IsAny<IToDo>()), Times.Never);
     }
 
@@ -176,6 +176,8 @@ public class ToDoServiceTests
         // Arrange
         var todoId = Guid.NewGuid();
         var todo = ToDoTestData.GetDefault(todoId);
+        
+        todo.Owner = _toDoOwnerMock.Object;
 
         _toDoOwnerMock
             .Setup(o => o.GetToDoByIdAsync(todoId))
@@ -186,5 +188,7 @@ public class ToDoServiceTests
 
         // Assert
         Assert.True(todo.IsCompleted);
+
+        _toDoOwnerMock.Verify(o => o.SaveAsync(It.Is<IToDo>(t => t.Id == todoId)), Times.Once);
     }
 }

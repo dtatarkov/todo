@@ -24,6 +24,12 @@ public class ToDo : IToDo
     {
         Owner = owner;
     }
+    
+    public async Task SaveAsync()
+    {
+        ArgumentNullException.ThrowIfNull(Owner);
+        await Owner.SaveAsync(this);
+    }
 
     public async Task CompleteAsync()
     {
@@ -46,7 +52,6 @@ public class ToDo : IToDo
     public async Task UpdateFromDataAsync(ToDoUpdateDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
-        ArgumentNullException.ThrowIfNull(Owner);
         data.ThrowIfEmpty();
 
         if (data.Title is not null)
@@ -64,7 +69,7 @@ public class ToDo : IToDo
             CompletionDatePlanned = data.CompletionDatePlanned;
         }
 
-        await Owner.SaveAsync(this);
+        await SaveAsync();
     }
 
     public ToDoGetDto GetData()

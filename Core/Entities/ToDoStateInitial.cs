@@ -15,11 +15,11 @@ public class ToDoStateInitial : IToDoState
     public static ToDoStateInitial Instance => instance;
 
 
-    public Task CompleteAsync(IToDo todo)
+    public async Task CompleteAsync(IToDo todo)
     {
         todo.CompletionDateActual = DateTimeOffset.Now;
         todo.State = ToDoState.GetState(ToDoStateType.Completed);
         
-        return Task.CompletedTask;
+        await todo.SaveAsync();
     }
 }
