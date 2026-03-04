@@ -83,7 +83,7 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CompleteToDo([FromRoute] Guid todoId)
     {
-        await toDoService.CompleteToDoAsync(todoId);
-        return NoContent();
+        var todo = await toDoService.CompleteToDoAsync(todoId);
+        return Ok(todo);
     }
 }

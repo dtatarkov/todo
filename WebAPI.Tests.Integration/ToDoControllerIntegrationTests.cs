@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Core.DTO;
+using Core.Enums;
 using Db.Postgre.Context;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -137,9 +138,12 @@ public class ToDoControllerIntegrationTests : IAsyncLifetime
 
         // Act
         var response = await _client.PostAsync($"/api/todos/{createdTodo!.Id}/complete", null);
+        var completedTodo = await response.Content.ReadFromJsonAsync<ToDoGetDto>();
 
         // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(completedTodo);
+        Assert.Equal(ToDoStateType.Completed, completedTodo.State);
     }
 
     public async Task InitializeAsync()
