@@ -195,39 +195,25 @@ public class ToDoTests
         // Сценарий: обновляется только Title
         yield return
         [
-            new ToDoUpdateDto
-            {
-                Title = "Updated Title",
-            },
+            ToDoUpdateDtoTestData.GetWithTitleOnly()
         ];
 
         // Сценарий: обновляется только Description
         yield return
         [
-            new ToDoUpdateDto
-            {
-                Description = "Updated Description",
-            }
+            ToDoUpdateDtoTestData.GetWithDescriptionOnly()
         ];
 
         // Сценарий: обновляется только CompletionDatePlanned
         yield return
         [
-            new ToDoUpdateDto
-            {
-                CompletionDatePlanned = now.AddDays(10)
-            }
+            ToDoUpdateDtoTestData.GetWithCompletionDatePlannedOnly()
         ];
 
         // Сценарий: обновляются все поля
         yield return
         [
-            new ToDoUpdateDto
-            {
-                Title = "Updated Title",
-                Description = "Updated Description",
-                CompletionDatePlanned = now.AddDays(10)
-            }
+            ToDoUpdateDtoTestData.GetDefault(),
         ];
     }
 }

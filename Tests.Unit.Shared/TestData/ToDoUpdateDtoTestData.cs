@@ -18,4 +18,28 @@ public static class ToDoUpdateDtoTestData
     {
         return new ToDoUpdateDto();
     }
+    
+    public static ToDoUpdateDto GetWithTitleOnly()
+    {
+        return new ToDoUpdateDto
+        {
+            Title = "Updated Title",
+        };
+    }
+    
+    public static ToDoUpdateDto GetWithDescriptionOnly()
+    {
+        return new ToDoUpdateDto
+        {
+            Description = "Updated Description",
+        };
+    }
+    
+    public static ToDoUpdateDto GetWithCompletionDatePlannedOnly()
+    {
+        return new ToDoUpdateDto
+        {
+            CompletionDatePlanned = DateTimeOffset.Now.AddDays(10),
+        };
+    }
 }
