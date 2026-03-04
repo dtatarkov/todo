@@ -22,4 +22,7 @@
       <ProjectReference Include="..\Db.Postgre\Db.Postgre.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="WebAPI.Tests.Integration" />
+    </ItemGroup>
 </Project>

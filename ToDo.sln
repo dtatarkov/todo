@@ -22,6 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db.Postgre.Tests.Unit", "Db
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Unit.Shared", "Tests.Unit.Shared\Tests.Unit.Shared.csproj", "{84CF6B2C-CF41-449E-A9E1-C420863B615C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI.Tests.Integration", "WebAPI.Tests.Integration\WebAPI.Tests.Integration.csproj", "{9685EA0C-1243-4139-A0BB-F5CFA0E2AE84}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6852F74C-AB80-4735-9BB9-ADE405A0AD7B} = {6852F74C-AB80-4735-9BB9-ADE405A0AD7B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,5 +57,9 @@ Global
 		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9685EA0C-1243-4139-A0BB-F5CFA0E2AE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9685EA0C-1243-4139-A0BB-F5CFA0E2AE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9685EA0C-1243-4139-A0BB-F5CFA0E2AE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9685EA0C-1243-4139-A0BB-F5CFA0E2AE84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
