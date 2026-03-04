@@ -54,13 +54,13 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     /// Обновляет существующую задачу.
     /// </summary>
     [HttpPut("{todoId:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(IEnumerable<ToDoGetDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateToDo([FromRoute] Guid todoId, [FromBody] ToDoUpdateDto data)
     {
-        await toDoService.UpdateToDoAsync(todoId, data);
-        return NoContent();
+        var todo = await toDoService.UpdateToDoAsync(todoId, data);
+        return Ok(todo);
     }
 
     /// <summary>

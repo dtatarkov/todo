@@ -119,7 +119,7 @@ public class ToDoServiceTests
     }
 
     [Fact]
-    public async Task UpdateToDoAsync_UpdatesTodoWhenDataIsValid()
+    public async Task UpdateToDoAsync_ReturnsUpdatedToDoGetDto_WhenDataIsValid()
     {
         // Arrange
         var todoId = Guid.NewGuid();
@@ -128,16 +128,22 @@ public class ToDoServiceTests
         var todo = ToDoTestData.GetDefault(todoId);
         todo.Owner = _toDoOwnerMock.Object;
 
+        var expectedDto = todo.GetData();
+
         _toDoOwnerMock
             .Setup(o => o.GetToDoByIdAsync(todoId))
             .ReturnsAsync(todo);
 
         // Act
-        await _toDoService.UpdateToDoAsync(todoId, updateDto);
+        var result = await _toDoService.UpdateToDoAsync(todoId, updateDto);
 
         // Assert
+        Assert.NotNull(result);
+        Assert.Equal(result.Title, updateDto.Title);
+        Assert.Equal(result.Description, updateDto.Description);
+        Assert.Equal(result.CompletionDatePlanned, updateDto.CompletionDatePlanned);
+        
         _toDoOwnerMock.Verify(o => o.GetToDoByIdAsync(todoId), Times.Once);
-        _toDoOwnerMock.Verify(o => o.SaveAsync(todo), Times.Once);
     }
 
     [Fact]

@@ -7,7 +7,7 @@ public interface IToDoService
     Task<ToDoGetDto?> GetToDoByIdAsync(Guid todoId);
     Task<IEnumerable<ToDoGetDto>> GetAllToDosAsync();
     Task<ToDoGetDto> AddToDoAsync(ToDoAddDto data);
-    Task UpdateToDoAsync(Guid todoId, ToDoUpdateDto data);
+    Task<ToDoGetDto> UpdateToDoAsync(Guid todoId, ToDoUpdateDto data);
     Task RemoveToDoAsync(Guid todoId);
     Task CompleteToDoAsync(Guid todoId);
 }

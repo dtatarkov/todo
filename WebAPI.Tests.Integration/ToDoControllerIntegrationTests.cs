@@ -92,9 +92,12 @@ public class ToDoControllerIntegrationTests : IAsyncLifetime
         };
 
         var response = await _client.PutAsJsonAsync($"/api/todos/{createdTodo!.Id}", updateData);
+        var updatedTodo = await response.Content.ReadFromJsonAsync<ToDoGetDto>();
 
         // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(updatedTodo);
+        Assert.Equal(updatedTodo.Title, updateData.Title);
     }
 
     [Fact]

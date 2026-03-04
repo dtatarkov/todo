@@ -39,7 +39,7 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         return todoDtos;
     }
 
-    public async Task UpdateToDoAsync(Guid todoId, ToDoUpdateDto data)
+    public async Task<ToDoGetDto> UpdateToDoAsync(Guid todoId, ToDoUpdateDto data)
     {
         ArgumentNullException.ThrowIfNull(data);
 
@@ -49,6 +49,8 @@ public class ToDoService(IToDoOwnerFactory toDoOwnerFactory) : IToDoService
         EntityNotFoundException.ThrowIfNull(todo, nameof(ToDo), todoId);
 
         await todo.UpdateFromDataAsync(data);
+
+        return todo.GetData();
     }
 
     public async Task RemoveToDoAsync(Guid todoId)
