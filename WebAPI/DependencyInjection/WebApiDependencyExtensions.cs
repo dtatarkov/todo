@@ -11,11 +11,16 @@ namespace WebAPI.DependencyInjection;
 
 public static class WebApiDependencyExtensions
 {
-    public static void RegisterDbServices(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterDbServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
+        ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
+        ArgumentNullException.ThrowIfNull(environment, nameof(environment));
+        
+        var environmentName = environment.EnvironmentName;
+        
         // Добавляем контекст PostgreSQL
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Main"),
+            options.UseNpgsql(configuration.GetConnectionString($"Postgre:{environmentName}"),
                 npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()));
         
         // Регистрируем репозиторий
