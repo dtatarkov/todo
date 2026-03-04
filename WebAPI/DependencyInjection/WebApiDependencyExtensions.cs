@@ -1,3 +1,4 @@
+using Core.Factories;
 using Core.Repositories;
 using Core.Services;
 using Db.Postgre.Context;
@@ -26,6 +27,7 @@ public static class WebApiDependencyExtensions
     {
         // Регистрируем репозиторий
         services.AddScoped<IToDoService, ToDoService>();
+        services.AddScoped<IToDoOwnerFactory, ToDoOwnerFactory>();
     }
     
     public static void RegisterApplicationControllers(this IServiceCollection services)
