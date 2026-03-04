@@ -1,10 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using Core.DTO;
 using Db.Postgre.Context;
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +9,7 @@ using Xunit;
 
 namespace WebAPI.Tests.Integration;
 
-public class ToDoControllerIntegrationTests : IAsyncDisposable
+public class ToDoControllerIntegrationTests : IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
@@ -25,8 +22,6 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
         });
         
         _client = _factory.CreateClient();
-        
-        ApplyMigrations();
     }
 
     [Fact]
@@ -36,9 +31,10 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
         var response = await _client.GetAsync("/api/todos");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var content = await response.Content.ReadAsStringAsync();
-        content.Should().NotBeNullOrEmpty();
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var content = await response.Content.ReadFromJsonAsync<ToDoGetDto[]>();
+        Assert.NotNull(content);
+        Assert.Empty(content);
     }
 
     [Fact]
@@ -48,7 +44,7 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
         var response = await _client.GetAsync($"/api/todos/{Guid.Empty}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -58,19 +54,21 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
         var todoToAdd = new ToDoAddDto
         {
             Title = "Test Todo",
-            Description = "Test Description"
+            Description = "Test Description",
+            CompletionDatePlanned = DateTime.Now.AddDays(1)
         };
 
-        var json = JsonSerializer.Serialize(todoToAdd);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
         // Act
-        var response = await _client.PostAsync("/api/todos", content);
+        var response = await _client.PostAsJsonAsync("/api/todos", todoToAdd);
+        var newToDo = await response.Content.ReadFromJsonAsync<ToDoGetDto>();
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var responseContent = await response.Content.ReadAsStringAsync();
-        responseContent.Should().NotBeNullOrEmpty();
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(newToDo);
+        Assert.NotEqual(newToDo.Id, Guid.Empty);
+        Assert.Equal(todoToAdd.Title, newToDo.Title);
+        Assert.Equal(todoToAdd.Description, newToDo.Description);
+        Assert.Equal(todoToAdd.CompletionDatePlanned, newToDo.CompletionDatePlanned);
     }
 
     [Fact]
@@ -83,9 +81,8 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
             Description = "Test Description"
         };
 
-        var json = JsonSerializer.Serialize(todoToAdd);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var createResponse = await _client.PostAsync("/api/todos", content);
+        // Create todo first
+        var createResponse = await _client.PostAsJsonAsync("/api/todos", todoToAdd);
         var createdTodo = await createResponse.Content.ReadFromJsonAsync<ToDoGetDto>();
 
         // Act
@@ -94,13 +91,10 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
             Title = "Updated Title"
         };
 
-        var updateJson = JsonSerializer.Serialize(updateData);
-        var updateContent = new StringContent(updateJson, Encoding.UTF8, "application/json");
-
-        var response = await _client.PutAsync($"/api/todos/{createdTodo!.Id}", updateContent);
+        var response = await _client.PutAsJsonAsync($"/api/todos/{createdTodo!.Id}", updateData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
 
     [Fact]
@@ -113,16 +107,15 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
             Description = "Test Description"
         };
 
-        var json = JsonSerializer.Serialize(todoToAdd);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var createResponse = await _client.PostAsync("/api/todos", content);
+        // Create todo first
+        var createResponse = await _client.PostAsJsonAsync("/api/todos", todoToAdd);
         var createdTodo = await createResponse.Content.ReadFromJsonAsync<ToDoGetDto>();
 
         // Act
         var response = await _client.DeleteAsync($"/api/todos/{createdTodo!.Id}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
 
     [Fact]
@@ -135,19 +128,23 @@ public class ToDoControllerIntegrationTests : IAsyncDisposable
             Description = "Test Description"
         };
 
-        var json = JsonSerializer.Serialize(todoToAdd);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var createResponse = await _client.PostAsync("/api/todos", content);
+        // Create todo first
+        var createResponse = await _client.PostAsJsonAsync("/api/todos", todoToAdd);
         var createdTodo = await createResponse.Content.ReadFromJsonAsync<ToDoGetDto>();
 
         // Act
         var response = await _client.PostAsync($"/api/todos/{createdTodo!.Id}/complete", null);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
 
-    public async ValueTask DisposeAsync()
+    public async Task InitializeAsync()
+    {
+        ApplyMigrations();
+    }
+
+    public async Task DisposeAsync()
     {
         using var scope = _factory.Services.CreateScope();
 
