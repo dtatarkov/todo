@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db.Postgre.Tests.Unit", "Db
 		{BF3FB92A-B606-4F7B-82FE-DE64789DD494} = {BF3FB92A-B606-4F7B-82FE-DE64789DD494}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Unit.Shared", "Tests.Unit.Shared\Tests.Unit.Shared.csproj", "{84CF6B2C-CF41-449E-A9E1-C420863B615C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,5 +48,9 @@ Global
 		{509127A7-A2B1-4695-B2B9-827CFE2C55EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{509127A7-A2B1-4695-B2B9-827CFE2C55EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{509127A7-A2B1-4695-B2B9-827CFE2C55EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84CF6B2C-CF41-449E-A9E1-C420863B615C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

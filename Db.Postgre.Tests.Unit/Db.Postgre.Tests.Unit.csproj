@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Db.Postgre\Db.Postgre.csproj" />
+      <ProjectReference Include="..\Tests.Unit.Shared\Tests.Unit.Shared.csproj" />
     </ItemGroup>
 
 </Project>

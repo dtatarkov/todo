@@ -1,5 +1,4 @@
 using Core.Entities;
-using Core.Enums;
 using Core.Exceptions;
 using Db.Postgre.Context;
 using Db.Postgre.Entities;
@@ -7,6 +6,7 @@ using Db.Postgre.Mappers;
 using Db.Postgre.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Tests.Unit.Shared.TestData;
 
 namespace Db.Postgre.Tests.Unit.Repositories;
 
@@ -16,23 +16,19 @@ public class PostgreToDoRepositoryTests
 
     public static IEnumerable<object[]> GetValidToDoTestCases()
     {
-        var now = DateTimeOffset.Now;
-
         yield return
         [
-            new ToDo()
+            ToDoTestData.GetEmpty()
+        ];
+        
+        yield return
+        [
+            ToDoTestData.GetDefault()
         ];
 
         yield return
         [
-            new ToDo
-            {
-                Title = "Finished Task",
-                Description = "Done with success",
-                CompletionDatePlanned = now.AddDays(-2),
-                CompletionDateActual = now,
-                State = ToDoState.GetState(ToDoStateType.Completed)
-            },
+            ToDoTestData.GetCompleted()
         ];
     }
 
@@ -40,7 +36,7 @@ public class PostgreToDoRepositoryTests
     public async Task SaveAsync_WhenTodoHasEmptyId_ShouldInsertAndSetId()
     {
         // Arrange
-        var todoToAdd = new ToDo();
+        var todoToAdd = ToDoTestData.GetEmpty();
         var context = CreateDbContext();
         var repository = new PostgreToDoRepository(context, _mapperMock.Object);
         

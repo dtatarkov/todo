@@ -1,6 +1,6 @@
 using Core.DTO;
 
-namespace Core.Tests.Unit.TestData;
+namespace Tests.Unit.Shared.TestData;
 
 public static class ToDoAddDtoTestData
 {

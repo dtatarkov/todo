@@ -1,7 +1,7 @@
 using Core.Entities;
 using Core.Repositories;
-using Core.Tests.Unit.TestData;
 using Moq;
+using Tests.Unit.Shared.TestData;
 
 namespace Core.Tests.Unit.Entities;
 

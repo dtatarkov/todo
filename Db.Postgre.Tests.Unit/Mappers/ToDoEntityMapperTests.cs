@@ -2,6 +2,7 @@ using Core.Entities;
 using Core.Enums;
 using Db.Postgre.Entities;
 using Db.Postgre.Mappers;
+using Tests.Unit.Shared.TestData;
 
 namespace Db.Postgre.Tests.Unit.Mappers;
 
@@ -15,31 +16,17 @@ public class ToDoEntityMapperTests
 
         yield return
         [
-            new ToDo()
+            ToDoTestData.GetEmpty(),
         ];
 
         yield return
         [
-            new ToDo
-            {
-                Id = Guid.NewGuid(),
-                Title = "Task in Progress",
-                Description = "Working on it",
-                CompletionDatePlanned = now.AddDays(2),
-            }
+            ToDoTestData.GetDefault(),
         ];
 
         yield return
         [
-            new ToDo
-            {
-                Id = Guid.NewGuid(),
-                Title = "Completed Task",
-                Description = "Finished successfully",
-                CompletionDatePlanned = now.AddDays(-1),
-                CompletionDateActual = now,
-                State = ToDoState.GetState(ToDoStateType.Completed)
-            }
+            ToDoTestData.GetCompleted(),
         ];
     }
     

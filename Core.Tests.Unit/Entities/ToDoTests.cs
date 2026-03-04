@@ -1,8 +1,8 @@
 using Core.DTO;
 using Core.Entities;
 using Core.Enums;
-using Core.Tests.Unit.TestData;
 using Moq;
+using Tests.Unit.Shared.TestData;
 
 namespace Core.Tests.Unit.Entities;
 
@@ -12,7 +12,7 @@ public class ToDoTests
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Arrange & Act
-        var todo = new ToDo();
+        var todo = ToDoTestData.GetEmpty();
 
         // Assert
         Assert.Equal(Guid.Empty, todo.Id);
@@ -29,10 +29,7 @@ public class ToDoTests
     public void IsCompleted_ReturnsTrue_WhenStateIsCompleted()
     {
         // Arrange
-        var todo = new ToDo
-        {
-            State = ToDoState.GetState(ToDoStateType.Completed)
-        };
+        var todo = ToDoTestData.GetCompleted();
 
         // Assert
         Assert.True(todo.IsCompleted);
@@ -42,10 +39,7 @@ public class ToDoTests
     public void IsCompleted_ReturnsFalse_WhenStateIsInitial()
     {
         // Arrange
-        var todo = new ToDo
-        {
-            State = ToDoState.GetState(ToDoStateType.Initial)
-        };
+        var todo = ToDoTestData.GetDefault();
 
         // Assert
         Assert.False(todo.IsCompleted);
@@ -55,7 +49,7 @@ public class ToDoTests
     public async Task SaveAsync_ThrowsArgumentNullException_WhenOwnerIsNull()
     {
         // Arrange
-        var todo = new ToDo();
+        var todo = ToDoTestData.GetDefault();
     
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => todo.SaveAsync());
@@ -79,17 +73,7 @@ public class ToDoTests
     public void Clone_ReturnsNewInstance_WithSamePropertyValues()
     {
         // Arrange
-        var now = DateTimeOffset.Now;
-
-        var original = new ToDo
-        {
-            Id = Guid.NewGuid(),
-            Title = "Test Title",
-            Description = "Test Description",
-            CompletionDatePlanned = now.AddDays(1),
-            CompletionDateActual = now,
-            State = ToDoState.GetState(ToDoStateType.Completed)
-        };
+        var original = ToDoTestData.GetCompleted();
 
         // Act
         var clone = original.Clone();
@@ -109,14 +93,7 @@ public class ToDoTests
     public void CreateFromData_CreatesValidToDo()
     {
         // Arrange
-        var now = DateTimeOffset.Now;
-
-        var dto = new ToDoAddDto
-        {
-            Title = "New Task",
-            Description = "Description",
-            CompletionDatePlanned = now.AddDays(1)
-        };
+        var dto = ToDoAddDtoTestData.GetDefault();
 
         // Act
         var todo = ToDo.CreateFromData(dto);
@@ -188,17 +165,7 @@ public class ToDoTests
     public void GetData_ReturnsCorrectDto()
     {
         // Arrange
-        var now = DateTimeOffset.Now;
-        
-        var todo = new ToDo
-        {
-            Id = Guid.NewGuid(),
-            Title = "Task",
-            Description = "Desc",
-            CompletionDatePlanned = now.AddDays(-1),
-            CompletionDateActual = now,
-            State = ToDoState.GetState(ToDoStateType.Completed)
-        };
+        var todo = ToDoTestData.GetCompleted();
     
         // Act
         var dto = todo.GetData();

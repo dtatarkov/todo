@@ -2,8 +2,8 @@ using Core.Entities;
 using Core.Exceptions;
 using Core.Factories;
 using Core.Services;
-using Core.Tests.Unit.TestData;
 using Moq;
+using Tests.Unit.Shared.TestData;
 
 namespace Core.Tests.Unit.Services;
 
