@@ -12,7 +12,7 @@ namespace Db.Postgre.Tests.Unit.Repositories;
 
 public class PostgreToDoRepositoryTests
 {
-    private readonly Mock<IToDoEntityMapper> _mapperMock = CreateMapperMock();
+    private readonly Mock<IPostgreToDoEntityMapper> _mapperMock = CreateMapperMock();
 
     public static IEnumerable<object[]> GetValidToDoTestCases()
     {
@@ -230,9 +230,9 @@ public class PostgreToDoRepositoryTests
     /// <summary>
     /// Создаёт и настраивает мок IToDoEntityMapper.
     /// </summary>
-    private static Mock<IToDoEntityMapper> CreateMapperMock()
+    private static Mock<IPostgreToDoEntityMapper> CreateMapperMock()
     {
-        var mapperMock = new Mock<IToDoEntityMapper>();
+        var mapperMock = new Mock<IPostgreToDoEntityMapper>();
 
         mapperMock
             .Setup(m => m.ToEntity(It.IsAny<IToDo>()))

@@ -3,7 +3,7 @@ using Db.Postgre.Entities;
 
 namespace Db.Postgre.Mappers;
 
-public class ToDoEntityMapper : IToDoEntityMapper
+public class PostgreToDoEntityMapper : IPostgreToDoEntityMapper
 {
     public IToDo ToDomainModel(PostgreToDoEntity entity)
     {

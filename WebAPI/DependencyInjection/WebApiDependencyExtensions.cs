@@ -20,7 +20,7 @@ public static class WebApiDependencyExtensions
         
         // Регистрируем репозиторий
         services.AddScoped<IToDoRepository, PostgreToDoRepository>();
-        services.AddScoped<IToDoEntityMapper, ToDoEntityMapper>();
+        services.AddScoped<IPostgreToDoEntityMapper, PostgreToDoEntityMapper>();
     }
     
     public static void RegisterApplicationServices(this IServiceCollection services)

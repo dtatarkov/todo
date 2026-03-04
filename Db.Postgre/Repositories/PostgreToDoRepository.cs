@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Db.Postgre.Repositories;
 
-public class PostgreToDoRepository(AppDbContext dbContext, IToDoEntityMapper entityMapper) : IToDoRepository
+public class PostgreToDoRepository(AppDbContext dbContext, IPostgreToDoEntityMapper entityMapper) : IToDoRepository
 {
     public async Task SaveAsync(IToDo todo)
     {

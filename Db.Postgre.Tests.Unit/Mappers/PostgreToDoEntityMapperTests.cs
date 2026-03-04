@@ -6,9 +6,9 @@ using Tests.Unit.Shared.TestData;
 
 namespace Db.Postgre.Tests.Unit.Mappers;
 
-public class ToDoEntityMapperTests
+public class PostgreToDoEntityMapperTests
 {
-    private readonly ToDoEntityMapper _todoEntityMapper = new();
+    private readonly PostgreToDoEntityMapper _todoEntityMapper = new();
     
     public static IEnumerable<object[]> GetValidToDoTestCases()
     {
