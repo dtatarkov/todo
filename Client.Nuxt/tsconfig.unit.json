@@ -1,0 +1,13 @@
+{
+  "include": [
+    "test/unit/*"
+  ],
+  
+  "compilerOptions": {
+    "paths": {
+      "#shared/*": [
+        "./shared/*"
+      ]
+    }
+  }
+}
