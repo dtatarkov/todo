@@ -1,0 +1,196 @@
+@startuml
+    class ToDo {
+        +string id
+        +string title
+        +string description
+        +Date completionDatePlanned
+        +Date completionDateActual
+        +string state
+        +remove()
+        +edit()
+    }
+
+    class ToDosOwner {
+        +getToDoById(id: string): ToDo
+        +getAllToDos(): ToDo[]
+        +saveToDo(toDo: ToDo)
+        +removeToDo(id: string)
+    }
+
+    class ToDosService {
+        +addToDoAsync(data: AddToDoDto): Promise~ToDo~
+        +updateToDoAsync(data: UpdateToDoDto): Promise~void~
+        +getToDoByIdAsync(id: string): Promise~ToDo~
+        +getAllToDosAsync(): Promise~ToDo[]~
+        +removeToDoAsync(id: string): Promise~void~
+    }
+
+    class ToDosStore {
+        +todos: ToDo[]
+        +initAsync(): Promise~void~
+    }
+
+    class ToDoImpl {
+        -owner: ToDosOwner
+    }
+
+    class ToDosOwnerBase {
+        -service: ToDosService
+    }
+
+    class ToDosServiceImpl
+
+    class ToDoCard {
+        -toDo: ToDo
+        +render(): UIElement
+    }
+
+    class Grid~T~ {
+        -items: T[]
+        +render(): UIElement
+    }
+
+    class ToDosView {
+        -store: ToDosStore
+        -grid: Grid~ToDoCard~
+        -addButton: Button
+        +render(): UIElement
+    }
+
+    class Button {
+        +label: string
+        +onClick(): void
+        +render(): UIElement
+    }
+
+    class ToDosPage {
+        -toDosView: ToDosView
+        +render()
+    }
+
+    class useToDosStore {
+        +(): ToDosStore
+    }
+
+    class Dialog {
+        +title: string
+        +body: UIElement
+        +controls: UIElement[]
+        +render(): UIElement
+    }
+
+    class Form {
+        +elements: FormElement[]
+        +data: object
+        +render(): UIElement
+    }
+
+    class FormElement {
+        +render(): UIElement
+    }
+
+    class InputText {
+        +label: string
+        +value: string
+        +render(): UIElement
+    }
+
+    class InputRichText {
+        +label: string
+        +value: string
+        +render(): UIElement
+    }
+
+    class InputDate {
+        +label: string
+        +value: Date
+        +render(): UIElement
+    }
+
+    class SelectSingle~T~ {
+        +options: T[]
+        +selected: T
+        +render(): UIElement
+    }
+
+    class Overlay {
+        +children: UIElement[]
+        +render(): UIElement
+    }
+
+    class ToDosDialogsManager {
+        +showEditToDoDialog(toDo: ToDo): void
+        +showAddToDoDialog(): void
+    }
+
+    ToDo <|-- ToDoImpl
+    ToDosOwner <|-- ToDosOwnerBase
+    ToDosService <|-- ToDosServiceImpl
+    FormElement <|-- InputText
+    FormElement <|-- InputRichText
+    FormElement <|-- InputDate
+    FormElement <|-- SelectSingle
+
+    ToDoImpl --> ToDosOwner : depends on
+    ToDosOwnerBase --> ToDosService : depends on
+
+    ToDosView --> ToDosStore : observes
+    ToDosView --> ToDoCard : creates per item
+    ToDosView --> Button : contains
+    ToDosView --> ToDosDialogsManager : uses
+    Button --> ToDosDialogsManager : calls showAddToDoDialog on click
+    ToDosPage --> ToDosView : contains
+    useToDosStore --> ToDosOwnerBase : instantiates
+    useToDosStore --> ToDosStore : returns
+
+    ToDo --> ToDosOwner : uses for remove/edit
+    ToDoImpl ..|> ToDo : implements
+    ToDosOwner ..|> ToDosOwnerBase : implements
+
+    ToDosDialogsManager --> Form : creates
+    ToDosDialogsManager --> Dialog : creates
+    Dialog --> Form : body
+    Form --> FormElement : has multiple
+    FormElement <|-- InputText
+    FormElement <|-- InputRichText
+    FormElement <|-- InputDate
+    FormElement <|-- SelectSingle
+    Overlay --> Dialog : displays
+    ToDosDialogsManager --> Overlay : uses to show dialog
+
+    note right of Dialog
+        Диалог имеет заголовок (title),
+        тело (body) — например, Form,
+        и набор controls (кнопки подтверждения и т.п.)
+    end note
+
+    note right of Form
+        Form содержит элементы ввода (FormElement)
+        и привязанные данные (data)
+    end note
+
+    note right of Overlay
+        Overlay — контейнер для модальных окон,
+        подсказок, выпадающих меню.
+        Позиционирует дочерние элементы абсолютно.
+    end note
+
+    note right of ToDosDialogsManager
+        Утилитный класс для управления диалогами.
+        showEditToDoDialog — создаёт форму с данными задачи.
+        showAddToDoDialog — создаёт пустую форму.
+        Оба метода создают Dialog, помещают его в Overlay.
+    end note
+
+    note right of ToDosView
+        Содержит кнопку "Добавить задачу".
+        При клике вызывает ToDosDialogsManager.showAddToDoDialog()
+    end note
+
+    note left of ToDo
+        Операции:
+        - remove() → делегирует удаление владельцу (ToDosOwner.removeToDo)
+        - edit() → изменяет поля и сохраняет через ToDosOwner.saveToDo
+        Поле state может управляться извне (например, через UI или ToDosOwner)
+    end note
+@enduml
