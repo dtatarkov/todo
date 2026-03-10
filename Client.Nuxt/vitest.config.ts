@@ -1,19 +1,17 @@
-import { defineConfig } from 'vitest/config'
-import * as path from "node:path";
+import { defineConfig, mergeConfig } from 'vitest/config'
+import viteConfig from './vite.config'
 import { defineVitestProject } from "@nuxt/test-utils/config";
 
-export default defineConfig({
+export default mergeConfig(viteConfig, defineConfig({
   test: {
     projects: [
       {
+        extends: true,
+        
         test: {
           name: 'unit',
           include: ['test/unit/*.{test,spec}.ts'],
           environment: 'node',
-
-          alias: {
-            '#shared': path.resolve(__dirname, 'shared')
-          }
         },
       },
       {
@@ -32,4 +30,4 @@ export default defineConfig({
       }),
     ],
   },
-})
+}));

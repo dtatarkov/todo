@@ -1,13 +1,13 @@
 {
-  "include": [
-    "test/unit/*"
-  ],
-  
-  "compilerOptions": {
-    "paths": {
-      "#shared/*": [
-        "./shared/*"
-      ]
-    }
-  }
+    "compilerOptions": {
+        "paths": {
+            "#shared/*": [
+                "./shared/*"
+            ]
+        }
+    },
+    
+    "include": [
+        "./test/**/*",
+    ]
 }
