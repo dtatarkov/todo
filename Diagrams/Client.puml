@@ -5,9 +5,29 @@
         +string description
         +Date completionDatePlanned
         +Date completionDateActual
-        +string state
+        +state: ToDoState
         +remove()
         +edit()
+    }
+
+    class ToDoState {
+        +remove(toDo: ToDo): void
+        +edit(toDo: ToDo): void
+    }
+
+    class ToDoStateInitial {
+        +remove(toDo: ToDo): void
+        +edit(toDo: ToDo): void
+    }
+
+    class ToDoStateCreated {
+        +remove(toDo: ToDo): void
+        +edit(toDo: ToDo): void
+    }
+
+    class ToDoStateRemoved {
+        +remove(toDo: ToDo): void
+        +edit(toDo: ToDo): void
     }
 
     class ToDosOwner {
@@ -123,14 +143,14 @@
         +showAddToDoDialog(): void
     }
 
-    ToDo <|-- ToDoImpl
-    ToDosOwner <|-- ToDosOwnerBase
-    ToDosService <|-- ToDosServiceImpl
-    FormElement <|-- InputText
-    FormElement <|-- InputRichText
-    FormElement <|-- InputDate
-    FormElement <|-- SelectSingle
+    ' Наследование состояний
+    ToDoState <|-- ToDoStateInitial
+    ToDoState <|-- ToDoStateCreated
+    ToDoState <|-- ToDoStateRemoved
 
+    ' Ассоциации
+    ToDo --> ToDoState : делегирует remove/edit
+    ToDo --> ToDosOwner : для сохранения изменений
     ToDoImpl --> ToDosOwner : depends on
     ToDosOwnerBase --> ToDosService : depends on
 
@@ -143,10 +163,6 @@
     useToDosStore --> ToDosOwnerBase : instantiates
     useToDosStore --> ToDosStore : returns
 
-    ToDo --> ToDosOwner : uses for remove/edit
-    ToDoImpl ..|> ToDo : implements
-    ToDosOwner ..|> ToDosOwnerBase : implements
-
     ToDosDialogsManager --> Form : creates
     ToDosDialogsManager --> Dialog : creates
     Dialog --> Form : body
@@ -158,39 +174,36 @@
     Overlay --> Dialog : displays
     ToDosDialogsManager --> Overlay : uses to show dialog
 
-    note right of Dialog
-        Диалог имеет заголовок (title),
-        тело (body) — например, Form,
-        и набор controls (кнопки подтверждения и т.п.)
+    note right of ToDoState
+        Состояние задачи управляет поведением операций:
+        - remove()
+        - edit()
+
+        Конкретное поведение зависит от текущего состояния (Initial, Created, Removed).
     end note
 
-    note right of Form
-        Form содержит элементы ввода (FormElement)
-        и привязанные данные (data)
+    note right of ToDoStateInitial
+        Начальное состояние.
+        edit() — разрешено, переводит в Created.
+        remove() — игнорируется или переводит в Removed.
     end note
 
-    note right of Overlay
-        Overlay — контейнер для модальных окон,
-        подсказок, выпадающих меню.
-        Позиционирует дочерние элементы абсолютно.
+    note right of ToDoStateCreated
+        Активная задача.
+        edit() — обновляет данные.
+        remove() — переводит в Removed.
     end note
 
-    note right of ToDosDialogsManager
-        Утилитный класс для управления диалогами.
-        showEditToDoDialog — создаёт форму с данными задачи.
-        showAddToDoDialog — создаёт пустую форму.
-        Оба метода создают Dialog, помещают его в Overlay.
-    end note
-
-    note right of ToDosView
-        Содержит кнопку "Добавить задачу".
-        При клике вызывает ToDosDialogsManager.showAddToDoDialog()
+    note right of ToDoStateRemoved
+        Удалённое состояние.
+        edit() / remove() — запрещены или не имеют эффекта.
     end note
 
     note left of ToDo
-        Операции:
-        - remove() → делегирует удаление владельцу (ToDosOwner.removeToDo)
-        - edit() → изменяет поля и сохраняет через ToDosOwner.saveToDo
-        Поле state может управляться извне (например, через UI или ToDosOwner)
+        Методы:
+        - remove() → делегирует вызов this.state.remove(this)
+        - edit() → делегирует вызов this.state.edit(this)
+
+        После изменения состояния ToDo может быть сохранён через ToDosOwner.
     end note
 @enduml
