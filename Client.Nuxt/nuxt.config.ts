@@ -18,4 +18,9 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+
+  // @ts-ignore
+  ui: {
+    colorMode: false
+  }
 })
