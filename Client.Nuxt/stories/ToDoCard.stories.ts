@@ -21,6 +21,15 @@ export const Default: Story = {
     todo: new ToDo({
       title: 'Задача 1',
       description: 'Описание задачи',
+    })
+  }
+};
+
+export const Planned: Story = {
+  args: {
+    todo: new ToDo({
+      title: 'Задача 1',
+      description: 'Описание задачи',
       completionDatePlanned: new Date('2023-12-01'),
       completionDateActual: undefined
     })
@@ -34,17 +43,6 @@ export const Completed: Story = {
       description: 'Описание завершенной задачи',
       completionDatePlanned: new Date('2023-11-01'),
       completionDateActual: new Date('2023-11-05')
-    })
-  }
-};
-
-export const WithDescription: Story = {
-  args: {
-    todo: new ToDo({
-      title: 'Задача с описанием',
-      description: 'Длинное описание задачи, которое может занимать несколько строк и демонстрирует, как компонент отображает текст',
-      completionDatePlanned: new Date('2023-12-15'),
-      completionDateActual: undefined
     })
   }
 };

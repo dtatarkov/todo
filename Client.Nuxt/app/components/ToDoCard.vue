@@ -1,7 +1,7 @@
 <template>
-  <UCard class="todo-card">
+  <UCard class="todo-card" variant="subtle" :ui="cardUIOptions">
     <template #header>
-      <div class="todo-card__title">{{ props.todo.title }}</div>
+      <div class="todo-card__title font-semibold text-lg">{{ props.todo.title }}</div>
     </template>
     
     <div class="todo-card__description">{{ props.todo.description }}</div>
@@ -29,19 +29,8 @@ const props = defineProps({
     required: true
   }
 });
-</script>
 
-<style lang="scss">
-.todo-card {
-  .todo-card__title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .todo-card__description {
-    color: #6b7280;
-    margin-bottom: 1rem;
-  }
+const cardUIOptions = {
+  header: 'bg-primary text-secondary'
 }
-</style>
+</script>

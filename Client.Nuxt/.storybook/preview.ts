@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook-vue/nuxt'
+import type { Preview } from '@storybook-vue/nuxt';
 
 const preview: Preview = {
   parameters: {
@@ -13,7 +13,9 @@ const preview: Preview = {
   beforeAll: () => {
     useServiceLocator();
     useApplicationServices();
-  }
+  },
+  
+  tags: ['autodocs'],
 };
 
 export default preview;

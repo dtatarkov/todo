@@ -9,6 +9,10 @@
                 "./app/components/*"
             ],
 
+            "#styles/*": [
+                "./styles/*"
+            ],
+
             "#composables/*": [
                 "./app/composables/*"
             ],
@@ -22,5 +26,6 @@
     "include": [
         "./.storybook/**/*",
         "./stories/**/*",
+        ".nuxt/imports.d.ts"
     ]
 }

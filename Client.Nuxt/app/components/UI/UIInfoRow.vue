@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-info-row">
+  <div class="ui-info-row text-sm">
     <span class="ui-info-row__label">{{ label }}</span>
     
     <span class="ui-info-row__content">
@@ -26,14 +26,10 @@ defineProps({
 }
 
 .ui-info-row__label {
-  font-size: 14px;
-  color: #777;
   min-width: 100px;
 }
 
 .ui-info-row__content {
-  font-size: 14px;
-  color: #333;
   text-align: right;
   flex: 1;
   margin-left: 8px;

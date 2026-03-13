@@ -12,7 +12,3 @@ useApplicationServices();
 
 const todo = new ToDo();
 </script>
-
-<style lang="scss">
-@use '../styles/index.scss';
-</style>

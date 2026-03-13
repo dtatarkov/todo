@@ -12,6 +12,8 @@ export default defineNuxtConfig({
     '#components': './app/components',
   },
 
+  css: ['./styles/main.css'],
+
   components: [
     {
       path      : '~/components',
