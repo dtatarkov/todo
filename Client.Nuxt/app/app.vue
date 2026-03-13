@@ -1,14 +1,10 @@
 <template>
   <UApp>
-    <ToDoCard :todo="todo" />
+    <NuxtPage />
   </UApp>
 </template>
 
 <script setup lang="ts">
-import { ToDo } from "#shared/entities/todo";
-
 useServiceLocator();
 useApplicationServices();
-
-const todo = new ToDo();
 </script>
