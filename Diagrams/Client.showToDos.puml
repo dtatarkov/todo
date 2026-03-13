@@ -1,0 +1,37 @@
+@startuml
+participant ToDosWidget
+    participant getService
+    participant useViewModel
+    participant ToDosViewModel
+    participant viewmodel
+    participant ToDosOwner
+    participant data
+    participant Grid
+
+    ToDosWidget ->> getService: getService(ToDosViewModel)
+    activate getService
+    getService ->> ToDosViewModel: create or return instance
+    deactivate getService
+    ToDosViewModel -->> viewmodel: return viewmodel
+
+    ToDosWidget ->> useViewModel: useViewModel(viewmodel)
+    activate useViewModel
+    useViewModel ->> viewmodel: init()
+    activate viewmodel
+
+    viewmodel ->> ToDosOwner: getAllToDosAsync()
+    activate ToDosOwner
+    ToDosOwner -->> viewmodel: return todos: ToDo[]
+    deactivate ToDosOwner
+
+    viewmodel ->> viewmodel: data.todos = todos
+    deactivate viewmodel
+    useViewModel -->> ToDosWidget: return reactive data
+
+    ToDosWidget ->> Grid: new Grid()
+
+    ToDosWidget ->> ToDosWidget: for each todo in data.todos
+    loop for each todo in data.todos
+        ToDosWidget ->> Grid: add(toDoCard)
+    end loop
+@enduml

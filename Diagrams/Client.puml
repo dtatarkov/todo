@@ -1,209 +1,103 @@
 @startuml
-    class ToDo {
-        +string id
-        +string title
-        +string description
-        +Date completionDatePlanned
-        +Date completionDateActual
-        +state: ToDoState
-        +remove()
-        +edit()
+    ' Presentation Layer
+    package "Presentation" {
+        class ToDosPage {
+            -toDosWidget: ToDosWidget
+            +render()
+        }
+
+        class ToDosWidget {
+            -grid: Grid
+            +render(): UIElement
+        }
+
+        class ToDoCard {
+            -viewModel: ToDoViewModel
+            +render(): UIElement
+        }
+
+        class Grid {
+            -items: ToDoCard[]
+            +render(): UIElement
+        }
     }
 
-    class ToDoState {
-        +remove(toDo: ToDo): void
-        +edit(toDo: ToDo): void
+    ' Domain Layer
+    package "Domain" {
+        class ToDosViewModel {
+            -todosService: ToDosService
+            +init(): void
+        }
+
+        class ToDoViewModel {
+            -todosService: ToDosService
+            +init(): void
+        }
+
+        class ViewModel {
+            +data: object
+            +setData(data: object): void
+            +subscribe(callback: Function): void
+            +unsubscribe(callback: Function): void
+        }
+
+        class ToDoImpl {
+            -owner: ToDosOwner
+        }
+
+        class ToDo {
+            +string id
+            +string title
+            +string description
+            +Date completionDatePlanned
+            +Date completionDateActual            
+        }
+
+        class ToDosOwner {
+            +getToDoById(id: string): ToDo
+            +getAllToDos(): ToDo[]
+            +saveToDo(toDo: ToDo)
+            +removeToDo(toDo: ToDo)
+        }
+
+        class ToDosOwnerBase {
+            -service: ToDosRepository
+        }
+        
+        class ToDosService {
+            -owner: ToDosOwner
+            +getToDoById(id: string): ToDo
+            +getAllToDos(): ToDo[]
+            +saveToDo(toDo: ToDo): void
+            +removeToDo(toDo: ToDo): void
+        }
     }
 
-    class ToDoStateInitial {
-        +remove(toDo: ToDo): void
-        +edit(toDo: ToDo): void
+    ' Data Layer
+    package "Data" {
+        class ToDosRepository {
+            +addToDoAsync(data: AddToDoDto): Promise~ToDo~
+            +updateToDoAsync(data: UpdateToDoDto): Promise~void~
+            +getToDoByIdAsync(id: string): Promise~ToDo~
+            +getAllToDosAsync(): Promise~ToDo[]~
+            +removeToDoAsync(id: string): Promise~void~
+        }
     }
 
-    class ToDoStateCreated {
-        +remove(toDo: ToDo): void
-        +edit(toDo: ToDo): void
-    }
-
-    class ToDoStateRemoved {
-        +remove(toDo: ToDo): void
-        +edit(toDo: ToDo): void
-    }
-
-    class ToDosOwner {
-        +getToDoById(id: string): ToDo
-        +getAllToDos(): ToDo[]
-        +saveToDo(toDo: ToDo)
-        +removeToDo(id: string)
-    }
-
-    class ToDosService {
-        +addToDoAsync(data: AddToDoDto): Promise~ToDo~
-        +updateToDoAsync(data: UpdateToDoDto): Promise~void~
-        +getToDoByIdAsync(id: string): Promise~ToDo~
-        +getAllToDosAsync(): Promise~ToDo[]~
-        +removeToDoAsync(id: string): Promise~void~
-    }
-
-    class ToDosStore {
-        +todos: ToDo[]
-        +initAsync(): Promise~void~
-    }
-
-    class ToDoImpl {
-        -owner: ToDosOwner
-    }
-
-    class ToDosOwnerBase {
-        -service: ToDosService
-    }
-
-    class ToDosServiceImpl
-
-    class ToDoCard {
-        -toDo: ToDo
-        +render(): UIElement
-    }
-
-    class Grid~T~ {
-        -items: T[]
-        +render(): UIElement
-    }
-
-    class ToDosView {
-        -store: ToDosStore
-        -grid: Grid~ToDoCard~
-        -addButton: Button
-        +render(): UIElement
-    }
-
-    class Button {
-        +label: string
-        +onClick(): void
-        +render(): UIElement
-    }
-
-    class ToDosPage {
-        -toDosView: ToDosView
-        +render()
-    }
-
-    class useToDosStore {
-        +(): ToDosStore
-    }
-
-    class Dialog {
-        +title: string
-        +body: UIElement
-        +controls: UIElement[]
-        +render(): UIElement
-    }
-
-    class Form {
-        +elements: FormElement[]
-        +data: object
-        +render(): UIElement
-    }
-
-    class FormElement {
-        +render(): UIElement
-    }
-
-    class InputText {
-        +label: string
-        +value: string
-        +render(): UIElement
-    }
-
-    class InputRichText {
-        +label: string
-        +value: string
-        +render(): UIElement
-    }
-
-    class InputDate {
-        +label: string
-        +value: Date
-        +render(): UIElement
-    }
-
-    class SelectSingle~T~ {
-        +options: T[]
-        +selected: T
-        +render(): UIElement
-    }
-
-    class Overlay {
-        +children: UIElement[]
-        +render(): UIElement
-    }
-
-    class ToDosDialogsManager {
-        +showEditToDoDialog(toDo: ToDo): void
-        +showAddToDoDialog(): void
-    }
-
-    ' Наследование состояний
-    ToDoState <|-- ToDoStateInitial
-    ToDoState <|-- ToDoStateCreated
-    ToDoState <|-- ToDoStateRemoved
-
-    ' Ассоциации
-    ToDo --> ToDoState : делегирует remove/edit
-    ToDo --> ToDosOwner : для сохранения изменений
+    ' Зависимости между слоями
+    ToDosPage --> ToDosWidget : uses
+    ToDosWidget --> ToDoCard : creates
+    ToDosWidget --> Grid : uses
+    ToDosWidget --> ToDosViewModel : uses
+    ToDoCard --> ToDoViewModel : uses
+    ToDosViewModel --> ToDosService : depends on
+    ToDoViewModel --> ToDosService : depends on
+    ToDosService --> ToDosOwner : depends on
+    ToDosOwnerBase --> ToDosRepository : depends on
+    ToDo --> ToDosOwner : for saving changes
     ToDoImpl --> ToDosOwner : depends on
-    ToDosOwnerBase --> ToDosService : depends on
-
-    ToDosView --> ToDosStore : observes
-    ToDosView --> ToDoCard : creates per item
-    ToDosView --> Button : contains
-    ToDosView --> ToDosDialogsManager : uses
-    Button --> ToDosDialogsManager : calls showAddToDoDialog on click
-    ToDosPage --> ToDosView : contains
-    useToDosStore --> ToDosOwnerBase : instantiates
-    useToDosStore --> ToDosStore : returns
-
-    ToDosDialogsManager --> Form : creates
-    ToDosDialogsManager --> Dialog : creates
-    Dialog --> Form : body
-    Form --> FormElement : has multiple
-    FormElement <|-- InputText
-    FormElement <|-- InputRichText
-    FormElement <|-- InputDate
-    FormElement <|-- SelectSingle
-    Overlay --> Dialog : displays
-    ToDosDialogsManager --> Overlay : uses to show dialog
-
-    note right of ToDoState
-        Состояние задачи управляет поведением операций:
-        - remove()
-        - edit()
-
-        Конкретное поведение зависит от текущего состояния (Initial, Created, Removed).
-    end note
-
-    note right of ToDoStateInitial
-        Начальное состояние.
-        edit() — разрешено, переводит в Created.
-        remove() — игнорируется или переводит в Removed.
-    end note
-
-    note right of ToDoStateCreated
-        Активная задача.
-        edit() — обновляет данные.
-        remove() — переводит в Removed.
-    end note
-
-    note right of ToDoStateRemoved
-        Удалённое состояние.
-        edit() / remove() — запрещены или не имеют эффекта.
-    end note
-
-    note left of ToDo
-        Методы:
-        - remove() → делегирует вызов this.state.remove(this)
-        - edit() → делегирует вызов this.state.edit(this)
-
-        После изменения состояния ToDo может быть сохранён через ToDosOwner.
-    end note
+    ToDosOwnerBase <|-- ToDosOwner
+    ToDosViewModel <|-- ViewModel
+    ToDoViewModel <|-- ViewModel
+    ToDosService <|-- ViewModel
 @enduml

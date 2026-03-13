@@ -1,0 +1,37 @@
+@startuml
+participant ToDoCard
+    participant getService
+    participant ToDoViewModel
+    participant viewmodel
+    participant ToDoOwner
+    participant template
+
+    ToDoCard ->> ToDoCard: new ToDoCard(todo.id)
+    activate ToDoCard
+
+    ToDoCard ->> getService: getService(ToDoViewModel)
+    activate getService
+    getService ->> ToDoViewModel: create or return instance
+    deactivate getService
+    ToDoViewModel -->> viewmodel: return viewmodel
+
+    ToDoCard ->> viewmodel: setToDoId(todo.id)
+    activate viewmodel
+
+    ToDoCard ->> viewmodel: init()
+    activate viewmodel
+
+    viewmodel ->> ToDoOwner: getToDoById(id)
+    activate ToDoOwner
+    ToDoOwner -->> viewmodel: return todo
+    deactivate ToDoOwner
+
+    viewmodel ->> viewmodel: data.todo = todo
+    deactivate viewmodel
+
+    viewmodel ->> ToDoCard: reactive data updated
+
+    ToDoCard ->> template: render(title, description, completionDatePlanned, completionDateActual)
+    deactivate viewmodel
+    deactivate ToDoCard
+@enduml
