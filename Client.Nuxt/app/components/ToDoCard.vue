@@ -6,13 +6,13 @@
     
     <div class="todo-card__description">{{ props.todo.description }}</div>
     
-    <template #footer>
+    <template #footer v-if="hasFooter">
       <UIInfoBlock>
         <UIInfoRow label="Выполнено" v-if="props.todo.completionDateActual">
           <UIDate :date="props.todo.completionDateActual" />
         </UIInfoRow>
 
-        <UIInfoRow label="Запланировано" v-else>
+        <UIInfoRow label="Выполнить до" v-else-if="props.todo.completionDatePlanned">
           <UIDate :date="props.todo.completionDatePlanned" />
         </UIInfoRow>
       </UIInfoBlock>
@@ -31,6 +31,9 @@ const props = defineProps({
 });
 
 const cardUIOptions = {
+  root: 'rounded-sm',
   header: 'bg-primary text-secondary'
 }
+
+const hasFooter = computed(() => props.todo.completionDateActual != undefined || props.todo.completionDatePlanned != undefined)
 </script>
