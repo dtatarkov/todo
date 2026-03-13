@@ -1,10 +1,10 @@
 import { TodosService } from "#shared/interfaces/todosService";
 import { ToDo } from "#shared/interfaces/todo";
-import type { TodosOwner } from "#shared/interfaces/todosOwner";
+import type { ToDosOwner } from "#shared/interfaces/todosOwner";
 
 export class TodosServiceImpl extends TodosService
 {
-  constructor(protected owner: TodosOwner)
+  constructor(protected owner: ToDosOwner)
   {
     super();
   }

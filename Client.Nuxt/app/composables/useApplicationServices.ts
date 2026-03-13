@@ -2,17 +2,17 @@ import { DatesServiceImpl } from "#shared/services/datesServiceImpl";
 import { DatesService } from "#shared/interfaces/datesService";
 import { TodosService } from "#shared/interfaces/todosService";
 import { TodosServiceImpl } from "#shared/services/todosServiceImpl";
-import { TodosOwner } from "#shared/interfaces/todosOwner";
-import { TodosOwnerBase } from "#shared/entities/todosOwnerBase";
+import { ToDosOwner } from "#shared/interfaces/todosOwner";
+import { ToDosOwnerBase } from "#shared/entities/todosOwnerBase";
 
 export function useApplicationServices()
 {
   registerService(DatesService, DatesServiceImpl);  
-  registerService(TodosOwner, TodosOwnerBase);
+  registerService(ToDosOwner, ToDosOwnerBase);
 
   registerServiceFactory(TodosService,() =>
   {
-    const todosOwner = getService(TodosOwner);
+    const todosOwner = getService(ToDosOwner);
     const todosService = new TodosServiceImpl(todosOwner);
     
     return todosService;

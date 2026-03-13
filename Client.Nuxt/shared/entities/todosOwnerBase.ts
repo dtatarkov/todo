@@ -1,4 +1,4 @@
-import { TodosOwner } from "#shared/interfaces/todosOwner";
+import { ToDosOwner } from "#shared/interfaces/todosOwner";
 import { ToDo } from "#shared/interfaces/todo";
 import { ToDoBase } from "#shared/entities/todoBase";
 
@@ -16,7 +16,7 @@ const mock_todos: ToDo[] = [
   })
 ];
 
-export class TodosOwnerBase extends TodosOwner {
+export class ToDosOwnerBase extends ToDosOwner {
   protected todos = new Array<ToDo>();
   
   private _is_initialized = false;
