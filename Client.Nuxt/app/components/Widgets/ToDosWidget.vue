@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { ToDo } from "#shared/entities/todo";
+import { TodosViewModel } from "#shared/interfaces/todosViewModel";
 
-const todo = new ToDo({
-  title: 'Задача 1',
-  description: 'Описание задачи',
-  completionDatePlanned: new Date('2023-12-01'),
-  completionDateActual: undefined
-});
+const viewmodel = getService(TodosViewModel);
+const data = useViewModel(viewmodel);
 </script>
 
 <template>
-  <ToDoCard :todo="todo"/>
+  <ToDoCard v-for="todo of data.todos" :key="todo.id" :todo="todo" />
 </template>

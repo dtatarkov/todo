@@ -13,4 +13,8 @@ export class ServiceLocatorImpl extends ServiceLocator {
   register<T>(serviceIdentifier: ServiceIdentifier<T>, service: Constructor<T>): void {
     this.container.bind(serviceIdentifier).to(service);
   }
+  
+  registerFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T): void {
+    this.container.bind(serviceIdentifier).toDynamicValue(factory);
+  }
 }

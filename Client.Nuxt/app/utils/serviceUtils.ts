@@ -28,3 +28,12 @@ export function registerService<T>(serviceIdentifier: ServiceIdentifier<T>, serv
 
   serviceLocator.register(serviceIdentifier, service);
 }
+
+export function registerServiceFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T): void {
+  if(!serviceLocator)
+  {
+    throw new Error('Service locator is not defined');
+  }
+
+  serviceLocator.registerFactory(serviceIdentifier, factory);
+}
