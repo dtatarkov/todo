@@ -1,4 +1,4 @@
-import { ToDo } from "#shared/entities/todo";
+import { ToDo } from "#shared/interfaces/todo";
 
 export abstract class TodosService {
   abstract getAllToDosAsync(): Promise<ToDo[]>;

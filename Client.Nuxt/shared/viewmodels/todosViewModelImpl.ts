@@ -1,5 +1,5 @@
 import { TodosViewModel } from "#shared/interfaces/todosViewModel";
-import { ToDo } from "#shared/entities/todo";
+import { ToDo } from "#shared/interfaces/todo";
 import { TodosService } from "#shared/interfaces/todosService";
 
 export class TodosViewModelImpl extends TodosViewModel

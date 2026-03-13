@@ -1,5 +1,5 @@
 import { ViewModel } from "#shared/interfaces/viewmodel";
-import { ToDo } from "#shared/entities/todo";
+import { ToDo } from "#shared/interfaces/todo";
 
 export type TodosViewModelData = {
   todos: ToDo[]

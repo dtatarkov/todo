@@ -1,6 +1,6 @@
-import { ToDoStateType } from "#shared/enums/toDoStateType";
+import { ToDo } from "#shared/interfaces/todo";
 
-export class ToDo
+export class ToDoBase extends ToDo
 {
   private _id: string           = '';
   private _title: string        = '';
@@ -9,6 +9,8 @@ export class ToDo
   private _completionDateActual: Date | undefined;
 
   constructor(data?: Partial<ToDo>) {
+    super();
+    
     if (data) {
       this._id = data.id || this._id;
       this._title = data.title || this._title;

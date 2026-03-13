@@ -1,7 +1,6 @@
-// stories/ToDoCard.stories.ts
 import type { Meta, StoryObj } from '@storybook-vue/nuxt';
 import ToDoCard from '../app/components/ToDoCard.vue';
-import { ToDo } from '#shared/entities/todo';
+import { ToDoBase } from "#shared/entities/todoBase";
 
 const meta: Meta<typeof ToDoCard> = {
   title: 'Components/ToDoCard',
@@ -18,7 +17,7 @@ type Story = StoryObj<typeof ToDoCard>;
 
 export const Default: Story = {
   args: {
-    todo: new ToDo({
+    todo: new ToDoBase({
       title: 'Задача 1',
       description: 'Описание задачи',
     })
@@ -27,7 +26,7 @@ export const Default: Story = {
 
 export const Planned: Story = {
   args: {
-    todo: new ToDo({
+    todo: new ToDoBase({
       title: 'Задача 1',
       description: 'Описание задачи',
       completionDatePlanned: new Date('2023-12-01'),
@@ -38,7 +37,7 @@ export const Planned: Story = {
 
 export const Completed: Story = {
   args: {
-    todo: new ToDo({
+    todo: new ToDoBase({
       title: 'Завершенная задача',
       description: 'Описание завершенной задачи',
       completionDatePlanned: new Date('2023-11-01'),
