@@ -1,8 +1,15 @@
-import { ViewModel } from "#shared/interfaces/viewmodel";
-import { ToDo } from "#shared/interfaces/todo";
+import { ViewModelBase } from "#shared/viewmodels/viewmodelBase";
 
 export type TodosViewModelData = {
-  todos: ToDo[]
+  todos: TodosViewModelToDoData[]
 }
 
-export abstract class TodosViewModel extends ViewModel<TodosViewModelData> { }
+export type TodosViewModelToDoData = {
+  id: string
+  title: string
+  description: string
+  completionDatePlanned: string
+  completionDateActual: string
+}
+
+export abstract class TodosViewModel extends ViewModelBase<TodosViewModelData> { }

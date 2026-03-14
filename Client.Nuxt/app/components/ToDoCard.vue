@@ -21,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { ToDo } from "#shared/interfaces/todo";
+import type { TodosViewModelToDoData } from "#shared/interfaces/todosViewModel";
 
 type Props = { 
-  todo: ToDo 
+  todo: TodosViewModelToDoData
 }
 
 const props = defineProps<Props>();

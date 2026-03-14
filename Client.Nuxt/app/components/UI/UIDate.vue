@@ -1,21 +1,14 @@
 <template>
-  <span class="ui-date" v-if="hasDate">
-    {{ formattedDate }}
+  <span class="ui-date">
+    {{ props.date }}
   </span>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { DatesService } from "#shared/interfaces/datesService";
-
-const datesService = getService(DatesService);
-
 const props = defineProps({
   date: {
-    type: Date,
+    type: String,
+    required: true,
   }
 });
-
-const hasDate = computed(() => datesService.isDate(props.date));
-const formattedDate = computed(() => datesService.formatDateOptional(props.date));
 </script>

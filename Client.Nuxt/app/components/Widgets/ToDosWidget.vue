@@ -7,9 +7,9 @@ const data = useViewModel(viewmodel);
 
 <template>
   <div class="todos-widget">
-  <UIGrid>
-    <ToDoCard v-for="todo of data.todos" :key="todo.id" :todo="todo" />
-  </UIGrid>
+    <UIGrid>
+      <ToDoCard v-for="todo of data.todos" :key="todo.id" :todo="todo" />
+    </UIGrid>
   </div>
 </template>
 
