@@ -1,19 +1,32 @@
 import { Action } from "#shared/types/action";
+import { TableStateMachine } from "#shared/models/tableStateMachine";
+
+enum ViewModelState {
+  initial     = 0,
+  initialized = 1,
+}
+
+enum ViewModelEvent {
+  init = 0
+}
 
 export abstract class ViewModel<D extends Record<string, any>> {
   protected abstract data: D;
   
   private _handlers = new Set<Action>();
-  private _is_initialized = false;
+
+  private stateMachine = new TableStateMachine<ViewModelState, ViewModelEvent>(ViewModelState.initial, [
+    {
+      from: ViewModelState.initial,
+      to: ViewModelState.initialized,
+      event: ViewModelEvent.init,
+
+      handler: async () => this.handleInitialization()
+    }
+  ]);
 
   async init() {
-    if(this._is_initialized)
-    {
-      return;
-    }
-
-    await this.handleInitialization();
-    this._is_initialized = true;
+    await this.stateMachine.handle(ViewModelEvent.init);
   }
   
   getData() {
