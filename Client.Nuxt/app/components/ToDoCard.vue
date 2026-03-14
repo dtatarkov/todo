@@ -1,7 +1,18 @@
 <template>
   <UCard class="todo-card" variant="subtle" :ui="cardUIOptions">
     <template #header>
-      <div class="todo-card__title font-semibold text-lg">{{ data.title }}</div>
+      <div class="todo-card__title font-semibold text-lg grow">{{ data.title }}</div>
+
+      <div class="todo-card__actions">
+        <UButton
+            class="cursor-pointer"
+            variant="link"
+            color="secondary"
+            icon="i-heroicons-pencil-square"
+            size="sm"
+            @click="() => viewmodel.handleEditButtonClick()"
+        />
+      </div>
     </template>
 
     <div class="todo-card__description">{{ data.description }}</div>
@@ -29,14 +40,14 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const todoViewModel = getService(ToDoViewModel);
-todoViewModel.setToDoId(props.todoId);
+const viewmodel = getService(ToDoViewModel);
+viewmodel.setToDoId(props.todoId);
 
-const data = useViewModel(todoViewModel);
+const data = useViewModel(viewmodel);
 
 const cardUIOptions = {
   root  : 'rounded-sm',
-  header: 'bg-primary text-secondary'
+  header: 'flex gap-4 items-center bg-primary text-secondary'
 }
 
 const hasFooter = computed(() => data.value.completionDateActual != undefined || data.value.completionDatePlanned != undefined);
