@@ -7,5 +7,4 @@
 <script setup lang="ts">
 useServiceLocator();
 useApplicationServices();
-useApplicationViewModels();
 </script>
