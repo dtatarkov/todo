@@ -13,14 +13,15 @@ public static class WebApiDependencyExtensions
 {
     public static void RegisterDbServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
-        ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
-        ArgumentNullException.ThrowIfNull(environment, nameof(environment));
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(environment);
         
         var environmentName = environment.EnvironmentName;
+        var connectionString = configuration.GetConnectionString($"Postgre{environmentName}");
         
         // Добавляем контекст PostgreSQL
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString($"Postgre:{environmentName}"),
+            options.UseNpgsql(connectionString,
                 npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()));
         
         // Регистрируем репозиторий

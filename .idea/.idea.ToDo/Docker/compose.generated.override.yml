@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  webapi:
+    build:
+      context: "C:\\Work\\ToDo"
+      dockerfile: "WebAPI/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/WebAPI.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "webapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Work\\ToDo\\WebAPI:/app:rw"
+    - "C:\\Work\\ToDo:/src:rw"
+    - "C:\\Users\\D\\AppData\\Roaming\\Microsoft\\UserSecrets:/home/app/.microsoft/usersecrets"
+    - "C:\\Users\\D\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"

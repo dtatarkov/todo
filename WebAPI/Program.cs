@@ -10,6 +10,22 @@ builder.Services.RegisterDbServices(builder.Configuration, builder.Environment);
 builder.Services.RegisterApplicationServices();
 builder.Services.RegisterApplicationControllers();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("Dev",
+            policy =>
+            {
+                policy
+                    .WithOrigins("http://localhost:3000", "https://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+    });
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -17,9 +33,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("Dev");
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapControllers();
-
 app.Run();
