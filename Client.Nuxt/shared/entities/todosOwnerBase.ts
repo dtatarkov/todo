@@ -1,40 +1,54 @@
 import { ToDosOwner } from "#shared/interfaces/todosOwner";
 import { ToDo } from "#shared/interfaces/todo";
-import { ToDoBase } from "#shared/entities/todoBase";
+import type { ToDosRepository } from "#shared/interfaces/todosRepository";
+import type { ToDoDtoMapper } from "#shared/interfaces/todoDtoMapper";
+import { TableStateMachine } from "#shared/models/tableStateMachine";
 
-const mock_todos: ToDo[] = [
-  new ToDoBase({
-    id         : '1',
-    title      : "Todo 1",
-    description: "Description 1"
-  }),
+enum ToDoOwnerState {
+  initial     = 0,
+  initialized = 1,
+}
 
-  new ToDoBase({
-    id         : '2',
-    title      : "Todo 2",
-    description: "Description 2"
-  })
-];
+enum ToDoOwnerEvent {
+  init = 0
+}
 
-export class ToDosOwnerBase extends ToDosOwner {
+export class ToDosOwnerBase extends ToDosOwner
+{
   protected todos = new Array<ToDo>();
   
-  private _is_initialized = false;
-  
-  async getAllToDosAsync(): Promise<ToDo[]> {
+  private stateMachine = new TableStateMachine<ToDoOwnerState, ToDoOwnerEvent>(ToDoOwnerState.initial, [
+    {
+      from: ToDoOwnerState.initial,
+      to: ToDoOwnerState.initialized,
+      event: ToDoOwnerEvent.init,
+      
+      handler: async () => {
+        const todoDtos = await this.todosRepository.getAllToDosAsync();
+        const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
+
+        this.todos = todos;
+      }
+    }
+  ]) 
+
+  constructor(
+    protected todosRepository: ToDosRepository,
+    protected todoDtoMapper: ToDoDtoMapper
+  )
+  {
+    super();
+  }
+
+  async getAllToDosAsync(): Promise<ToDo[]>
+  {
     await this.init();
-    
+
     return this.todos;
   }
-  
-  async init() {
-    if(this._is_initialized)
-    {
-      return;
-    }
-    
-    this.todos = mock_todos;
-    
-    this._is_initialized = true;
+
+  async init()
+  {
+    await this.stateMachine.handle(ToDoOwnerEvent.init);
   }
 }

@@ -4,11 +4,30 @@ import { TodosService } from "#shared/interfaces/todosService";
 import { TodosServiceImpl } from "#shared/services/todosServiceImpl";
 import { ToDosOwner } from "#shared/interfaces/todosOwner";
 import { ToDosOwnerBase } from "#shared/entities/todosOwnerBase";
+import { ToDosRepository } from "#shared/interfaces/todosRepository";
+import { ToDosRepositoryImpl } from "#shared/repositories/todosRepositoryImpl";
+import { ToDoDtoMapperImpl } from "#shared/mappers/todoDtoMapperImpl";
+import { ToDoDtoMapper } from "#shared/interfaces/todoDtoMapper";
 
 export function useApplicationServices()
 {
   registerService(DatesService, DatesServiceImpl);  
-  registerService(ToDosOwner, ToDosOwnerBase);
+  registerService(ToDosRepository, ToDosRepositoryImpl);
+  
+  registerServiceFactory(ToDoDtoMapper, () => {
+    const datesService = getService(DatesService);
+    const mapper = new ToDoDtoMapperImpl(datesService);
+    
+    return mapper;
+  });
+
+  registerServiceFactory(ToDosOwner, () => {
+    const todosRepository = getService(ToDosRepository);
+    const todoDtoMapper = getService(ToDoDtoMapper);
+    const todoOwner = new ToDosOwnerBase(todosRepository, todoDtoMapper);
+    
+    return todoOwner;
+  });
 
   registerServiceFactory(TodosService,() =>
   {

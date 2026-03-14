@@ -24,5 +24,11 @@ export default defineNuxtConfig({
   // @ts-ignore
   ui: {
     colorMode: false
-  }
+  },
+
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: ''
+    },
+  },
 })
