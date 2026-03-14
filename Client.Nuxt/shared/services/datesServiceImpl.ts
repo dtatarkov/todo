@@ -25,7 +25,15 @@ export class DatesServiceImpl extends DatesService {
 
   formatDate(date: Date, options = DateTime.DATETIME_SHORT): string {
     const dateTime = DateTime.fromJSDate(date);
-    const result = dateTime.toLocaleString(options);
+
+    if(!dateTime.isValid)
+    {
+      throw new Error(`Invalid date(${date.toString()})`);
+    }
+    
+    const result = dateTime
+      .setLocale('ru-RU')
+      .toLocaleString(options);
     
     if(!result)
     {

@@ -79,4 +79,30 @@ describe('DatesServiceImpl', () => {
     expect(service.isDate(undefined)).toBe(false);
     expect(service.isDate({})).toBe(false);
   });
+
+  it('should format date with default options', () => {
+    const date = new Date(2023, 9, 15, 10, 30, 45);
+    const result = service.formatDate(date);
+
+    expect(result).toBe('15.10.2023, 10:30'); // Russian locale formatting
+  });
+
+  it('should throw error for invalid date formatting', () => {
+    const date = new Date('invalid-date');
+
+    expect(() => service.formatDate(date)).toThrow();
+  });
+
+  it('should return empty string for undefined date in formatDateOptional', () => {
+    const result = service.formatDateOptional(undefined);
+
+    expect(result).toBe('');
+  });
+
+  it('should return formatted date for valid date in formatDateOptional', () => {
+    const date = new Date(2023, 9, 23, 10, 42, 45);
+    const result = service.formatDateOptional(date);
+
+    expect(result).toBe('23.10.2023, 10:42');
+  });
 });
