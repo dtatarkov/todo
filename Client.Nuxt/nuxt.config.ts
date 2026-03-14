@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     '#components': './app/components',
   },
 
-  css: ['./styles/main.css'],
+  css: ['~/assets/css/main.css'],
 
   components: [
     {
