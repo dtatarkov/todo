@@ -4,7 +4,23 @@ import { DatesService } from '#shared/interfaces/datesService';
 export class DatesServiceImpl extends DatesService {
   fromString(dateString: string): Date {
     const dateTime = DateTime.fromISO(dateString);
+    
+    if(!dateTime.isValid)
+    {
+      throw new Error(`Date(${dateString}) parsing error`);
+    }
+    
     return dateTime.toJSDate();
+  }
+
+  fromStringOptional(dateString?: string): Date | undefined {
+    if(!dateString)
+    {
+      return undefined;
+    }
+    
+    const date = this.fromString(dateString);
+    return date;
   }
 
   formatDate(date: Date, options = DateTime.DATETIME_SHORT): string {
