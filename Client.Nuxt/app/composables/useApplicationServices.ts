@@ -10,6 +10,8 @@ import { ToDoDtoMapperImpl } from "#shared/mappers/todoDtoMapperImpl";
 import { ToDoDtoMapper } from "#shared/interfaces/todoDtoMapper";
 import { TodosViewModel } from "#shared/interfaces/todosViewModel";
 import { TodosViewModelImpl } from "#shared/viewmodels/todosViewModelImpl";
+import { ToDoViewModel } from "#shared/interfaces/todoViewModel";
+import { ToDoViewModelImpl } from "#shared/viewmodels/todoViewModelImpl";
 
 export function useApplicationServices()
 {
@@ -42,8 +44,16 @@ export function useApplicationServices()
   registerServiceFactory(TodosViewModel, () =>
   {
     const todosService = getService(TodosService);
+    const viewmodel    = new TodosViewModelImpl(todosService);
+
+    return viewmodel;
+  });
+
+  registerServiceFactory(ToDoViewModel, () =>
+  {
+    const todosService = getService(TodosService);
     const datesService = getService(DatesService);
-    const viewmodel    = new TodosViewModelImpl(todosService, datesService);
+    const viewmodel    = new ToDoViewModelImpl(todosService, datesService);
 
     return viewmodel;
   });

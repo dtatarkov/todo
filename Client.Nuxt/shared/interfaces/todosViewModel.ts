@@ -6,10 +6,6 @@ export type TodosViewModelData = {
 
 export type TodosViewModelToDoData = {
   id: string
-  title: string
-  description: string
-  completionDatePlanned: string
-  completionDateActual: string
 }
 
 export abstract class TodosViewModel extends ViewModelBase<TodosViewModelData> { }

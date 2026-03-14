@@ -1,19 +1,19 @@
 <template>
   <UCard class="todo-card" variant="subtle" :ui="cardUIOptions">
     <template #header>
-      <div class="todo-card__title font-semibold text-lg">{{ props.todo.title }}</div>
+      <div class="todo-card__title font-semibold text-lg">{{ data.title }}</div>
     </template>
 
-    <div class="todo-card__description">{{ props.todo.description }}</div>
+    <div class="todo-card__description">{{ data.description }}</div>
 
     <template #footer v-if="hasFooter">
       <UIInfoBlock>
-        <UIInfoRow label="Выполнено" v-if="props.todo.completionDateActual">
-          <UIDate :date="props.todo.completionDateActual"/>
+        <UIInfoRow label="Выполнено" v-if="data.completionDateActual">
+          <UIDate :date="data.completionDateActual"/>
         </UIInfoRow>
 
-        <UIInfoRow label="Выполнить до" v-else-if="props.todo.completionDatePlanned">
-          <UIDate :date="props.todo.completionDatePlanned"/>
+        <UIInfoRow label="Выполнить до" v-else-if="data.completionDatePlanned">
+          <UIDate :date="data.completionDatePlanned"/>
         </UIInfoRow>
       </UIInfoBlock>
     </template>
@@ -21,18 +21,23 @@
 </template>
 
 <script setup lang="ts">
-import type { TodosViewModelToDoData } from "#shared/interfaces/todosViewModel";
+import { ToDoViewModel } from "#shared/interfaces/todoViewModel";
 
 type Props = { 
-  todo: TodosViewModelToDoData
+  todoId: string;
 }
 
 const props = defineProps<Props>();
+
+const todoViewModel = getService(ToDoViewModel);
+todoViewModel.setToDoId(props.todoId);
+
+const data = useViewModel(todoViewModel);
 
 const cardUIOptions = {
   root  : 'rounded-sm',
   header: 'bg-primary text-secondary'
 }
 
-const hasFooter = computed(() => props.todo.completionDateActual != undefined || props.todo.completionDatePlanned != undefined)
+const hasFooter = computed(() => data.value.completionDateActual != undefined || data.value.completionDatePlanned != undefined);
 </script>

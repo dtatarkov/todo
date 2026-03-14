@@ -1,6 +1,5 @@
 import { TodosViewModel, type TodosViewModelToDoData } from "#shared/interfaces/todosViewModel";
 import { TodosService } from "#shared/interfaces/todosService";
-import type { DatesService } from "#shared/interfaces/datesService";
 
 export class TodosViewModelImpl extends TodosViewModel
 {
@@ -10,10 +9,7 @@ export class TodosViewModelImpl extends TodosViewModel
     todos: new Array<TodosViewModelToDoData>()
   }
 
-  constructor(
-    protected todosService: TodosService,
-    protected datesService: DatesService
-  )
+  constructor(protected todosService: TodosService)
   {
     super();
   }
@@ -23,10 +19,6 @@ export class TodosViewModelImpl extends TodosViewModel
     
     const todosData = todos.map<TodosViewModelToDoData>(todo => ({
       id: todo.id,
-      title: todo.title,
-      description: todo.description,
-      completionDatePlanned: this.datesService.formatDateOptional(todo.completionDatePlanned),
-      completionDateActual: this.datesService.formatDateOptional(todo.completionDateActual)
     }));
     
     this.setData({

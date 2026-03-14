@@ -40,11 +40,16 @@ export class ToDosOwnerBase extends ToDosOwner
     super();
   }
 
-  async getAllToDosAsync(): Promise<ToDo[]>
+  getAllToDos(): ToDo[]
   {
-    await this.init();
-
     return this.todos;
+  }
+
+  override getToDoById(id: string): ToDo | undefined
+  {
+    const todo = this.todos.find(todo => todo.id === id);
+
+    return todo;
   }
 
   async init()
