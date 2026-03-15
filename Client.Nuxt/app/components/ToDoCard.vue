@@ -50,5 +50,5 @@ const cardUIOptions = {
   header: 'flex gap-4 items-center bg-primary text-secondary'
 }
 
-const hasFooter = computed(() => data.value.completionDateActual != undefined || data.value.completionDatePlanned != undefined);
+const hasFooter = computed(() => data.completionDateActual != undefined || data.completionDatePlanned != undefined);
 </script>
