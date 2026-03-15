@@ -1,0 +1,97 @@
+@startuml
+    class UIElement {
+        <<interface>>
+        +getVNode(): VNode
+    }
+
+    class UIOverlayElement {
+        <<interface>>
+        +getVNode(): VNode
+    }
+
+    class Overlay {
+        +addElement(element: UIOverlayElement): void
+        +removeElement(element: UIOverlayElement): void
+        -elements: UIOverlayElement[]
+        +getElements(): UIOverlayElement[]
+    }
+
+    class OverlayService {
+        +getElements(): UIOverlayElement[]
+        +addElement(element: UIOverlayElement): void
+    }
+
+    class UIOverlayViewModel {
+        +elements: UIOverlayElement[]  // реактивное поле
+        +init(): void
+    }
+
+    class UIOverlay {
+        +viewModel: UIOverlayViewModel
+        +render(): VNode[]
+    }
+
+    class Form {
+        +getVNode(): VNode
+    }
+
+    class UIForm {
+        -form: Form
+        +render(): UIElement
+    }
+
+    class Modal {
+        +getVNode(): VNode
+    }
+
+    ' Наследование интерфейсов и классов
+    UIElement <|-- UIOverlayElement : extends
+    UIElement <|-- Form
+    UIOverlayElement <|-- Modal
+
+    ' Композиция и зависимости
+    UIForm --> Form : содержит
+    UIOverlay --> UIOverlayViewModel : использует для получения элементов
+    UIOverlayViewModel --> OverlayService : вызывает getElements()
+    OverlayService --> Overlay : делегирует getElements() и addElement()
+    OverlayService --> UIOverlayElement : принимает в addElement
+    UIOverlay --> UIOverlayElement : отрисовывает через getVNode()
+    Overlay --> UIOverlayElement : содержит элементы
+
+    note right of UIElement
+        Базовый интерфейс для всех UI-элементов.
+        Определяет метод getVNode().
+    end note
+
+    note right of UIOverlayElement
+        Интерфейс для элементов, которые могут отображаться в оверлее.
+        Наследуется от UIElement.
+        Только реализующие этот интерфейс могут быть добавлены в Overlay.
+    end note
+
+    note right of Modal
+        Конкретная реализация модального окна.
+        Реализует UIOverlayElement — может быть показан в оверлее.
+    end note
+
+    note right of Form
+        Форма — это UI-элемент, но не обязательно элемент оверлея.
+        Реализует UIElement, но НЕ реализует UIOverlayElement.
+        Может использоваться внутри других компонентов, но не добавляется напрямую в Overlay.
+    end note
+
+    note right of Overlay
+        Логический контейнер для элементов оверлея.
+        Принимает только те элементы, которые реализуют UIOverlayElement.
+    end note
+
+    note right of OverlayService
+        Сервис, через который внешние компоненты добавляют элементы в оверлей.
+        Например, Modal может быть добавлен, а Form — нет (если не обёрнут).
+    end note
+
+    note right of UIOverlay
+        Vue-компонент, отображающий все UIOverlayElement из viewModel.
+        Для каждого вызывает getVNode() и рендерит.
+    end note
+@enduml
