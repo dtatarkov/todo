@@ -18,10 +18,17 @@ export class TodosServiceImpl extends TodosService
     return todos;
   }
 
-  async getToDoByIdOrDefaultAsync(id: string): Promise<ToDo>
+  async getToDoByIdAsync(todoId: string): Promise<ToDo | undefined>
   {
     await this.owner.init();
-    let todo = this.owner.getToDoById(id);
+    let todo = this.owner.getToDoById(todoId);
+    
+    return todo;
+  }
+
+  async getToDoByIdOrDefaultAsync(todoId: string): Promise<ToDo>
+  {
+    let todo = await this.getToDoByIdAsync(todoId);
 
     if (!todo)
     {
@@ -29,5 +36,16 @@ export class TodosServiceImpl extends TodosService
     }
 
     return todo;
+  }
+
+  async editToDoAsync(todoId: string): Promise<void> {
+    let todo = await this.getToDoByIdAsync(todoId);
+    
+    if(!todo)
+    {
+      throw new Error(`ToDo(${todoId}) not found`);
+    }
+    
+    
   }
 }
