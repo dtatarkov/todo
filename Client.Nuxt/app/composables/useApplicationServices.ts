@@ -14,6 +14,8 @@ import { ToDoViewModel } from "#shared/interfaces/todoViewModel";
 import { ToDoViewModelImpl } from "#shared/viewmodels/todoViewModelImpl";
 import { OverlayViewModel } from "#shared/interfaces/overlayViewModel";
 import { OverlayViewModelImpl } from "#shared/viewmodels/overlayViewModelImpl";
+import { OverlayServiceImpl } from "#shared/services/overlayServiceImpl";
+import { OverlayService } from "#shared/interfaces/overlayService";
 
 export function useApplicationServices()
 {
@@ -43,6 +45,13 @@ export function useApplicationServices()
     const todosService = new TodosServiceImpl(todosOwner);
 
     return todosService;
+  });
+
+  registerServiceFactory(OverlayService, () =>
+  {
+    const overlayService = new OverlayServiceImpl();
+
+    return overlayService;
   });
 
   registerServiceFactory(TodosViewModel, () =>
