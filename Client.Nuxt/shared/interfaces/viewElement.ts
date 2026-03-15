@@ -1,4 +1,7 @@
 export abstract class ViewElement
 {
-  abstract getVNode(): object;
+  abstract readonly id: number;
+  
+  abstract getRenderFunction(): () => object;
+  abstract getVNode(): { setup: () => () => object };
 }

@@ -1,6 +1,6 @@
 import { Overlay } from "#shared/interfaces/overlay";
-import { OverlayElement } from "#shared/interfaces/overlayElement";
 import { Observable } from "#shared/models/observable";
+import type { OverlayElement } from "#shared/entities/overlayElement";
 
 export class OverlayBase extends Overlay {
   private elements = new Observable<OverlayElement[]>([]);

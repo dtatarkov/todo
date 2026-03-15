@@ -1,7 +1,7 @@
 import { OverlayService } from "#shared/interfaces/overlayService";
-import { OverlayElement } from "#shared/interfaces/overlayElement";
 import type { Overlay } from "#shared/interfaces/overlay";
 import  { type Observable } from "#shared/models/observable";
+import type { OverlayElement } from "#shared/entities/overlayElement";
 
 export class OverlayServiceImpl extends OverlayService {
   constructor(protected overlay: Overlay)
