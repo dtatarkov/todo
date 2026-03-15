@@ -5,13 +5,17 @@ import { TableStateMachine } from "#shared/models/tableStateMachine";
 enum ViewModelState
 {
   initial     = 0,
+  initializing = 3,
   initialized = 1,
+  updatingData = 4,
   destroyed   = 2,
 }
 
 enum ViewModelEvent
 {
   init    = 0,
+  updateData = 2,
+  finishDataUpdating = 3,
   destroy = 1,
 }
 
@@ -33,6 +37,24 @@ export abstract class ViewModelBase<D extends Record<string, any>> extends ViewM
 
     {
       from : ViewModelState.initialized,
+      to   : ViewModelState.updatingData,
+      event: ViewModelEvent.updateData,
+
+      handler: async () =>
+      {
+        await this.updateData();
+        this.stateMachine.handle(ViewModelEvent.finishDataUpdating);
+      }
+    },
+
+    {
+      from : ViewModelState.updatingData,
+      to   : ViewModelState.initialized,
+      event: ViewModelEvent.finishDataUpdating,
+    },
+
+    {
+      from : ViewModelState.initialized,
       to   : ViewModelState.destroyed,
       event: ViewModelEvent.destroy,
 
@@ -40,7 +62,7 @@ export abstract class ViewModelBase<D extends Record<string, any>> extends ViewM
     }
   ]);
 
-  init(): void
+  async init(): Promise<void>
   {
     this.stateMachine.handle(ViewModelEvent.init);
   }
@@ -74,17 +96,17 @@ export abstract class ViewModelBase<D extends Record<string, any>> extends ViewM
     this._changeHandlers.delete(handler);
   }
 
-  async updateData(): Promise<void>
+  override async updateData(): Promise<void>
   {
     
   }
 
-  protected async handleInitialization(): Promise<void>
+  protected handleInitialization(): void
   {
-
+    
   }
 
-  protected async handleDestruction(): Promise<void>
+  protected handleDestruction(): void
   {
     this._changeHandlers.clear();
 

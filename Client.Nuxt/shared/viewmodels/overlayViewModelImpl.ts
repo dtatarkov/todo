@@ -14,9 +14,9 @@ export class OverlayViewModelImpl extends OverlayViewModel
     super();
   }
 
-  protected override async handleInitialization(): Promise<void>
+  protected override handleInitialization(): void
   {
-    await super.handleInitialization();
+    super.handleInitialization();
     
     const observableElements = this.overlayService.getElements();
     const elements = observableElements.get();

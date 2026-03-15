@@ -2,35 +2,38 @@ import type { ViewModel } from "#shared/interfaces/viewmodel";
 
 export default function useViewModel<D extends Record<string, any>>(viewmodel: ViewModel<D>)
 {
+  const data = reactive(viewmodel.getData());
+
   const response = useAsyncData(`viewmodel:${ viewmodel.name }`, async () =>
   {
-    if(import.meta.server)
-    {
-      await viewmodel.updateData();
-    }
+    viewmodel.init();
+    await viewmodel.updateData();
     
     const data = viewmodel.getData();
-    
+
     return data;
   }, {
     default: () => viewmodel.getData(),
-  });  
-  
+  });
+
   if (import.meta.client)
   {
-    response.then(() => {
-      viewmodel.setData(response.data.value as D);
-      viewmodel.init();
-    });
-
     const unsubscribe = viewmodel.subscribe(() =>
     {
-      response.refresh();
+      Object.assign(data, viewmodel.getData());
     });
 
     onUnmounted(() =>
     {
       unsubscribe();
+    });
+
+    response.then(() =>
+    {
+      viewmodel.setData(response.data.value as D);
+    }).finally(() =>
+    {
+      viewmodel.init();
     });
   }
 
