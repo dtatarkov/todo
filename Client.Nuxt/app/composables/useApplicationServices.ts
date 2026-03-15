@@ -16,11 +16,14 @@ import { OverlayViewModel } from "#shared/interfaces/overlayViewModel";
 import { OverlayViewModelImpl } from "#shared/viewmodels/overlayViewModelImpl";
 import { OverlayServiceImpl } from "#shared/services/overlayServiceImpl";
 import { OverlayService } from "#shared/interfaces/overlayService";
+import { OverlayBase } from "#shared/entities/overlayBase";
+import { Overlay } from "#shared/interfaces/overlay";
 
 export function useApplicationServices()
 {
   registerService(DatesService, DatesServiceImpl);
   registerService(ToDosRepository, ToDosRepositoryImpl);
+  registerService(Overlay, OverlayBase);
 
   registerServiceFactory(ToDoDtoMapper, () =>
   {
@@ -49,7 +52,8 @@ export function useApplicationServices()
 
   registerServiceFactory(OverlayService, () =>
   {
-    const overlayService = new OverlayServiceImpl();
+    const overlay = getService(Overlay);
+    const overlayService = new OverlayServiceImpl(overlay);
 
     return overlayService;
   });
@@ -73,7 +77,8 @@ export function useApplicationServices()
 
   registerServiceFactory(OverlayViewModel, () =>
   {
-    const viewmodel = new OverlayViewModelImpl();
+    const overlayService = getService(OverlayService);
+    const viewmodel = new OverlayViewModelImpl(overlayService);
 
     return viewmodel;
   });

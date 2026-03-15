@@ -1,19 +1,16 @@
 import { OverlayService } from "#shared/interfaces/overlayService";
 import { OverlayElement } from "#shared/interfaces/overlayElement";
+import type { Overlay } from "#shared/interfaces/overlay";
+import type { Observable } from "#shared/models/observable";
 
 export class OverlayServiceImpl extends OverlayService {
-  getElements(): OverlayElement[]
+  constructor(protected overlay: Overlay)
   {
-    return [];
+    super();
   }
-
-  subscribeToElementChanges(handler: Action): void
+  
+  getElements(): Observable<OverlayElement[]>
   {
-     
+    return this.overlay.getElements();
   }
-
-  unsubscribeFromElementChanges(handler: Action): void
-  {
-    
-  }  
 }
