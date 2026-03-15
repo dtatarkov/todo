@@ -27,7 +27,7 @@ export function registerService<T>(serviceIdentifier: ServiceIdentifier<T>, serv
     throw new Error('Service locator is not defined');
   }
 
-  serviceLocator.register(serviceIdentifier, service);
+  serviceLocator.register(serviceIdentifier, service, scope);
 }
 
 export function registerServiceFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T, scope?: ServiceScope): void {
@@ -36,5 +36,5 @@ export function registerServiceFactory<T>(serviceIdentifier: ServiceIdentifier<T
     throw new Error('Service locator is not defined');
   }
 
-  serviceLocator.registerFactory(serviceIdentifier, factory);
+  serviceLocator.registerFactory(serviceIdentifier, factory, scope);
 }
