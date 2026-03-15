@@ -1,15 +1,14 @@
-import type { Func } from "#shared/types/func";
-
 export class TableStateMachine<TState, TEvent>
 {
-  private states: Map<TState, Map<TEvent, { to: TState; handler: Func<Promise<void>> }>> = new Map();
+  private states: Map<TState, Map<TEvent, { to: TState; handler?: Action }>> = new Map();
+  private stateAwaiters: Map<TState, Set<Action>> = new Map();
   private currentState: TState;
 
   constructor(initialState: TState, states?: Array<{
     from: TState;
     to: TState;
     event: TEvent;
-    handler: Func<Promise<void>>;
+    handler?: Action;
   }>)
   {
     this.currentState = initialState;
@@ -23,14 +22,17 @@ export class TableStateMachine<TState, TEvent>
     }
   }
 
-  addTransition(from: TState, to: TState, event: TEvent, handler: Func<Promise<void>>): this
+  addTransition(from: TState, to: TState, event: TEvent, handler?: Action): this
   {
-    if (!this.states.has(from))
-    {
-      this.states.set(from, new Map());
-    }
+    let stateTransitions = this.states.get(from);
     
-    this.states.get(from)!.set(event, { to, handler });
+    if (!stateTransitions)
+    {
+      stateTransitions = new Map();
+      this.states.set(from, stateTransitions);
+    }
+
+    stateTransitions.set(event, { to, handler });
     
     return this;
   }
@@ -41,7 +43,7 @@ export class TableStateMachine<TState, TEvent>
       this.states.get(this.currentState)!.has(event);
   }
 
-  async handle(event: TEvent)
+  handle(event: TEvent)
   {
     if (!this.canHandle(event))
     {
@@ -50,12 +52,43 @@ export class TableStateMachine<TState, TEvent>
 
     const { to, handler }  = this.states.get(this.currentState)!.get(event)!;
 
-    await handler();
-    this.currentState = to;    
+    handler?.();
+    this.setState(to); 
   }
 
   getCurrentState(): TState
   {
     return this.currentState;
+  }
+  
+  awaitState(state: TState): Promise<void>
+  {
+    return new Promise(resolve => {
+      if(this.currentState === state)
+      {
+        resolve();
+      }
+      
+      let awaiters = this.stateAwaiters.get(state);
+
+      if (!awaiters)
+      {
+        awaiters = new Set<Action>();
+        this.stateAwaiters.set(state, awaiters);
+      }
+
+      awaiters?.add(resolve);
+    });
+  }
+
+  private setState(state: TState) {
+    this.currentState = state;
+    
+    let stateAwaiters = this.stateAwaiters.get(state);
+    
+    if(stateAwaiters) {
+      stateAwaiters.forEach(awaiter => awaiter());
+      this.stateAwaiters.delete(state);
+    }
   }
 }
