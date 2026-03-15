@@ -28,7 +28,7 @@ export abstract class ViewModelBase<D extends Record<string, any>> extends ViewM
       to   : ViewModelState.initialized,
       event: ViewModelEvent.init,
 
-      handler: async () => this.handleInitialization()
+      handler: () => this.handleInitialization()
     },
 
     {
@@ -36,18 +36,18 @@ export abstract class ViewModelBase<D extends Record<string, any>> extends ViewM
       to   : ViewModelState.destroyed,
       event: ViewModelEvent.destroy,
 
-      handler: async () => this.handleDestruction()
+      handler: () => this.handleDestruction()
     }
   ]);
 
-  async init(): Promise<void>
+  init(): void
   {
-    await this.stateMachine.handle(ViewModelEvent.init);
+    this.stateMachine.handle(ViewModelEvent.init);
   }
 
-  async destroy(): Promise<void>
+  destroy(): void
   {
-    await this.stateMachine.handle(ViewModelEvent.destroy);
+    this.stateMachine.handle(ViewModelEvent.destroy);
   }
 
   getData(): D
@@ -62,14 +62,21 @@ export abstract class ViewModelBase<D extends Record<string, any>> extends ViewM
     this._changeHandlers.forEach(handler => handler());
   }
 
-  subscribe(handler: Action): void
+  subscribe(handler: Action): Action
   {
     this._changeHandlers.add(handler);
+    
+    return () => this.unsubscribe(handler);
   }
 
   unsubscribe(handler: Action): void
   {
     this._changeHandlers.delete(handler);
+  }
+
+  async updateData(): Promise<void>
+  {
+    
   }
 
   protected async handleInitialization(): Promise<void>

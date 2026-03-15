@@ -14,15 +14,16 @@ export class TodosViewModelImpl extends TodosViewModel
     super();
   }
   
-  protected override async handleInitialization() {
-    await super.handleInitialization();
+  override async updateData(): Promise<void>
+  {
+    await super.updateData();
     
     const todos = await this.todosService.getAllToDosAsync();
     
     const todosData = todos.map<TodosViewModelToDoData>(todo => ({
       id: todo.id,
     }));
-    
+
     this.setData({
       todos: todosData
     });

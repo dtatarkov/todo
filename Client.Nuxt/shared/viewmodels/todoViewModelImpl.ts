@@ -31,21 +31,21 @@ export class ToDoViewModelImpl extends ToDoViewModel
     });
   }
 
-  async handleEditButtonClick(): Promise<void>
-  {
-    await this.todosService.editToDoAsync(this.data.id);
-  }
-
-  protected override async handleInitialization() {
-    await super.handleInitialization();
+  override async updateData(): Promise<void> {
+    await super.updateData();
     
     const todo = await this.todosService.getToDoByIdOrDefaultAsync(this.data.id);
-    
+
     this.setData({
       title: todo.title,
       description: todo.description,
       completionDatePlanned: this.datesService.formatDateOptional(todo.completionDatePlanned),
       completionDateActual: this.datesService.formatDateOptional(todo.completionDateActual)
     });
+  }
+
+  async handleEditButtonClick(): Promise<void>
+  {
+    await this.todosService.editToDoAsync(this.data.id);
   }
 }
