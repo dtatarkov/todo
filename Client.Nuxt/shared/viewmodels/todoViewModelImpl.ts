@@ -14,7 +14,7 @@ export class ToDoViewModelImpl extends ToDoViewModel
 
   constructor(
     protected todosService: TodosService,
-    protected datesService: DatesService
+    protected datesService: DatesService,
   )
   {
     super();
@@ -31,8 +31,9 @@ export class ToDoViewModelImpl extends ToDoViewModel
     });
   }
 
-  handleEditButtonClick() {
-    console.log('edit requested');
+  async handleEditButtonClick(): Promise<void>
+  {
+    await this.todosService.editToDoAsync(this.data.id);
   }
 
   protected override async handleInitialization() {

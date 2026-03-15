@@ -10,5 +10,5 @@ export type ToDoViewModelData = {
 
 export abstract class ToDoViewModel extends ViewModelBase<ToDoViewModelData> { 
   abstract setToDoId(id: string): void;
-  abstract handleEditButtonClick(): void;
+  abstract handleEditButtonClick(): Promise<void>;
 }

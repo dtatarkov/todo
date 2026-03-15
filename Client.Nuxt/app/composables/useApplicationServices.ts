@@ -45,7 +45,9 @@ export function useApplicationServices()
   registerServiceFactory(TodosService, () =>
   {
     const todosOwner   = getService(ToDosOwner);
-    const todosService = new TodosServiceImpl(todosOwner);
+    const overlayService = getService(OverlayService);
+    
+    const todosService = new TodosServiceImpl(todosOwner, overlayService);
 
     return todosService;
   });
