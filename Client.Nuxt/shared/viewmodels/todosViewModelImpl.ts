@@ -14,7 +14,9 @@ export class TodosViewModelImpl extends TodosViewModel
     super();
   }
   
-  protected async handleInitialization() {
+  protected override async handleInitialization() {
+    await super.handleInitialization();
+    
     const todos = await this.todosService.getAllToDosAsync();
     
     const todosData = todos.map<TodosViewModelToDoData>(todo => ({

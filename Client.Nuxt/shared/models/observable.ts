@@ -13,9 +13,13 @@ export class Observable<D> {
     this.handlers.forEach(handler => handler(value));
   }
   
-  subscribe(handler: Action<[D]>)
+  subscribe(handler: Action<[D]>): Action
   {
     this.handlers.add(handler);
+    
+    return () => {
+      this.unsubscribe(handler);
+    }
   }
   
   unsubscribe(handler: Action<[D]>)

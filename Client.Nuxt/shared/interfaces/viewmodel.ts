@@ -4,6 +4,7 @@ export abstract class ViewModel<D extends Record<string, any>> {
   readonly abstract name: string;
   
   abstract init(): Promise<void>
+  abstract destroy(): Promise<void>
   abstract getData(): D
   abstract setData(newData: Partial<D>): void;
   abstract subscribe(handler: Action): void

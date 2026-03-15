@@ -35,7 +35,9 @@ export class ToDoViewModelImpl extends ToDoViewModel
     console.log('edit requested');
   }
 
-  protected async handleInitialization() {
+  protected override async handleInitialization() {
+    await super.handleInitialization();
+    
     const todo = await this.todosService.getToDoByIdOrDefaultAsync(this.data.id);
     
     this.setData({

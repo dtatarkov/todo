@@ -17,8 +17,8 @@ export default function useViewModel<D extends Record<string, any>>(viewmodel: V
   
   viewmodel.subscribe(handleViewModelChange);
   
-  onUnmounted(() => {
-    viewmodel.unsubscribe(handleViewModelChange);
+  onUnmounted(async () => {
+    await viewmodel.destroy();
   });
   
   return data;

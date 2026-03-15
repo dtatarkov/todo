@@ -14,8 +14,10 @@ export class OverlayViewModelImpl extends OverlayViewModel
     super();
   }
 
-  protected async handleInitialization(): Promise<void>
+  protected override async handleInitialization(): Promise<void>
   {
+    await super.handleInitialization();
+    
     const observableElements = this.overlayService.getElements();
     const elements = observableElements.get();
     
@@ -23,10 +25,12 @@ export class OverlayViewModelImpl extends OverlayViewModel
       elements
     });    
     
-    observableElements.subscribe(elements => {
+    const unsubscribe = observableElements.subscribe(elements => {
       this.setData({
         elements
       });
     });
+    
+    this.addDestroyHandler(unsubscribe);
   }
 } 
