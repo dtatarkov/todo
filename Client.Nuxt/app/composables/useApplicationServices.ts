@@ -12,32 +12,36 @@ import { TodosViewModel } from "#shared/interfaces/todosViewModel";
 import { TodosViewModelImpl } from "#shared/viewmodels/todosViewModelImpl";
 import { ToDoViewModel } from "#shared/interfaces/todoViewModel";
 import { ToDoViewModelImpl } from "#shared/viewmodels/todoViewModelImpl";
+import { OverlayViewModel } from "#shared/interfaces/overlayViewModel";
+import { OverlayViewModelImpl } from "#shared/viewmodels/overlayViewModelImpl";
 
 export function useApplicationServices()
 {
-  registerService(DatesService, DatesServiceImpl);  
+  registerService(DatesService, DatesServiceImpl);
   registerService(ToDosRepository, ToDosRepositoryImpl);
-  
-  registerServiceFactory(ToDoDtoMapper, () => {
+
+  registerServiceFactory(ToDoDtoMapper, () =>
+  {
     const datesService = getService(DatesService);
-    const mapper = new ToDoDtoMapperImpl(datesService);
-    
+    const mapper       = new ToDoDtoMapperImpl(datesService);
+
     return mapper;
   });
 
-  registerServiceFactory(ToDosOwner, () => {
+  registerServiceFactory(ToDosOwner, () =>
+  {
     const todosRepository = getService(ToDosRepository);
-    const todoDtoMapper = getService(ToDoDtoMapper);
-    const todoOwner = new ToDosOwnerBase(todosRepository, todoDtoMapper);
-    
+    const todoDtoMapper   = getService(ToDoDtoMapper);
+    const todoOwner       = new ToDosOwnerBase(todosRepository, todoDtoMapper);
+
     return todoOwner;
   });
 
-  registerServiceFactory(TodosService,() =>
+  registerServiceFactory(TodosService, () =>
   {
-    const todosOwner = getService(ToDosOwner);
+    const todosOwner   = getService(ToDosOwner);
     const todosService = new TodosServiceImpl(todosOwner);
-    
+
     return todosService;
   });
 
@@ -54,6 +58,13 @@ export function useApplicationServices()
     const todosService = getService(TodosService);
     const datesService = getService(DatesService);
     const viewmodel    = new ToDoViewModelImpl(todosService, datesService);
+
+    return viewmodel;
+  });
+
+  registerServiceFactory(OverlayViewModel, () =>
+  {
+    const viewmodel = new OverlayViewModelImpl();
 
     return viewmodel;
   });

@@ -1,6 +1,7 @@
 <template>
   <UApp>
     <NuxtPage />
+    <UIOverlay />
   </UApp>
 </template>
 
