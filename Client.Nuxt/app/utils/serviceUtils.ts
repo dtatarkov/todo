@@ -1,6 +1,7 @@
 import type { ServiceLocator } from "#shared/interfaces/serviceLocator";
 import type { ServiceIdentifier } from "#shared/types/serviceIdentifier";
 import type { Constructor } from "#shared/types/constructor";
+import type { ServiceScope } from "#shared/enums/serviceScope";
 
 let serviceLocator: ServiceLocator | undefined;
 
@@ -20,7 +21,7 @@ export function getService<T>(serviceIdentifier: ServiceIdentifier<T>): T
   return service;
 }
 
-export function registerService<T>(serviceIdentifier: ServiceIdentifier<T>, service: Constructor<T>): void {
+export function registerService<T>(serviceIdentifier: ServiceIdentifier<T>, service: Constructor<T>, scope?: ServiceScope): void {
   if(!serviceLocator)
   {
     throw new Error('Service locator is not defined');
@@ -29,7 +30,7 @@ export function registerService<T>(serviceIdentifier: ServiceIdentifier<T>, serv
   serviceLocator.register(serviceIdentifier, service);
 }
 
-export function registerServiceFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T): void {
+export function registerServiceFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T, scope?: ServiceScope): void {
   if(!serviceLocator)
   {
     throw new Error('Service locator is not defined');

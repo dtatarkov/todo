@@ -1,8 +1,9 @@
 import type { ServiceIdentifier } from "#shared/types/serviceIdentifier";
 import type { Constructor } from "#shared/types/constructor";
+import type { ServiceScope } from "#shared/enums/serviceScope";
 
 export abstract class ServiceLocator {
   abstract get<T>(serviceIdentifier: ServiceIdentifier<T>): T;
-  abstract register<T>(serviceIdentifier: ServiceIdentifier<T>, service: Constructor<T>): void;
-  abstract registerFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T): void;
+  abstract register<T>(serviceIdentifier: ServiceIdentifier<T>, service: Constructor<T>, scope?: ServiceScope): void;
+  abstract registerFactory<T>(serviceIdentifier: ServiceIdentifier<T>, factory: () => T, scope?: ServiceScope): void;
 }

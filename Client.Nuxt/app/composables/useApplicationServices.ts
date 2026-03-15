@@ -18,12 +18,13 @@ import { OverlayServiceImpl } from "#shared/services/overlayServiceImpl";
 import { OverlayService } from "#shared/interfaces/overlayService";
 import { OverlayBase } from "#shared/entities/overlayBase";
 import { Overlay } from "#shared/interfaces/overlay";
+import { ServiceScope } from "#shared/enums/serviceScope";
 
 export function useApplicationServices()
 {
-  registerService(DatesService, DatesServiceImpl);
-  registerService(ToDosRepository, ToDosRepositoryImpl);
-  registerService(Overlay, OverlayBase);
+  registerService(DatesService, DatesServiceImpl, ServiceScope.Singleton);
+  registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
+  registerService(Overlay, OverlayBase, ServiceScope.Singleton);
 
   registerServiceFactory(ToDoDtoMapper, () =>
   {
@@ -31,7 +32,7 @@ export function useApplicationServices()
     const mapper       = new ToDoDtoMapperImpl(datesService);
 
     return mapper;
-  });
+  }, ServiceScope.Singleton);
 
   registerServiceFactory(ToDosOwner, () =>
   {
@@ -40,7 +41,7 @@ export function useApplicationServices()
     const todoOwner       = new ToDosOwnerBase(todosRepository, todoDtoMapper);
 
     return todoOwner;
-  });
+  }, ServiceScope.Singleton);
 
   registerServiceFactory(TodosService, () =>
   {
@@ -50,7 +51,7 @@ export function useApplicationServices()
     const todosService = new TodosServiceImpl(todosOwner, overlayService);
 
     return todosService;
-  });
+  }, ServiceScope.Singleton);
 
   registerServiceFactory(OverlayService, () =>
   {
@@ -58,7 +59,7 @@ export function useApplicationServices()
     const overlayService = new OverlayServiceImpl(overlay);
 
     return overlayService;
-  });
+  }, ServiceScope.Singleton);
 
   registerServiceFactory(TodosViewModel, () =>
   {
