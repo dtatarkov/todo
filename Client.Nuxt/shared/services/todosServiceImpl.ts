@@ -52,11 +52,18 @@ export class TodosServiceImpl extends TodosService
       throw new Error(`ToDo(${todoId}) not found`);
     }
     
+    const form = new Form<ToDo>();
+    
+    form.setElements({
+      title: {
+        type: 'input-text',
+        label: 'Название задачи',
+        placeholder: 'Введите название задачи'
+      }
+    })
+
     const modal = new Modal();
     modal.setTitle('Редактирование');
-    
-    const form = new Form();
-    
     modal.setContent(form);
     
     this.overlayService.addElement(modal);
