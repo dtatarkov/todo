@@ -53,6 +53,8 @@ export class TodosServiceImpl extends TodosService
     }
     
     const modal = new Modal();
+    modal.setTitle('Редактирование');
+    
     const form = new Form();
     
     modal.setContent(form);
