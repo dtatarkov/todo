@@ -1,10 +1,11 @@
 import { UInput } from "#components";
 import { FormElement } from "#shared/entities/formElement";
 import { InputTextData } from "../types/inputTextData";
+import { FormElementType } from "#shared/enums/formElementType";
 
 export class InputText extends FormElement
 {
-  static readonly type = 'input-text';
+  static readonly type = FormElementType.inputText;
 
   private data: InputTextData;
 

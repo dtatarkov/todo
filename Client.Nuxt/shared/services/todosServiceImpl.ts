@@ -5,6 +5,7 @@ import { ToDoBase } from "#shared/entities/todoBase";
 import type { OverlayService } from "#shared/interfaces/overlayService";
 import { Modal } from "#shared/entities/modal";
 import { Form } from "#shared/entities/form";
+import { FormElementType } from "#shared/enums/formElementType";
 
 export class TodosServiceImpl extends TodosService
 {
@@ -56,7 +57,7 @@ export class TodosServiceImpl extends TodosService
     
     form.setElements({
       title: {
-        type: 'input-text',
+        type: FormElementType.inputText,
         label: 'Название задачи',
         placeholder: 'Введите название задачи'
       }
