@@ -18,16 +18,15 @@ export class OverlayViewModelImpl extends OverlayViewModel
   {
     super.handleInitialization();
     
-    const observableElements = this.overlayService.getElements();
-    const elements = observableElements.get();
+    const elements = this.overlayService.getElements();
     
     this.setData({
       elements
     });    
     
-    const unsubscribe = observableElements.subscribe(elements => {
+    const unsubscribe = this.overlayService.onElementsChange(elements => {
       this.setData({
-        elements
+        elements: elements
       });
     });
     

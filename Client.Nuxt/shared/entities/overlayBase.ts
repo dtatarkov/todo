@@ -1,24 +1,59 @@
 import { Overlay } from "#shared/interfaces/overlay";
 import { Observable } from "#shared/models/observable";
-import type { OverlayElement } from "#shared/entities/overlayElement";
+import  { type OverlayElement } from "#shared/entities/overlayElement";
+import type { Action } from "#shared/types/action";
 
 export class OverlayBase extends Overlay {
-  private elements = new Observable<OverlayElement[]>([]);
+  private observableElements = new Observable(new Set<OverlayElement>());
 
   override addElement(element: OverlayElement): void
   {
-    const currentElements = this.elements.get();
-    const newElements = [...currentElements, element];
+    const currentElements = this.observableElements.get();
+    const newElements = new Set([...currentElements, element]);
     
-    this.elements.set(newElements);
+    this.observableElements.set(newElements);
+
+    element.onClose(() => {
+      this.removeElement(element);
+    });
   }
 
-  getElements(): Observable<OverlayElement[]> {
-    return this.elements;
+  removeElement(element: OverlayElement): void {
+    const currentElements = this.observableElements.get();
+    const newElements = new Set(currentElements);
+
+    newElements.delete(element);
+
+    this.observableElements.set(newElements);
+    element.destroy();
   }
-  
+
+  getElements(): OverlayElement[] {
+    const elementsSet = this.observableElements.get();
+    const elements = [...elementsSet];
+    
+    return elements;    
+  }
+
+  override onElementsChange(handler: Action<[elements: OverlayElement[]]>): Action
+  {
+    const unsubscribe = this.observableElements.subscribe(elementsSet => {
+      const elements = [...elementsSet];
+      
+      handler(elements);
+    });
+    
+    return unsubscribe;
+  }
+
   destroy(): void
   {
-    this.elements.destroy();
+    let currentElements = this.observableElements.get();
+    
+    currentElements.forEach((element) => {
+      element.destroy();
+    });
+    
+    this.observableElements.destroy();
   }
 }

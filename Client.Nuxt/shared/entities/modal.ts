@@ -1,43 +1,75 @@
 import { ViewElement } from "#shared/interfaces/viewElement";
 import { UModal } from "#components";
 import { OverlayElement } from "#shared/entities/overlayElement";
+import { Observable } from "#shared/models/observable";
 
-export class Modal extends OverlayElement {
+export class Modal extends OverlayElement
+{
   private content: ViewElement | undefined;
   private title: string | undefined;
   private description: string | undefined;
 
-  setContent(content: ViewElement) {
+  private isOpened = new Observable(false);
+
+  setContent(content: ViewElement)
+  {
     this.content = content;
   }
 
-  setTitle(title: string) {
+  setTitle(title: string)
+  {
     this.title = title;
   }
 
-  setDescription(description: string) {
+  setDescription(description: string)
+  {
     this.description = description;
   }
 
-  override getRenderFunction(): () => object {
+  override destroy(): void
+  {
+    this.isOpened.destroy();
+  }
+
+  override getRenderFunction(): () => object
+  {
     const slots: Record<string, object> = {};
 
-    if(this.content) {
+    if (this.content)
+    {
       slots['content'] = this.content.getRenderFunction();
     }
 
     return () => h(UModal, {
-      open: true,
-      title: this.title,
-      description: this.description
+      defaultOpen: true,
+      title      : this.title,
+      description: this.description,
+      transition : false,
+
+      'onUpdate:open': (isOpened: boolean) =>
+      {
+        this.isOpened.set(isOpened);
+      }
     }, slots);
   }
 
-  getVNode(): { setup: () => () => any } {
+  getVNode(): { setup: () => () => any }
+  {
     const vnode = {
       setup: () => this.getRenderFunction()
     }
 
     return vnode;
+  }
+
+  override onClose(handler: Action): void
+  {
+    this.isOpened.subscribe(isOpened =>
+    {
+      if (!isOpened)
+      {
+        handler();
+      }
+    });
   }
 }
