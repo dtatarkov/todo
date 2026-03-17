@@ -1,46 +1,34 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
 import type { InputElement } from "#shared/entities/inputElement";
+import { FormField } from "#shared/entities/formField";
 
 export abstract class FormElement<D extends FormElementData = FormElementData> extends ViewElementBase
 {
-  private _label: string = "";
-  private _name: string = "";
-  
-  protected abstract inputElement: InputElement;
+  protected inputElement: InputElement;
+  protected formField: FormField;
 
   constructor(data?: D)
   {
     super();
-
-    if (data?.label)
-    {
-      this.setLabel(data.label);
-    }
-
-    if (data?.name)
-    {
-      this.setName(data.name);
-    }
+    
+    this.formField = new FormField(data);
+    this.inputElement = this.createInputElement(data);
+    
+    this.formField.setContent(this.inputElement);
   }
 
   public get label(): string {
-    return this._label;
+    return this.formField.label;
   }
 
   public get name(): string {
-    return this._name;
-  }
-
-  public setLabel(label: string): void {
-    this._label = label;
-  }
-
-  public setName(name: string): void {
-    this._name = name;
+    return this.formField.name;
   }
 
   getRenderFunction(): () => object
   {
-    return this.inputElement.getRenderFunction();
+    return this.formField.getRenderFunction();
   }
+  
+  protected abstract createInputElement(data?: D): InputElement;
 }
