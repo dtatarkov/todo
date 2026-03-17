@@ -3,8 +3,8 @@ import { ToDo } from "#shared/interfaces/todo";
 import type { ToDosOwner } from "#shared/interfaces/todosOwner";
 import { ToDoBase } from "#shared/entities/todoBase";
 import type { OverlayService } from "#shared/interfaces/overlayService";
-import { Modal } from "#shared/entities/modal";
-import { Form } from "#shared/entities/form";
+import { Modal } from "#shared/entities/overlay/modal";
+import { Form } from "#shared/entities/forms/form";
 import { FormElementType } from "#shared/enums/formElementType";
 
 export class TodosServiceImpl extends TodosService

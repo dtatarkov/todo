@@ -16,7 +16,7 @@ import { OverlayViewModel } from "#shared/interfaces/overlayViewModel";
 import { OverlayViewModelImpl } from "#shared/viewmodels/overlayViewModelImpl";
 import { OverlayServiceImpl } from "#shared/services/overlayServiceImpl";
 import { OverlayService } from "#shared/interfaces/overlayService";
-import { OverlayBase } from "#shared/entities/overlayBase";
+import { OverlayBase } from "#shared/entities/overlay/overlayBase";
 import { Overlay } from "#shared/interfaces/overlay";
 import { ServiceScope } from "#shared/enums/serviceScope";
 

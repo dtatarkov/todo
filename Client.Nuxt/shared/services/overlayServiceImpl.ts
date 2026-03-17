@@ -1,6 +1,6 @@
 import { OverlayService } from "#shared/interfaces/overlayService";
 import type { Overlay } from "#shared/interfaces/overlay";
-import  { type OverlayElement } from "#shared/entities/overlayElement";
+import  { type OverlayElement } from "#shared/entities/overlay/overlayElement";
 import type { Action } from "#shared/types/action";
 
 export class OverlayServiceImpl extends OverlayService {

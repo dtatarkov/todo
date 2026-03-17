@@ -1,6 +1,6 @@
 import { UInput } from "#components";
 import { FormElementType } from "#shared/enums/formElementType";
-import { InputElement } from "#shared/entities/inputElement";
+import { InputElement } from "#shared/entities/inputElements/inputElement";
 import type { InputElementTextData } from "#shared/types/inputElementTextData";
 
 export class InputElementText extends InputElement<string>

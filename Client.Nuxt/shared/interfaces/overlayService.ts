@@ -1,4 +1,4 @@
-import type { OverlayElement } from "#shared/entities/overlayElement";
+import type { OverlayElement } from "#shared/entities/overlay/overlayElement";
 
 export abstract class OverlayService {
   abstract addElement(element: OverlayElement): void;

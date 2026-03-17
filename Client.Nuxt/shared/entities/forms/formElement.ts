@@ -1,6 +1,6 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
-import type { InputElement } from "#shared/entities/inputElement";
-import { FormField } from "#shared/entities/formField";
+import type { InputElement } from "#shared/entities/inputElements/inputElement";
+import { FormField } from "#shared/entities/forms/formField";
 import type { RenderFunction } from "#shared/types/renderFunction";
 
 export abstract class FormElement<D extends FormElementData = FormElementData> extends ViewElementBase

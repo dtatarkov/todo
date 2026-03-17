@@ -1,8 +1,8 @@
 import { UForm } from "#components";
 import { ViewElementBase } from "#shared/entities/viewElementBase";
-import { FormElement } from "#shared/entities/formElement";
+import { FormElement } from "#shared/entities/forms/formElement";
 import type { FormElementCreateData } from "#shared/types/formElementCreateData";
-import { FormInputText } from "#shared/entities/formInputText";
+import { FormInputText } from "#shared/entities/forms/formInputText";
 import type { RenderFunction } from "#shared/types/renderFunction";
 
 export class Form<TEntity extends Record<string, any> = Record<string, any>> extends ViewElementBase {
