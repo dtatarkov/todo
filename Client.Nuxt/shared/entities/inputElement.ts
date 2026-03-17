@@ -56,4 +56,8 @@ export abstract class InputElement extends ViewElementBase
   {
     this._autofocus = autofocus;
   }
+  
+  protected getCssClasses() {
+    return 'w-full';
+  }
 }

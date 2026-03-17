@@ -33,6 +33,7 @@ export class InputElementText extends InputElement
       name       : this.name,
       placeholder: this.placeholder,
       autofocus  : this.autofocus,
+      class      : this.getCssClasses(), 
 
       'update:modelValue': (value: string) =>
       {

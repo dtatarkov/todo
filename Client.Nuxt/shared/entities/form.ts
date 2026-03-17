@@ -17,7 +17,9 @@ export class Form<TEntity extends Record<string, any> = Record<string, any>> ext
   }
 
   override getRenderFunction(): RenderFunction {
-    return () => h(UForm, {}, {
+    return () => h(UForm, {
+      class: 'p-4'
+    }, {
       default: () => this.elements.map(element => element.getRenderFunction()())
     });
   }
