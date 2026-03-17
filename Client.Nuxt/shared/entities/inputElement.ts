@@ -13,17 +13,17 @@ export abstract class InputElement extends ViewElementBase
 
     if (data?.autofocus)
     {
-      this._autofocus = data.autofocus;
+      this.setAutofocus(data.autofocus);
     }
 
     if (data?.name)
     {
-      this._name = data.name;
+      this.setName(data.name);
     }
 
     if (data?.id)
     {
-      this._id = data.id;
+      this.setId(data.id);
     }
   }
 
