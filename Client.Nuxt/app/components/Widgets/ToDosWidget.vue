@@ -6,15 +6,9 @@ const data = useViewModel(viewmodel);
 </script>
 
 <template>
-  <div class="todos-widget">
+  <div class="p-4">
     <UIGrid>
       <ToDoCard v-for="todo of data.todos" :key="todo.id" :todo-id="todo.id" />
     </UIGrid>
   </div>
 </template>
-
-<style lang="scss">
-.todos-widget {
-  padding: 16px;
-}
-</style>

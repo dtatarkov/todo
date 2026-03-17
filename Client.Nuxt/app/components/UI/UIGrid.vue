@@ -1,13 +1,5 @@
 <template>
-  <div class="ui-grid">
+  <div class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(400px,1fr))]">
     <slot />
   </div>
 </template>
-
-<style lang="scss">
-.ui-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(300px, 1fr));
-  gap: 4px;
-}
-</style>
