@@ -1,9 +1,12 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
+import type { InputElement } from "#shared/entities/inputElement";
 
 export abstract class FormElement<D extends FormElementData = FormElementData> extends ViewElementBase
 {
   private _label: string = "";
   private _name: string = "";
+  
+  protected abstract inputElement: InputElement;
 
   constructor(data?: D)
   {
@@ -34,5 +37,10 @@ export abstract class FormElement<D extends FormElementData = FormElementData> e
 
   public setName(name: string): void {
     this._name = name;
+  }
+
+  getRenderFunction(): () => object
+  {
+    return this.inputElement.getRenderFunction();
   }
 }

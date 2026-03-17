@@ -1,17 +1,17 @@
 import { UInput } from "#components";
-import { FormElement } from "#shared/entities/formElement";
-import { InputTextData } from "../types/inputTextData";
 import { FormElementType } from "#shared/enums/formElementType";
+import { InputElement } from "#shared/entities/inputElement";
+import type { InputElementTextData } from "#shared/types/inputElementTextData";
 
-export class InputText extends FormElement<InputTextData>
+export class InputElementText extends InputElement
 {
   static readonly type = FormElementType.inputText;
 
   private _value: string       = '';
   private _placeholder: string = '';
-  private _autofocus: boolean  = false;
+  
 
-  constructor(data?: InputTextData)
+  constructor(data?: InputElementTextData)
   {
     super(data);
 
@@ -24,17 +24,11 @@ export class InputText extends FormElement<InputTextData>
     {
       this.setPlaceholder(data.placeholder);
     }
-
-    if (data?.autofocus)
-    {
-      this.setAutofocus(data.autofocus);
-    }
   }
 
   override getRenderFunction(): () => object
   {
     return () => h(UInput, {
-      label      : this.label,
       modelValue : this.value,
       name       : this.name,
       placeholder: this.placeholder,
@@ -57,11 +51,6 @@ export class InputText extends FormElement<InputTextData>
     return this._placeholder;
   }
 
-  public get autofocus(): boolean
-  {
-    return this._autofocus;
-  }
-
   public setValue(value: string): void
   {
     this._value = value;
@@ -70,10 +59,5 @@ export class InputText extends FormElement<InputTextData>
   public setPlaceholder(placeholder: string): void
   {
     this._placeholder = placeholder;
-  }
-
-  public setAutofocus(autofocus: boolean): void
-  {
-    this._autofocus = autofocus;
   }
 }

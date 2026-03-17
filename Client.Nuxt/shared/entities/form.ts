@@ -2,7 +2,7 @@ import { UForm } from "#components";
 import { ViewElementBase } from "#shared/entities/viewElementBase";
 import { FormElement } from "#shared/entities/formElement";
 import type { FormElementCreateData } from "#shared/types/formElementCreateData";
-import { InputText } from "#shared/entities/inputText";
+import { FormInputText } from "#shared/entities/formInputText";
 
 export class Form<TEntity extends Record<string, any> = Record<string, any>> extends ViewElementBase {
   private elements: FormElement[] = [];
@@ -24,7 +24,7 @@ export class Form<TEntity extends Record<string, any> = Record<string, any>> ext
   private createElement(data: FormElementCreateData): FormElement {
     switch (data.type) {
       case 'input-text':
-        return new InputText(data);
+        return new FormInputText(data);
       default:
         throw new Error(`Unknown form element type: ${data.type}`);
     }
