@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "storybook": "storybook dev -p 6006 --no-open",
+    "storybook": "set NUXT_ALLOW_COLOR_MODE=false && storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
     "test": "vitest run"
   },

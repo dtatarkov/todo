@@ -1,13 +1,15 @@
 import type { StorybookConfig } from '@storybook-vue/nuxt';
 
 const config: StorybookConfig = {
-  "stories": [
+  stories: [
     "../stories/**/*.stories.@(js|jsx|ts|tsx|mdx)"
   ],
-  "addons": [
+  
+  addons: [
     "@storybook/addon-a11y",
     "@storybook/addon-docs"
   ],
-  "framework": "@storybook-vue/nuxt"
+  
+  framework: "@storybook-vue/nuxt",
 };
 export default config;
