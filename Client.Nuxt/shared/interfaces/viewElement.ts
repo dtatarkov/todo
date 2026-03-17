@@ -1,5 +1,7 @@
+import type { RenderFunction } from "#shared/types/renderFunction";
+
 export abstract class ViewElement
 {
-  abstract getRenderFunction(): () => object;
-  abstract getVNode(): { setup: () => () => object };
+  abstract getRenderFunction(): RenderFunction;
+  abstract getVNode(): { setup: () => RenderFunction };
 }

@@ -2,6 +2,7 @@ import { ViewElement } from "#shared/interfaces/viewElement";
 import { UModal } from "#components";
 import { OverlayElement } from "#shared/entities/overlayElement";
 import { Observable } from "#shared/models/observable";
+import type { RenderFunction } from "#shared/types/renderFunction";
 
 export class Modal extends OverlayElement
 {
@@ -31,7 +32,7 @@ export class Modal extends OverlayElement
     this.isOpened.destroy();
   }
 
-  override getRenderFunction(): () => object
+  override getRenderFunction(): RenderFunction
   {
     const slots: Record<string, object> = {};
 

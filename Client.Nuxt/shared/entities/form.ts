@@ -3,6 +3,7 @@ import { ViewElementBase } from "#shared/entities/viewElementBase";
 import { FormElement } from "#shared/entities/formElement";
 import type { FormElementCreateData } from "#shared/types/formElementCreateData";
 import { FormInputText } from "#shared/entities/formInputText";
+import type { RenderFunction } from "#shared/types/renderFunction";
 
 export class Form<TEntity extends Record<string, any> = Record<string, any>> extends ViewElementBase {
   private elements: FormElement[] = [];
@@ -15,7 +16,7 @@ export class Form<TEntity extends Record<string, any> = Record<string, any>> ext
     });
   }
 
-  override getRenderFunction(): () => object {
+  override getRenderFunction(): RenderFunction {
     return () => h(UForm, {}, {
       default: () => this.elements.map(element => element.getRenderFunction()())
     });
