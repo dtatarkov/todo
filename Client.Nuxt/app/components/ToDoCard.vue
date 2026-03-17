@@ -47,7 +47,7 @@ const data = useViewModel(viewmodel);
 
 const cardUIOptions = {
   root  : 'rounded-sm',
-  header: 'flex gap-4 items-center bg-primary text-secondary'
+  header: 'flex gap-4 items-center text-primary'
 }
 
 const hasFooter = computed(() => data.completionDateActual != undefined || data.completionDatePlanned != undefined);

@@ -23,7 +23,9 @@ export default defineNuxtConfig({
 
   // @ts-ignore
   ui: {
-    colorMode: false
+    colorMode: {
+      preference: 'dark'
+    }
   },
 
   runtimeConfig: {
