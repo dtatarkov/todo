@@ -26,6 +26,10 @@ export abstract class FormElement<D extends FormElementData = FormElementData> e
     return this.formField.name;
   }
 
+  public setValue(value: any): void {
+    this.inputElement.setValue(value);
+  }
+
   getRenderFunction(): RenderFunction
   {
     return this.formField.getRenderFunction();

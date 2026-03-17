@@ -8,6 +8,14 @@ import type { RenderFunction } from "#shared/types/renderFunction";
 export class Form<TEntity extends Record<string, any> = Record<string, any>> extends ViewElementBase {
   private elements: FormElement[] = [];
 
+  setData(data: Record<string, any>) {
+    for (const element of this.elements) {
+      if (element.name in data) {
+        element.setValue(data[element.name]);
+      }
+    }
+  }
+
   setElements(elements: Partial<Record<keyof TEntity, Omit<FormElementCreateData, 'name'>>>) {
     this.elements = Object.entries(elements).map(([name, createData]) => {
       const element = this.createElement({ name, ...createData } as FormElementCreateData);

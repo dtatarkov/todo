@@ -3,7 +3,7 @@ import { FormElementType } from "#shared/enums/formElementType";
 import { InputElement } from "#shared/entities/inputElement";
 import type { InputElementTextData } from "#shared/types/inputElementTextData";
 
-export class InputElementText extends InputElement
+export class InputElementText extends InputElement<string>
 {
   static readonly type = FormElementType.inputText;
 

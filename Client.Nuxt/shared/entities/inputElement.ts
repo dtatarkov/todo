@@ -1,7 +1,7 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
 import { InputElementData } from "#shared/types/inputElementData";
 
-export abstract class InputElement extends ViewElementBase
+export abstract class InputElement<V = any> extends ViewElementBase
 {
   private _autofocus: boolean = false;
   private _name: string       = '';
@@ -41,6 +41,8 @@ export abstract class InputElement extends ViewElementBase
   {
     return this._id;
   }
+  
+  public abstract get value(): V;
 
   public setName(name: string): void
   {
@@ -56,6 +58,8 @@ export abstract class InputElement extends ViewElementBase
   {
     this._autofocus = autofocus;
   }
+  
+  public abstract setValue(value: V): void;
   
   protected getCssClasses() {
     return 'w-full';

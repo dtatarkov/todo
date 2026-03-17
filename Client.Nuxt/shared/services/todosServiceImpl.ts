@@ -61,7 +61,9 @@ export class TodosServiceImpl extends TodosService
         label: 'Название задачи',
         placeholder: 'Введите название задачи'
       }
-    })
+    });
+    
+    form.setData(todo);
 
     const modal = new Modal();
     modal.setTitle('Редактирование');
