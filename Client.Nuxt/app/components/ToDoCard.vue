@@ -19,11 +19,11 @@
 
     <template #footer v-if="hasFooter">
       <UIInfoBlock>
-        <UIInfoRow label="Выполнено" v-if="data.completionDateActual">
+        <UIInfoRow label="Выполнено" v-if="data.completionDateActual.length">
           <UIDate :date="data.completionDateActual"/>
         </UIInfoRow>
 
-        <UIInfoRow label="Выполнить до" v-else-if="data.completionDatePlanned">
+        <UIInfoRow label="Выполнить до" v-else-if="data.completionDatePlanned.length">
           <UIDate :date="data.completionDatePlanned"/>
         </UIInfoRow>
       </UIInfoBlock>
@@ -50,5 +50,5 @@ const cardUIOptions = {
   header: 'flex gap-4 items-center text-primary'
 }
 
-const hasFooter = computed(() => data.completionDateActual != undefined || data.completionDatePlanned != undefined);
+const hasFooter = computed(() => data.completionDateActual.length > 0 || data.completionDatePlanned.length > 0);
 </script>

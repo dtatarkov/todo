@@ -10,11 +10,6 @@ const preview: Preview = {
     },
   },
   
-  beforeAll: () => {
-    useServiceLocator();
-    useApplicationServices();
-  },
-  
   tags: ['autodocs'],
 };
 
