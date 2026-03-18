@@ -60,6 +60,12 @@ export class TodosServiceImpl extends TodosService
         type: FormElementType.inputText,
         label: 'Название задачи',
         placeholder: 'Введите название задачи'
+      },
+      
+      description: {
+        type: FormElementType.textarea,
+        label: 'Описание задачи',
+        placeholder: 'Введите описание задачи'
       }
     });
     
