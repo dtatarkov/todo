@@ -62,6 +62,7 @@ export class FormField extends ViewElementBase
     const props = {
       label: this.label,
       name : this.name,
+      class: 'flex flex-col gap-1'
     }
 
     return () => h(UFormField, props, slots);
