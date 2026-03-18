@@ -5,6 +5,9 @@ import type { FormElementCreateData } from "#shared/types/formElementCreateData"
 import { FormInputText } from "#shared/entities/forms/formInputText";
 import type { RenderFunction } from "#shared/types/renderFunction";
 import { FormTextArea } from "#shared/entities/forms/formTextarea";
+import { FormElementType } from "#shared/enums/formElementType";
+import { FormInputDate } from "#shared/entities/forms/formInputDate";
+import { FormElementCreateDataWithName } from "#shared/types/formElementCreateDataWithName";
 
 export class Form<TEntity extends Record<string, any> = Record<string, any>> extends ViewElementBase
 {
@@ -21,11 +24,11 @@ export class Form<TEntity extends Record<string, any> = Record<string, any>> ext
     }
   }
 
-  setElements(elements: Partial<Record<keyof TEntity, Omit<FormElementCreateData, 'name'>>>)
+  setElements(elements: Partial<Record<keyof TEntity, FormElementCreateData>>)
   {
     this.elements = Object.entries(elements).map(([name, createData]) =>
     {
-      const element = this.createElement({ name, ...createData } as FormElementCreateData);
+      const element = this.createElement({ name, ...createData } as FormElementCreateDataWithName);
 
       return element;
     });
@@ -40,14 +43,16 @@ export class Form<TEntity extends Record<string, any> = Record<string, any>> ext
     });
   }
 
-  private createElement(data: FormElementCreateData): FormElement
+  private createElement(data: FormElementCreateDataWithName): FormElement
   {
     switch (data.type)
     {
-      case 'input-text':
+      case FormElementType.inputText:
         return new FormInputText(data);
-      case 'textarea':
+      case FormElementType.textarea:
         return new FormTextArea(data);
+      case FormElementType.inputDate:
+        return new FormInputDate(data);
       default:
         throw new Error(`Unknown form element type: ${ data.type }`);
     }

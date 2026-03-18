@@ -66,6 +66,11 @@ export class TodosServiceImpl extends TodosService
         type: FormElementType.textarea,
         label: 'Описание задачи',
         placeholder: 'Введите описание задачи'
+      },
+      
+      completionDatePlanned: {
+        type: FormElementType.inputDate,
+        label: 'Плановая дата выполнения',
       }
     });
     

@@ -1,0 +1,1 @@
+export type InputElementDateData = InputElementData<Date>
