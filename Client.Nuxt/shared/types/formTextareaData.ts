@@ -1,3 +1,1 @@
-export type FormTextareaData = FormElementData & {
-  placeholder?: string;
-};
+export type FormTextareaData = FormElementData & Partial<InputElementTextareaData>
