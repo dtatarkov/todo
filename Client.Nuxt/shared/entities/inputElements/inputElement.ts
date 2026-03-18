@@ -1,65 +1,65 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
 import { InputElementData } from "#shared/types/inputElementData";
 
-export abstract class InputElement<V = any> extends ViewElementBase
+export abstract class InputElement<V = any, D extends InputElementData<V> = InputElementData<V>, > extends ViewElementBase
 {
-  private _autofocus: boolean = false;
-  private _name: string       = '';
-  private _id: string         = '';
+  protected data: D;
 
-  constructor(data?: InputElementData)
+  constructor(data?: Partial<D>)
   {
     super();
 
-    if (data?.autofocus)
-    {
-      this.setAutofocus(data.autofocus);
+    this.data = {
+      ...this.getDefaultData(),
+      ...data
+    };
+  }
+
+  get id(): string
+  {
+    return this.data.id;
+  }
+
+  get name(): string
+  {
+    return this.data.name;
+  }
+
+  get autofocus(): boolean {
+    return this.data.autofocus;
+  }
+
+  get value(): V
+  {
+    return this.data.value;
+  }
+
+  setValue(value: V): void
+  {
+    this.data.value = value;
+  }
+
+  protected getProps(): Record<string, any> {
+    return {
+      ...this.data,
+
+      modelValue : this.value,
+      class      : this.getCssClasses(),
+
+      'update:modelValue': (value: V) =>
+      {
+        this.setValue(value);
+      }
     }
-
-    if (data?.name)
-    {
-      this.setName(data.name);
-    }
-
-    if (data?.id)
-    {
-      this.setId(data.id);
-    }
   }
 
-  public get autofocus(): boolean
-  {
-    return this._autofocus;
+  protected getDefaultData(): D {
+    return {
+      id: '',
+      name: '',
+      autofocus: false,
+    } as D;
   }
-
-  public get name(): string
-  {
-    return this._name;
-  }
-
-  public get id(): string
-  {
-    return this._id;
-  }
-  
-  public abstract get value(): V;
-
-  public setName(name: string): void
-  {
-    this._name = name;
-  }
-
-  public setId(id: string): void
-  {
-    this._id = id;
-  }
-
-  public setAutofocus(autofocus: boolean): void
-  {
-    this._autofocus = autofocus;
-  }
-  
-  public abstract setValue(value: V): void;
   
   protected getCssClasses() {
     return 'w-full';

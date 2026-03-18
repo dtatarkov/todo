@@ -1,4 +1,3 @@
-export type InputElementTextareaData = InputElementData & {
-  value?: string;
-  placeholder?: string;
+export type InputElementTextareaData = InputElementData<string> & {
+  placeholder: string;
 };
