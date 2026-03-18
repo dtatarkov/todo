@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 import { DatesService } from '#shared/interfaces/datesService';
 
 export class DatesServiceImpl extends DatesService {
+  private config = useRuntimeConfig();
+  
   fromString(dateString: string): Date {
     const dateTime = DateTime.fromISO(dateString);
     
@@ -32,7 +34,7 @@ export class DatesServiceImpl extends DatesService {
     }
     
     const result = dateTime
-      .setLocale('ru-RU')
+      .setLocale(this.config.public.locale)
       .toLocaleString(options);
     
     if(!result)

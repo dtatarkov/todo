@@ -1,11 +1,16 @@
 <template>
-  <UApp>
+  <UApp :locale="locale">
     <NuxtPage />
     <UIOverlay />
   </UApp>
 </template>
 
 <script setup lang="ts">
+import * as locales from '@nuxt/ui/locale';
+
 useServiceLocator();
 useApplicationServices();
+
+const config = useRuntimeConfig();
+const locale = (locales as any)[config.public.locale];
 </script>

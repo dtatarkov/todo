@@ -30,7 +30,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: ''
+      apiBaseUrl: '',
+      locale    : 'ru'
     },
   },
 })
