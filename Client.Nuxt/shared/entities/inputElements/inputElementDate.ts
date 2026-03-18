@@ -1,7 +1,7 @@
 import { InputElement } from "#shared/entities/inputElements/inputElement";
 import { InputElementDateData } from "#shared/types/InputElementDateData";
 import { UInputDate } from "#components";
-import { CalendarDate, getLocalTimeZone, parseAbsolute, parseDate } from "@internationalized/date";
+import { getLocalTimeZone, parseAbsolute, ZonedDateTime } from "@internationalized/date";
 
 export class InputElementDate extends InputElement<Date | undefined, InputElementDateData>
 {
@@ -18,8 +18,10 @@ export class InputElementDate extends InputElement<Date | undefined, InputElemen
       ...super.getProps(),
 
       modelValue: internationalizedValue,
+      hideTimeZone: true,
+      granularity: 'day',
 
-      'update:modelValue': (value: CalendarDate) =>
+      'update:modelValue': (value: ZonedDateTime) =>
       {
         let nativeValue = this.fromInternationalizedValue(value);
 
@@ -30,7 +32,7 @@ export class InputElementDate extends InputElement<Date | undefined, InputElemen
     return props;
   }
 
-  private toInternationalizedValue(value?: Date): CalendarDate | undefined
+  private toInternationalizedValue(value?: Date): ZonedDateTime | undefined
   {
     if (!value)
     {
@@ -43,15 +45,14 @@ export class InputElementDate extends InputElement<Date | undefined, InputElemen
     return result;
   }
 
-  private fromInternationalizedValue(value?: CalendarDate): Date | undefined
+  private fromInternationalizedValue(value?: ZonedDateTime): Date | undefined
   {
     if (!value)
     {
       return undefined;
     }
 
-    const timezone = getLocalTimeZone();
-    const result   = value.toDate(timezone);
+    const result   = value.toDate();
 
     return result;
   }
