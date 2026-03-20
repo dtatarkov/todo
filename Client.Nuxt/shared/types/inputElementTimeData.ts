@@ -1,0 +1,1 @@
+export type InputElementTimeData = InputElementData<number>
