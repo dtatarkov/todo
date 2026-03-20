@@ -3,9 +3,9 @@ import type { InputElement } from "#shared/entities/inputElements/inputElement";
 import { FormField } from "#shared/entities/forms/formField";
 import type { RenderFunction } from "#shared/types/renderFunction";
 
-export abstract class FormElement<D extends FormElementData = FormElementData> extends ViewElementBase
+export abstract class FormElementBase<V = any, D extends FormElementData = FormElementData> extends ViewElementBase implements FormElementBase<V>
 {
-  protected inputElement: InputElement;
+  protected inputElement: InputElement<V>;
   protected formField: FormField;
 
   constructor(data?: D)
@@ -17,16 +17,12 @@ export abstract class FormElement<D extends FormElementData = FormElementData> e
     
     this.formField.setContent(this.inputElement);
   }
-
-  public get label(): string {
-    return this.formField.label;
+  
+  get name() {
+    return this.inputElement.name;
   }
 
-  public get name(): string {
-    return this.formField.name;
-  }
-
-  public setValue(value: any): void {
+  setValue(value: V): void {
     this.inputElement.setValue(value);
   }
 

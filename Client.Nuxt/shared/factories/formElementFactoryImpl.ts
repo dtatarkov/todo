@@ -1,15 +1,16 @@
 import { FormElementFactory } from "#shared/interfaces/formElementFactory";
 import { FormElementCreateData } from "#shared/types/formElementCreateData";
-import { FormElement } from "#shared/entities/forms/formElement";
+import { FormElementBase } from "#shared/entities/forms/formElementBase";
 import { FormElementCreateDataWithName } from "../types/formElementCreateDataWithName";
+import type { FormElement } from "#shared/interfaces/formElement";
 
 // Динамический импорт всех классов форм
-const formFolderClasses = import.meta.glob("#shared/entities/forms/*.ts", { eager: true });
+const formModules = import.meta.glob("#shared/entities/forms/*.ts", { eager: true });
 
 // Фильтрация классов, которые наследуются от FormElement но не являются FormElement
-const formElementClasses = Object.values(formFolderClasses)
-                                 .map((cls: any) => Object.values(cls)[0]) // Получаем класс из модуля
-                                 .filter((cls: any) => cls.prototype instanceof FormElement && cls !== FormElement) as Constructor<FormElement, [data: FormElementCreateDataWithName]>[];
+const formElementClasses = Object.values(formModules)
+                                 .map((module: any) => Object.values(module)[0]) // Получаем класс из модуля
+                                 .filter((cls: any) => cls.prototype instanceof FormElementBase && cls !== FormElementBase) as Constructor<FormElementBase, [data: FormElementCreateDataWithName]>[];
 
 export class FormElementFactoryImpl implements FormElementFactory
 {
