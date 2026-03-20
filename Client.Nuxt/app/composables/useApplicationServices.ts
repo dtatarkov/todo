@@ -19,6 +19,10 @@ import { OverlayService } from "#shared/interfaces/overlayService";
 import { OverlayBase } from "#shared/entities/overlay/overlayBase";
 import { Overlay } from "#shared/interfaces/overlay";
 import { ServiceScope } from "#shared/enums/serviceScope";
+import { FormElementFactory } from "#shared/interfaces/formElementFactory";
+import { FormElementFactoryImpl } from "#shared/factories/formElementFactoryImpl";
+import { FormFactory } from "#shared/interfaces/formFactory";
+import { FormFactoryImpl } from "#shared/factories/formFactoryImpl";
 
 export function useApplicationServices()
 {
@@ -47,10 +51,20 @@ export function useApplicationServices()
   {
     const todosOwner   = getService(ToDosOwner);
     const overlayService = getService(OverlayService);
+    const formFactory = getService(FormFactory);
     
-    const todosService = new TodosServiceImpl(todosOwner, overlayService);
+    const todosService = new TodosServiceImpl(todosOwner, overlayService, formFactory);
 
     return todosService;
+  }, ServiceScope.Singleton);
+  
+  registerService(FormElementFactory, FormElementFactoryImpl, ServiceScope.Singleton);
+  
+  registerServiceFactory(FormFactory, () => {
+    const formElementFactory = getService(FormElementFactory);
+    const formFactory = new FormFactoryImpl(formElementFactory);
+    
+    return formFactory;
   }, ServiceScope.Singleton);
 
   registerServiceFactory(OverlayService, () =>

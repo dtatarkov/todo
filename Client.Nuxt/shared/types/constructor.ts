@@ -1,1 +1,1 @@
-export type Constructor<T> = new (...args: any[]) => T;
+export type Constructor<T, TArgs extends any[] = any[]> = new (...args: TArgs) => T;

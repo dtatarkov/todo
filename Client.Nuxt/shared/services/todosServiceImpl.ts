@@ -4,14 +4,15 @@ import type { ToDosOwner } from "#shared/interfaces/todosOwner";
 import { ToDoBase } from "#shared/entities/todoBase";
 import type { OverlayService } from "#shared/interfaces/overlayService";
 import { Modal } from "#shared/entities/overlay/modal";
-import { Form } from "#shared/entities/forms/form";
 import { FormElementType } from "#shared/enums/formElementType";
+import type { FormFactory } from "#shared/interfaces/formFactory";
 
 export class TodosServiceImpl extends TodosService
 {
   constructor(
     protected owner: ToDosOwner,
-    protected overlayService: OverlayService
+    protected overlayService: OverlayService,
+    protected formFactory: FormFactory
   )
   {
     super();
@@ -53,7 +54,7 @@ export class TodosServiceImpl extends TodosService
       throw new Error(`ToDo(${todoId}) not found`);
     }
     
-    const form = new Form<ToDo>();
+    const form = this.formFactory.create<ToDo>();
     
     form.setElements({
       title: {
