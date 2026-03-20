@@ -6,14 +6,18 @@ import type { RenderFunction } from "#shared/types/renderFunction";
 export abstract class FormElementBase<V = any, D extends FormElementData = FormElementData> extends ViewElementBase implements FormElementBase<V>
 {
   protected inputElement: InputElement<V>;
-  protected formField: FormField;
+  protected formField = new FormField();
 
   constructor(data?: D)
   {
     super();
     
-    this.formField = new FormField(data);
     this.inputElement = this.createInputElement(data);
+
+    if(data)
+    {
+      this.formField.setData(data);
+    }
     
     this.formField.setContent(this.inputElement);
   }

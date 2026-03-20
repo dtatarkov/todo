@@ -6,43 +6,16 @@ import type { FormFieldData } from "#shared/types/formFieldData";
 
 export class FormField extends ViewElementBase
 {
-  private _label: string = "";
-  private _name: string  = "";
+  private _data: FormFieldData = {
+    label: '',
+    name: '',
+  };
+  
   private _content: ViewElement | undefined;
 
-  constructor(data?: FormFieldData)
+  public setData(data: Partial<FormFieldData>): void
   {
-    super();
-
-    if (data?.name)
-    {
-      this.setName(data.name);
-    }
-
-    if (data?.label)
-    {
-      this.setLabel(data.label);
-    }
-  }
-
-  public get label(): string
-  {
-    return this._label;
-  }
-
-  public get name(): string
-  {
-    return this._name;
-  }
-
-  public setLabel(label: string): void
-  {
-    this._label = label;
-  }
-
-  public setName(name: string): void
-  {
-    this._name = name;
+    Object.assign(this._data, data);
   }
 
   public setContent(content: ViewElement): void
@@ -60,8 +33,7 @@ export class FormField extends ViewElementBase
     }
 
     const props = {
-      label: this.label,
-      name : this.name,
+      ...this._data,
       class: 'flex flex-col gap-1'
     }
 
