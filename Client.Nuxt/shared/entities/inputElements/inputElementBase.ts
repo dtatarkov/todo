@@ -1,50 +1,33 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
 import { InputElementData } from "#shared/types/inputElementData";
+import type { InputElement } from "#shared/interfaces/inputElement";
 
-export abstract class InputElementBase<V = any, D extends InputElementData<V> = InputElementData<V>, > extends ViewElementBase implements InputElementBase<V>
+export abstract class InputElementBase<V = any, D extends InputElementData<V> = InputElementData<V>, > extends ViewElementBase implements InputElement<V, D>
 {
-  protected data: D;
+  protected data: D = this.getDefaultData();
 
-  constructor(data?: Partial<D>)
-  {
-    super();
-
-    this.data = {
-      ...this.getDefaultData(),
-      ...data
-    };
-  }
-
-  get id(): string
-  {
-    return this.data.id;
-  }
-
-  get name(): string
+  get name()
   {
     return this.data.name;
   }
 
-  get autofocus(): boolean {
-    return this.data.autofocus;
-  }
-
-  get value(): V
+  setData(data?: Partial<D>)
   {
-    return this.data.value;
-  }
+    Object.assign(this.data, data);
+  }  
 
   setValue(value: V): void
   {
     this.data.value = value;
   }
 
-  protected getProps(): Record<string, any> {
+  protected getProps(): Record<string, any>
+  {
     return {
       ...this.data,
 
-      modelValue : this.value,
-      class      : this.getCssClasses(),
+      modelValue: this.data.value,
+      class     : this.getCssClasses(),
 
       'update:modelValue': (value: V) =>
       {
@@ -53,15 +36,17 @@ export abstract class InputElementBase<V = any, D extends InputElementData<V> = 
     }
   }
 
-  protected getDefaultData(): D {
+  protected getDefaultData(): D
+  {
     return {
-      id: '',
-      name: '',
+      id       : '',
+      name     : '',
       autofocus: false,
     } as D;
   }
-  
-  protected getCssClasses() {
+
+  protected getCssClasses()
+  {
     return 'w-full';
   }
 }

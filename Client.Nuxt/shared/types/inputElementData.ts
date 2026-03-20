@@ -1,4 +1,4 @@
-export type InputElementData<V> = {
+export type InputElementData<V = any> = {
   id: string;
   name: string;
   autofocus: boolean;

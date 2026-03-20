@@ -1,1 +1,0 @@
-export type FormTextareaData = FormElementData & Partial<InputElementTextareaData>

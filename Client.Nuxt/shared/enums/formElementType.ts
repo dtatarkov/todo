@@ -1,6 +1,6 @@
 export enum FormElementType {
-  inputText = 'input-text',
-  inputDate = 'input-date',
-  inputTime = 'input-time',
+  inputText = 'text',
+  inputDate = 'date',
+  inputTime = 'time',
   textarea = 'textarea'
 }

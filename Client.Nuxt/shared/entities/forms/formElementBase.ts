@@ -1,25 +1,23 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
-import type { InputElementBase } from "#shared/entities/inputElements/inputElementBase";
 import { FormField } from "#shared/entities/forms/formField";
 import type { RenderFunction } from "#shared/types/renderFunction";
+import type { InputElement } from "#shared/interfaces/inputElement";
+import { FormElementCreateDataWithName } from "#shared/types/formElementCreateDataWithName";
 
-export abstract class FormElementBase<V = any, D extends FormElementData = FormElementData> extends ViewElementBase implements FormElementBase<V>
+export class FormElementBase<V = any, D extends InputElementData = InputElementData> extends ViewElementBase implements FormElementBase<V, D>
 {
-  protected inputElement: InputElementBase<V>;
   protected formField = new FormField();
 
-  constructor(data?: D)
+  constructor(protected inputElement: InputElement<V, D>)
   {
     super();
     
-    this.inputElement = this.createInputElement(data);
-
-    if(data)
-    {
-      this.formField.setData(data);
-    }
-    
-    this.formField.setContent(this.inputElement);
+    this.formField.setContent(inputElement);
+  }
+  
+  setData(data: FormElementCreateDataWithName): void {
+    this.formField.setData(data);
+    this.inputElement.setData(data as unknown as D);
   }
   
   get name() {
@@ -34,6 +32,4 @@ export abstract class FormElementBase<V = any, D extends FormElementData = FormE
   {
     return this.formField.getRenderFunction();
   }
-  
-  protected abstract createInputElement(data?: D): InputElementBase;
 }
