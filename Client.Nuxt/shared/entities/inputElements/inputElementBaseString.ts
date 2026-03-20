@@ -1,7 +1,7 @@
 import { InputElementData } from "#shared/types/inputElementData";
-import { InputElement } from "#shared/entities/inputElements/inputElement";
+import { InputElementBase } from "#shared/entities/inputElements/inputElementBase";
 
-export abstract class InputElementBaseString<D extends InputElementData<string> = InputElementData<string>> extends InputElement<string, D> {
+export abstract class InputElementBaseString<D extends InputElementData<string> = InputElementData<string>> extends InputElementBase<string, D> {
   protected override getDefaultData(): D {
     return {
       ...super.getDefaultData(),

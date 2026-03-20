@@ -1,5 +1,5 @@
 import { FormElementBase } from "#shared/entities/forms/formElementBase";
-import { InputElement } from "#shared/entities/inputElements/inputElement";
+import { InputElementBase } from "#shared/entities/inputElements/inputElementBase";
 import { FormElementType } from "#shared/enums/formElementType";
 import { FormInputTimeData } from "#shared/types/formInputTimeData";
 import { InputElementTime } from "#shared/entities/inputElements/inputElementTime";
@@ -7,7 +7,7 @@ import { InputElementTime } from "#shared/entities/inputElements/inputElementTim
 export class FormInputTime extends FormElementBase<FormInputTimeData> {
   static type = FormElementType.inputTime;
   
-  protected override createInputElement(data?: FormInputTimeData): InputElement {
+  protected override createInputElement(data?: FormInputTimeData): InputElementBase {
     return new InputElementTime(data);
   }
 }

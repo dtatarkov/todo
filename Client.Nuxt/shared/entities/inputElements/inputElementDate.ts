@@ -1,9 +1,9 @@
-import { InputElement } from "#shared/entities/inputElements/inputElement";
+import { InputElementBase } from "#shared/entities/inputElements/inputElementBase";
 import { InputElementDateData } from "#shared/types/InputElementDateData";
 import { UInputDate } from "#components";
 import { getLocalTimeZone, parseAbsolute, ZonedDateTime } from "@internationalized/date";
 
-export class InputElementDate extends InputElement<Date | undefined, InputElementDateData>
+export class InputElementDate extends InputElementBase<Date | undefined, InputElementDateData>
 {
   override getRenderFunction(): () => object
   {

@@ -1,7 +1,7 @@
 import { ViewElementBase } from "#shared/entities/viewElementBase";
 import { InputElementData } from "#shared/types/inputElementData";
 
-export abstract class InputElement<V = any, D extends InputElementData<V> = InputElementData<V>, > extends ViewElementBase
+export abstract class InputElementBase<V = any, D extends InputElementData<V> = InputElementData<V>, > extends ViewElementBase implements InputElementBase<V>
 {
   protected data: D;
 

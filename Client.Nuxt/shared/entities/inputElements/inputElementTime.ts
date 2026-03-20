@@ -1,9 +1,9 @@
-import { InputElement } from "#shared/entities/inputElements/inputElement";
+import { InputElementBase } from "#shared/entities/inputElements/inputElementBase";
 import { InputElementTimeData } from "#shared/types/inputElementTimeData";
 import { UInputTime } from "#components";
 import { Time } from "@internationalized/date";
 
-export class InputElementTime extends InputElement<number | undefined, InputElementTimeData>
+export class InputElementTime extends InputElementBase<number | undefined, InputElementTimeData>
 {
   override getRenderFunction(): () => object
   {
