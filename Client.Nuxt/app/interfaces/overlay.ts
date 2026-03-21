@@ -1,5 +1,5 @@
-import type { OverlayElement } from "@/entities/overlay/overlayElement";
 import type { Action } from "~/types/action";
+import type { OverlayElement } from "./overlayElement";
 
 export abstract class Overlay {
   abstract addElement(element: OverlayElement): void;

@@ -1,12 +1,12 @@
 import { UForm } from "#components";
-import { ViewElementBase } from "@/entities/viewElementBase";
 import type { FormElementCreateData } from "@/types/formElementCreateData";
 import type { RenderFunction } from "@/types/renderFunction";
 import { Form } from "@/interfaces/form";
 import { FormElementFactory } from "@/interfaces/formElementFactory";
 import type { FormElement } from "@/interfaces/formElement";
+import { AsViewElement } from "~/mixins/asViewElement";
 
-export class FormBase<TEntity extends Record<string, any> = Record<string, any>> extends ViewElementBase implements Form
+export class FormBase<TEntity extends Record<string, any> = Record<string, any>> extends AsViewElement(Form)
 {
   private elements: FormElement[] = [];
   

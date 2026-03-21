@@ -1,13 +1,14 @@
-import { ViewElementBase } from "@/entities/viewElementBase";
-import { FormField } from "@/entities/forms/formField";
+import { FormFieldBase } from "~/entities/forms/formFieldBase";
 import type { RenderFunction } from "@/types/renderFunction";
 import type { InputElement } from "@/interfaces/inputElement";
 import type { FormElementCreateDataWithName } from "@/types/formElementCreateDataWithName";
 import type { InputElementData } from "~/types/inputElementData";
+import { FormElement } from "~/interfaces/formElement";
+import { AsViewElement } from "~/mixins/asViewElement";
 
-export class FormElementBase<V = any, D extends InputElementData = InputElementData> extends ViewElementBase implements FormElementBase<V, D>
+export class FormElementBase<V = any, D extends InputElementData = InputElementData> extends AsViewElement(FormElement)
 {
-  protected formField = new FormField();
+  protected formField = new FormFieldBase();
 
   constructor(protected inputElement: InputElement<V, D>)
   {

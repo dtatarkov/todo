@@ -1,7 +1,7 @@
 import { OverlayService } from "@/interfaces/overlayService";
 import type { Overlay } from "@/interfaces/overlay";
-import  { type OverlayElement } from "@/entities/overlay/overlayElement";
 import type { Action } from "@/types/action";
+import type { OverlayElement } from "~/interfaces/overlayElement";
 
 export class OverlayServiceImpl extends OverlayService {
   constructor(protected overlay: Overlay)

@@ -6,5 +6,5 @@ export abstract class InputElement<V = any, D extends InputElementData<V> = Inpu
   abstract value: V;
   
   abstract setValue(value: V): void
-  abstract setData(data: D): void;
+  abstract setData(data?: Partial<D>): void;
 }

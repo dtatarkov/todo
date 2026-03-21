@@ -1,10 +1,11 @@
 import { UFormField } from "#components";
-import { ViewElementBase } from "@/entities/viewElementBase";
 import { ViewElement } from "@/interfaces/viewElement";
 import type { RenderFunction } from "@/types/renderFunction";
 import type { FormFieldData } from "@/types/formFieldData";
+import { FormField } from "~/interfaces/formField";
+import { AsViewElement } from "~/mixins/asViewElement";
 
-export class FormField extends ViewElementBase
+export class FormFieldBase extends AsViewElement(FormField)
 {
   private _data: FormFieldData = {
     label: '',

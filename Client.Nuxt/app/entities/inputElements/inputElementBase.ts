@@ -1,8 +1,8 @@
-import { ViewElementBase } from "@/entities/viewElementBase";
 import type { InputElementData } from "@/types/inputElementData";
-import type { InputElement } from "@/interfaces/inputElement";
+import { InputElement } from "@/interfaces/inputElement";
+import { AsViewElement } from "~/mixins/asViewElement";
 
-export abstract class InputElementBase<V = any, D extends InputElementData<V> = InputElementData<V>, > extends ViewElementBase implements InputElement<V, D>
+export abstract class InputElementBase<V = any, D extends InputElementData<V> = InputElementData<V>, > extends AsViewElement(InputElement)
 {
   protected data: D = this.getDefaultData();
 

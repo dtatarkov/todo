@@ -1,5 +1,5 @@
 import { ViewModelBase } from "@/viewmodels/viewmodelBase";
-import type { OverlayElement } from "@/entities/overlay/overlayElement";
+import type { OverlayElement } from "~/interfaces/overlayElement";
 
 export type OverlayViewModelData = {
   elements: OverlayElement[];

@@ -1,11 +1,11 @@
 import { ViewElement } from "@/interfaces/viewElement";
 import { UModal } from "#components";
-import { OverlayElement } from "@/entities/overlay/overlayElement";
+import { OverlayElementBase } from "~/entities/overlay/overlayElementBase";
 import { Observable } from "@/models/observable";
 import type { RenderFunction } from "@/types/renderFunction";
 import type { Action } from "~/types/action";
 
-export class Modal extends OverlayElement
+export class Modal extends OverlayElementBase
 {
   private content: ViewElement | undefined;
   private title: string | undefined;
