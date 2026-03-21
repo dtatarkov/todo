@@ -1,0 +1,31 @@
+import { TodosViewModel, type TodosViewModelToDoData } from "@/interfaces/todosViewModel";
+import { TodosService } from "@/interfaces/todosService";
+
+export class TodosViewModelImpl extends TodosViewModel
+{
+  readonly name = 'todos';
+  
+  protected data = {
+    todos: new Array<TodosViewModelToDoData>()
+  }
+
+  constructor(protected todosService: TodosService)
+  {
+    super();
+  }
+  
+  override async updateData(): Promise<void>
+  {
+    await super.updateData();
+    
+    const todos = await this.todosService.getAllToDosAsync();
+    
+    const todosData = todos.map<TodosViewModelToDoData>(todo => ({
+      id: todo.id,
+    }));
+
+    this.setData({
+      todos: todosData
+    });
+  }
+}

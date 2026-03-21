@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OverlayViewModel } from "#shared/interfaces/overlayViewModel";
+import { OverlayViewModel } from "@/interfaces/overlayViewModel";
 
 const viewmodel = getService(OverlayViewModel);
 const data = useViewModel(viewmodel);

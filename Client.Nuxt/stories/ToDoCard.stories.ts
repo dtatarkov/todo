@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook-vue/nuxt';
 import ToDoCard from '../app/components/ToDoCard.vue';
-import { ToDoViewModel, type ToDoViewModelData } from "#shared/interfaces/todoViewModel";
+import { ToDoViewModel, type ToDoViewModelData } from "@/interfaces/todoViewModel";
 import { fn } from "storybook/test";
 
 function getToDoViewModelData(data: Partial<ToDoViewModelData>) {

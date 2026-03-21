@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TodosViewModel } from "#shared/interfaces/todosViewModel";
+import { TodosViewModel } from "@/interfaces/todosViewModel";
 
 const viewmodel = getService(TodosViewModel);
 const data = useViewModel(viewmodel);

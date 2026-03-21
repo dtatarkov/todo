@@ -1,4 +1,4 @@
-import type { ViewModel } from "#shared/interfaces/viewmodel";
+import type { ViewModel } from "@/interfaces/viewmodel";
 
 export default function useViewModel<D extends Record<string, any>>(viewmodel: ViewModel<D>)
 {

@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ToDoViewModel } from "#shared/interfaces/todoViewModel";
+import { ToDoViewModel } from "@/interfaces/todoViewModel";
 
 type Props = { 
   todoId: string;

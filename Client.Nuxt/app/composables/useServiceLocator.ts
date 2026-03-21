@@ -1,4 +1,4 @@
-import { ServiceLocatorImpl } from "#shared/services/serviceLocatorImpl";
+import { ServiceLocatorImpl } from "@/services/serviceLocatorImpl";
 
 export function useServiceLocator()
 {

@@ -1,7 +1,7 @@
-import type { ServiceLocator } from "#shared/interfaces/serviceLocator";
-import type { ServiceIdentifier } from "#shared/types/serviceIdentifier";
-import type { Constructor } from "#shared/types/constructor";
-import type { ServiceScope } from "#shared/enums/serviceScope";
+import type { ServiceLocator } from "@/interfaces/serviceLocator";
+import type { ServiceIdentifier } from "@/types/serviceIdentifier";
+import type { Constructor } from "@/types/constructor";
+import type { ServiceScope } from "@/enums/serviceScope";
 
 let serviceLocator: ServiceLocator | undefined;
 
