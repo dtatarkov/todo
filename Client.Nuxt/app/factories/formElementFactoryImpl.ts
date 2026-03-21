@@ -5,7 +5,6 @@ import type { FormElement } from "@/interfaces/formElement";
 import { InputElementBase } from "@/entities/inputElements/inputElementBase";
 import type { InputElement } from "@/interfaces/inputElement";
 import type { Constructor } from "@/types/constructor";
-import type { FormElementCreateDataWithName } from "@/types/formElementCreateDataWithName";
 
 const inputElementModules = import.meta.glob("@/entities/inputElements/*.ts", { eager: true });
 
@@ -27,7 +26,7 @@ export class FormElementFactoryImpl implements FormElementFactory
     const inputElement = new InputElementClass();
     const formElement = new FormElementBase(inputElement);
     
-    formElement.setData({ name, ...data } as FormElementCreateDataWithName);
+    formElement.setData({ name, ...data });
 
     return formElement;
   }
