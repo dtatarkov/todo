@@ -7,42 +7,46 @@
         }
 
         class ToDosWidget {
-            -grid: Grid
             +render(): UIElement
         }
 
-        class ToDoCard {
-            -viewModel: ToDoViewModel
+        class VToDoCard {
+            -todoCard: ToDoCard
             +render(): UIElement
         }
 
-        class Grid {
-            -items: ToDoCard[]
+        class VGrid {
+            -items: VToDoCard[]
             +render(): UIElement
         }
     }
 
     ' Domain Layer
     package "Domain" {
-        class ToDosViewModel {
-            -todosService: ToDosService
-            +init(): void
+        class ToDoCard {
+            -id: string
+            -title: string
+            -description: string
+            -completionDatePlanned: Date
+            -completionDateActual: Date
+            +render(): UIElement
         }
 
-        class ToDoViewModel {
-            -todosService: ToDosService
-            +init(): void
+        class ToDoData {
+            -id: string
+            -title: string
+            -description: string
+            -completionDatePlanned: Date
+            -completionDateActual: Date
         }
 
-        class ViewModel {
-            +data: object
-            +setData(data: object): void
-            +subscribe(callback: Function): void
-            +unsubscribe(callback: Function): void
+        class ToDoElementsFactory {
+            +createToDoCard(data: ToDoData): ToDoCard
         }
 
-        class ToDoImpl {
-            -owner: ToDosOwner
+        class UIElement {
+            +getRenderFunction(): Function
+            +getVNode(): VNode
         }
 
         class ToDo {
@@ -51,6 +55,7 @@
             +string description
             +Date completionDatePlanned
             +Date completionDateActual            
+            +getData(): ToDoData
         }
 
         class ToDosOwner {
@@ -66,10 +71,7 @@
         
         class ToDosService {
             -owner: ToDosOwner
-            +getToDoById(id: string): ToDo
-            +getAllToDos(): ToDo[]
-            +saveToDo(toDo: ToDo): void
-            +removeToDo(toDo: ToDo): void
+            +getAllToDosData(): ToDoData[]
         }
     }
 
@@ -86,18 +88,18 @@
 
     ' Зависимости между слоями
     ToDosPage --> ToDosWidget : uses
-    ToDosWidget --> ToDoCard : creates
-    ToDosWidget --> Grid : uses
-    ToDosWidget --> ToDosViewModel : uses
-    ToDoCard --> ToDoViewModel : uses
-    ToDosViewModel --> ToDosService : depends on
-    ToDoViewModel --> ToDosService : depends on
+    ToDosWidget --> ToDosService : uses
+    ToDoCard --> VToDoCard : creates
+    VToDoCard --> ToDoCard : uses
+    ToDosWidget --> VGrid : renders
     ToDosService --> ToDosOwner : depends on
+    ToDosService --> ToDo : depends on
+    ToDosWidget --> ToDoElementsFactory : uses
+    ToDosWidget --> ToDoCard : renders
+    ToDoElementsFactory --> ToDoCard : depends on
     ToDosOwnerBase --> ToDosRepository : depends on
     ToDo --> ToDosOwner : for saving changes
-    ToDoImpl --> ToDosOwner : depends on
-    ToDosOwnerBase <|-- ToDosOwner
-    ToDosViewModel <|-- ViewModel
-    ToDoViewModel <|-- ViewModel
-    ToDosService <|-- ViewModel
+    ToDo --> ToDoData : depends on
+    ToDoCard <|-- UIElement
+    ToDosOwnerBase <|-- ToDosOwner : depends on
 @enduml
