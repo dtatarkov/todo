@@ -96,6 +96,26 @@ export class DatesServiceImpl extends DatesService
     return result.toJSDate();
   }
 
+  getTime(date: Date): number
+  {
+    // Преобразуем дату в DateTime
+    const datetime = DateTime.fromJSDate(date);
+
+    // Находим начало дня
+    const startOfDay = datetime.startOf('day');
+
+    // Вычисляем разницу в миллисекундах
+    const diff = datetime.diff(startOfDay, 'milliseconds').milliseconds;
+
+    // Проверяем диапазон
+    if (diff < 0 || diff > this.dayInMilliseconds)
+    {
+      throw new Error('Time value is out of valid range (0-24 hours)');
+    }
+
+    return diff;
+  }
+
   isDate(value: any): value is Date
   {
     return value instanceof Date;
