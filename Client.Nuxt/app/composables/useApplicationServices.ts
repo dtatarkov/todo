@@ -23,12 +23,19 @@ import { FormElementFactory } from "@/interfaces/formElementFactory";
 import { FormElementFactoryImpl } from "@/factories/formElementFactoryImpl";
 import { FormFactory } from "@/interfaces/formFactory";
 import { FormFactoryImpl } from "@/factories/formFactoryImpl";
+import { AppPublicRuntimeConfig } from "~/interfaces/appRuntimeConfig";
 
 export function useApplicationServices()
 {
   registerService(DatesService, DatesServiceImpl, ServiceScope.Singleton);
   registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
+  
+  registerServiceFactory(AppPublicRuntimeConfig, () => {
+    const config = useRuntimeConfig();
+    
+    return config.public;
+  });
 
   registerServiceFactory(ToDoDtoMapper, () =>
   {
