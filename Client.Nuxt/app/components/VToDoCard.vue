@@ -18,15 +18,15 @@
     <div class="todo-card__description">{{ data.description }}</div>
 
     <template #footer v-if="hasFooter">
-      <UIInfoBlock>
-        <UIInfoRow label="Выполнено" v-if="data.completionDateActual.length">
-          <UIDate :date="data.completionDateActual"/>
-        </UIInfoRow>
+      <VInfoBlock>
+        <VInfoRow label="Выполнено" v-if="data.completionDateActual.length">
+          <VDate :date="data.completionDateActual"/>
+        </VInfoRow>
 
-        <UIInfoRow label="Выполнить до" v-else-if="data.completionDatePlanned.length">
-          <UIDate :date="data.completionDatePlanned"/>
-        </UIInfoRow>
-      </UIInfoBlock>
+        <VInfoRow label="Выполнить до" v-else-if="data.completionDatePlanned.length">
+          <VDate :date="data.completionDatePlanned"/>
+        </VInfoRow>
+      </VInfoBlock>
     </template>
   </UCard>
 </template>

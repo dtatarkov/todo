@@ -1,7 +1,7 @@
 <template>
   <UApp :locale="locale">
     <NuxtPage />
-    <UIOverlay />
+    <VOverlay />
   </UApp>
 </template>
 
