@@ -2,9 +2,15 @@ import { InputElementBase } from "@/entities/inputElements/inputElementBase";
 import type { InputElementTimeData } from "@/types/inputElementTimeData";
 import { UInputTime } from "#components";
 import { Time } from "@internationalized/date";
+import type { DatesService } from "~/interfaces/datesService";
 
 export class InputElementTime extends InputElementBase<number | undefined, InputElementTimeData>
 {
+  constructor(private datesService: DatesService)
+  {
+    super();
+  }
+  
   override getRenderFunction(): () => object
   {
     return () => h(UInputTime, this.getProps());
@@ -17,9 +23,9 @@ export class InputElementTime extends InputElementBase<number | undefined, Input
     let props = {
       ...super.getProps(),
 
-      modelValue: time,
+      modelValue  : time,
       hideTimeZone: true,
-      granularity: 'minute',
+      granularity : 'minute',
 
       'update:modelValue': (time: Time) =>
       {
@@ -39,27 +45,34 @@ export class InputElementTime extends InputElementBase<number | undefined, Input
       return undefined;
     }
     
-    const hours = Math.floor(value / 3600);
-    const minutes = Math.floor((value - hours * 3600) / 60);
-    const seconds = value - hours * 3600 - minutes * 60;
+    let availableMilliseconds = value;
+    
+    const hours   = Math.floor(availableMilliseconds / this.datesService.hourInMilliseconds);
+    availableMilliseconds -= hours * this.datesService.hourInMilliseconds;
+    
+    const minutes = Math.floor(availableMilliseconds / this.datesService.minuteInMilliseconds);
+    availableMilliseconds -= minutes * this.datesService.minuteInMilliseconds;
+    
+    const seconds = Math.floor((availableMilliseconds) / this.datesService.secondInMilliseconds);
+    availableMilliseconds -= seconds * this.datesService.secondInMilliseconds;
 
-    const result   = new Time(hours, minutes, seconds);
+    const time = new Time(hours, minutes, seconds, availableMilliseconds);
 
-    return result;
+    return time;
   }
 
-  private fromTime(value?: Time): number | undefined
+  private fromTime(time?: Time): number | undefined
   {
-    if (!value)
+    if (!time)
     {
       return undefined;
     }
-    
-    const hoursInSeconds = value.hour * 3600;
-    const minutesInSeconds = value.minute * 60;
-    const seconds = value.second;
 
-    const result = hoursInSeconds + minutesInSeconds + seconds;
+    const hours   = time.hour * 60 * 60 * 1000;
+    const minutes = time.minute * 60 * 1000;
+    const seconds = time.second * 1000;
+
+    const result = hours + minutes + seconds + time.millisecond;
 
     return result;
   }

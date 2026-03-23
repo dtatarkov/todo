@@ -70,9 +70,8 @@ export class TodosServiceImpl extends TodosService
       },
       
       completionDatePlanned: {
-        type: FormElementType.inputDate,
+        type: FormElementType.inputDateTime,
         label: 'Плановая дата выполнения',
-        
       }
     });
     

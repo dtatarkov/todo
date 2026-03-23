@@ -12,27 +12,27 @@ export class InputElementDate extends InputElementBase<Date | undefined, InputEl
 
   protected override getProps(): Record<string, any>
   {
-    let internationalizedValue = this.toInternationalizedValue(this.value);
+    const datetime = this.toDateTime(this.value);
 
-    let props = {
+    const props = {
       ...super.getProps(),
 
-      modelValue: internationalizedValue,
+      modelValue: datetime,
       hideTimeZone: true,
       granularity: 'day',
 
-      'update:modelValue': (value: ZonedDateTime) =>
+      'update:modelValue': (datetime: ZonedDateTime) =>
       {
-        let nativeValue = this.fromInternationalizedValue(value);
+        const date = datetime?.toDate();
 
-        this.setValue(nativeValue);
+        this.setValue(date);
       }
     }
 
     return props;
   }
 
-  private toInternationalizedValue(value?: Date): ZonedDateTime | undefined
+  private toDateTime(value?: Date): ZonedDateTime | undefined
   {
     if (!value)
     {
@@ -41,18 +41,6 @@ export class InputElementDate extends InputElementBase<Date | undefined, InputEl
 
     const timezone = getLocalTimeZone();
     const result   = parseAbsolute(value.toISOString(), timezone);
-
-    return result;
-  }
-
-  private fromInternationalizedValue(value?: ZonedDateTime): Date | undefined
-  {
-    if (!value)
-    {
-      return undefined;
-    }
-
-    const result   = value.toDate();
 
     return result;
   }

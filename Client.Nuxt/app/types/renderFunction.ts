@@ -1,1 +1,1 @@
-export type RenderFunction = () => object;
+export type RenderFunction = () => any;
