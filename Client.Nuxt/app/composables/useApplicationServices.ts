@@ -27,15 +27,21 @@ import { AppPublicRuntimeConfig } from "~/interfaces/appRuntimeConfig";
 
 export function useApplicationServices()
 {
-  registerService(DatesService, DatesServiceImpl, ServiceScope.Singleton);
   registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
+  
+  registerServiceFactory(DatesService, () => {
+    const config = getService(AppPublicRuntimeConfig);
+    const result = new DatesServiceImpl(config);
+    
+    return result;
+  }, ServiceScope.Singleton)
   
   registerServiceFactory(AppPublicRuntimeConfig, () => {
     const config = useRuntimeConfig();
     
     return config.public;
-  });
+  }, ServiceScope.Singleton);
 
   registerServiceFactory(ToDoDtoMapper, () =>
   {
@@ -65,7 +71,13 @@ export function useApplicationServices()
     return todosService;
   }, ServiceScope.Singleton);
   
-  registerService(FormElementFactory, FormElementFactoryImpl, ServiceScope.Singleton);
+  registerServiceFactory(FormElementFactory, () =>
+  {
+    const datesService = getService(DatesService);
+    const result = new FormElementFactoryImpl(datesService);
+    
+    return result;
+  }, ServiceScope.Singleton);
   
   registerServiceFactory(FormFactory, () => {
     const formElementFactory = getService(FormElementFactory);
