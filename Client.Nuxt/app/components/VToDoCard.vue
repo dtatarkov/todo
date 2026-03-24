@@ -10,7 +10,7 @@
             color="secondary"
             icon="i-heroicons-pencil-square"
             size="sm"
-            @click="() => viewmodel.handleEditButtonClick()"
+            @click="() => todoCard.handleEditButtonClick()"
         />
       </div>
     </template>
@@ -32,18 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { ToDoViewModel } from "@/interfaces/todoViewModel";
+import { ToDoCard } from "~/interfaces/todoCard";
 
-type Props = { 
-  todoId: string;
-}
-
-const props = defineProps<Props>();
-
-const viewmodel = getService(ToDoViewModel);
-viewmodel.setToDoId(props.todoId);
-
-const data = useViewModel(viewmodel);
+const props = defineProps<{ todoCard: ToDoCard }>();
+const data = useUIElement(props.todoCard);
 
 const cardUIOptions = {
   root  : 'rounded-sm',
