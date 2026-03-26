@@ -1,7 +1,7 @@
 <template>
   <UApp :locale="locale">
     <NuxtPage />
-    <VOverlay />
+    <VOverlayWidget />
   </UApp>
 </template>
 
