@@ -26,11 +26,15 @@ import { ToDoCardDataMapper } from "~/interfaces/todoCardDataMapper";
 import { ToDoCardDataMapperImpl } from "~/mappers/todoCardDataMapperImpl";
 import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
 import { ToDoElementsFactoryImpl } from "~/factories/todoElementsFactoryImpl";
+import { SSRLoader } from "~/interfaces/ssrLoader";
+import { SSRLoaderImpl } from "~/services/ssrLoaderImpl";
 
 export function useApplicationServices()
 {
   registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
+  
+  registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
   
   registerServiceFactory(DatesService, () => {
     const config = getService(AppPublicRuntimeConfig);
@@ -57,7 +61,8 @@ export function useApplicationServices()
   {
     const todosRepository = getService(ToDosRepository);
     const todoDtoMapper   = getService(ToDoDtoMapper);
-    const todoOwner       = new ToDosOwnerBase(todosRepository, todoDtoMapper);
+    const ssrLoader       = getService(SSRLoader);
+    const todoOwner       = new ToDosOwnerBase(todosRepository, todoDtoMapper, ssrLoader);
 
     return todoOwner;
   }, ServiceScope.Singleton);

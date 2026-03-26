@@ -2,7 +2,7 @@ import { ToDosOwner } from "@/interfaces/todosOwner";
 import { ToDo } from "@/interfaces/todo";
 import type { ToDosRepository } from "@/interfaces/todosRepository";
 import type { ToDoDtoMapper } from "@/interfaces/todoDtoMapper";
-import { TableStateMachine } from "@/models/tableStateMachine";
+import type { SSRLoader } from "~/interfaces/ssrLoader";
 
 enum ToDoOwnerState
 {
@@ -11,43 +11,16 @@ enum ToDoOwnerState
   initialized  = 1,
 }
 
-enum ToDoOwnerEvent
-{
-  init       = 0,
-  finishInit = 1,
-}
-
 export class ToDosOwnerBase extends ToDosOwner
 {
   protected todos = new Array<ToDo>();
 
-  private stateMachine = new TableStateMachine<ToDoOwnerState, ToDoOwnerEvent>(ToDoOwnerState.initial, [
-    {
-      from : ToDoOwnerState.initial,
-      to   : ToDoOwnerState.initializing,
-      event: ToDoOwnerEvent.init,
-
-      handler: async () =>
-      {
-        const todoDtos = await this.todosRepository.getAllToDosAsync();
-        const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
-
-        this.todos = todos;
-
-        this.stateMachine.handle(ToDoOwnerEvent.finishInit);
-      }
-    },
-
-    {
-      from : ToDoOwnerState.initializing,
-      to   : ToDoOwnerState.initialized,
-      event: ToDoOwnerEvent.finishInit,
-    }
-  ])
+  protected state = ToDoOwnerState.initial;
 
   constructor(
     protected todosRepository: ToDosRepository,
-    protected todoDtoMapper: ToDoDtoMapper
+    protected todoDtoMapper: ToDoDtoMapper,
+    protected ssrLoader: SSRLoader
   )
   {
     super();
@@ -67,7 +40,18 @@ export class ToDosOwnerBase extends ToDosOwner
 
   async init()
   {
-    this.stateMachine.handle(ToDoOwnerEvent.init);
-    await this.stateMachine.awaitState(ToDoOwnerState.initialized);
+    if (this.state != ToDoOwnerState.initial)
+    {
+      return;
+    }
+
+    this.state = ToDoOwnerState.initializing;
+
+    const todoDtos = await this.ssrLoader.loadAsync('todos', () => this.todosRepository.getAllToDosAsync());
+    const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
+
+    this.todos = todos;
+
+    this.state = ToDoOwnerState.initialized;
   }
 }
