@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { TodosService } from "~/interfaces/todosService";
+import { ToDosService } from "~/interfaces/todosService";
 import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
 
-const todosService        = getService(TodosService);
+const todosService        = getService(ToDosService);
 const todoElementsFactory = getService(ToDoElementsFactory);
 
 const { data: todos } = useViewAsyncData(() => todosService.getAllToDosAsync(), []);

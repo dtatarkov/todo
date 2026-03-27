@@ -1,6 +1,6 @@
 import { DatesServiceImpl } from "@/services/datesServiceImpl";
 import { DatesService } from "@/interfaces/datesService";
-import { TodosService } from "@/interfaces/todosService";
+import { ToDosService } from "@/interfaces/todosService";
 import { TodosServiceImpl } from "@/services/todosServiceImpl";
 import { ToDosOwner } from "@/interfaces/todosOwner";
 import { ToDosOwnerBase } from "@/entities/todosOwnerBase";
@@ -65,7 +65,7 @@ export function useApplicationServices()
     return todoOwner;
   }, ServiceScope.Singleton);
 
-  registerServiceFactory(TodosService, () =>
+  registerServiceFactory(ToDosService, () =>
   {
     const todosOwner   = getService(ToDosOwner);
     const overlayService = getService(OverlayService);
@@ -107,7 +107,7 @@ export function useApplicationServices()
   });
   
   registerServiceFactory(ToDoElementsFactory, () => {
-    const todosService = getService(TodosService);
+    const todosService = getService(ToDosService);
     const datesService = getService(DatesService);
     
     const result = new ToDoElementsFactoryImpl(todosService, datesService);

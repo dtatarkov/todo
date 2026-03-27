@@ -1,4 +1,4 @@
-import { TodosService } from "@/interfaces/todosService";
+import { ToDosService } from "@/interfaces/todosService";
 import { ToDo } from "@/interfaces/todo";
 import type { ToDosOwner } from "@/interfaces/todosOwner";
 import { ToDoBase } from "@/entities/todoBase";
@@ -7,7 +7,7 @@ import { Modal } from "@/entities/overlay/modal";
 import { FormElementType } from "@/enums/formElementType";
 import type { FormFactory } from "@/interfaces/formFactory";
 
-export class TodosServiceImpl extends TodosService
+export class TodosServiceImpl extends ToDosService
 {
   constructor(
     protected owner: ToDosOwner,

@@ -1,5 +1,5 @@
 import { ToDoCard } from "~/interfaces/todoCard";
-import type { TodosService } from "~/interfaces/todosService";
+import type { ToDosService } from "~/interfaces/todosService";
 import type { RenderFunction } from "~/types/renderFunction";
 import { VToDoCard } from "#components";
 
@@ -14,7 +14,7 @@ export class ToDoCardBase extends ToDoCard
   });
 
   constructor(
-    private todosService: TodosService
+    private todosService: ToDosService
   )
   {
     super();
