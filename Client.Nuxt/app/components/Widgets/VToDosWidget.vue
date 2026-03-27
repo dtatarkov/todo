@@ -5,7 +5,7 @@ import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
 const todosService        = getService(ToDosService);
 const todoElementsFactory = getService(ToDoElementsFactory);
 
-const todos = todosService.getAllToDos();
+const todos = todosService.getAllToDosRef();
 const cards = computed(() => todos.value.map(todo => todoElementsFactory.createToDoCard(todo)))
 </script>
 

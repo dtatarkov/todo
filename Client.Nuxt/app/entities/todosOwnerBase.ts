@@ -15,7 +15,9 @@ export class ToDosOwnerBase extends ToDosOwner
 {
   protected state = ToDoOwnerState.initial;
 
-  readonly todos = shallowRef(new Array<ToDo>());
+  private _todos = shallowRef(new Array<ToDo>());
+  
+  readonly todos = computed(() => this._todos.value);
 
   constructor(
     protected todosRepository: ToDosRepository,
@@ -47,7 +49,7 @@ export class ToDosOwnerBase extends ToDosOwner
     const todoDtos = await this.ssrLoader.loadAsync('todos', () => this.todosRepository.getAllToDosAsync());
     const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
 
-    this.todos.value = todos;
+    this._todos.value = todos;
 
     this.state = ToDoOwnerState.initialized;
   }

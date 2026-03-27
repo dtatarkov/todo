@@ -18,6 +18,6 @@ export class OverlayServiceImpl extends OverlayService
 
   getElementsRef(): ComputedRef<OverlayElement[]>
   {
-    return this.overlay.getElementsRef();
+    return this.overlay.elements;
   }
 }

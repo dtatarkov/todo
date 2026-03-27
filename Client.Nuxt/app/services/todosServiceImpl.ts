@@ -16,7 +16,7 @@ export class TodosServiceImpl extends ToDosService
     super();
   }
 
-  getAllToDos(): Ref<ToDo[]>
+  getAllToDosRef(): ComputedRef<ToDo[]>
   {
     return this.owner.todos;
   }

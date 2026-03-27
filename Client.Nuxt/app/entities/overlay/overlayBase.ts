@@ -5,7 +5,8 @@ import { ModalBase } from "~/entities/overlay/modalBase";
 export class OverlayBase extends Overlay
 {
   private elementsSet = shallowRef(new Set<OverlayElement>());
-  private elements    = computed(() => [...this.elementsSet.value]);
+  
+  readonly elements    = computed(() => [...this.elementsSet.value]);
   
   override createModal()
   {
@@ -38,10 +39,5 @@ export class OverlayBase extends Overlay
     newElements.delete(element);
 
     this.elementsSet.value = newElements;
-  }
-
-  getElementsRef(): ComputedRef<OverlayElement[]>
-  {
-    return this.elements;
   }
 }
