@@ -1,6 +1,6 @@
 import type { Action } from "~/types/action";
 
-export class Observable<D> {
+export class ObservableBase<D> {
   private handlers = new Set<Action<[D]>>();
   
   constructor(private data: D) { }

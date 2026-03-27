@@ -1,9 +1,9 @@
 import { ViewElement } from "@/interfaces/viewElement";
 import { UModal } from "#components";
 import { OverlayElementBase } from "~/entities/overlay/overlayElementBase";
-import { Observable } from "@/models/observable";
 import type { RenderFunction } from "@/types/renderFunction";
 import type { Action } from "~/types/action";
+import { ObservableBase } from "~/entities/observableBase";
 
 export class Modal extends OverlayElementBase
 {
@@ -11,7 +11,7 @@ export class Modal extends OverlayElementBase
   private title: string | undefined;
   private description: string | undefined;
 
-  private isOpened = new Observable(false);
+  private isOpened = new ObservableBase(false);
 
   setContent(content: ViewElement)
   {

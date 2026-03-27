@@ -1,10 +1,10 @@
 import { Overlay } from "@/interfaces/overlay";
-import { Observable } from "@/models/observable";
 import type { Action } from "@/types/action";
 import type { OverlayElement } from "~/interfaces/overlayElement";
+import { ObservableBase } from "~/entities/observableBase";
 
 export class OverlayBase extends Overlay {
-  private observableElements = new Observable(new Set<OverlayElement>());
+  private observableElements = new ObservableBase(new Set<OverlayElement>());
 
   override addElement(element: OverlayElement): void
   {
