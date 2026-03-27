@@ -8,8 +8,6 @@ import { ToDosRepository } from "@/interfaces/todosRepository";
 import { ToDosRepositoryImpl } from "@/repositories/todosRepositoryImpl";
 import { ToDoDtoMapperImpl } from "@/mappers/todoDtoMapperImpl";
 import { ToDoDtoMapper } from "@/interfaces/todoDtoMapper";
-import { OverlayViewModel } from "@/interfaces/overlayViewModel";
-import { OverlayViewModelImpl } from "@/viewmodels/overlayViewModelImpl";
 import { OverlayServiceImpl } from "@/services/overlayServiceImpl";
 import { OverlayService } from "@/interfaces/overlayService";
 import { OverlayBase } from "@/entities/overlay/overlayBase";
@@ -113,13 +111,5 @@ export function useApplicationServices()
     const result = new ToDoElementsFactoryImpl(todosService, datesService);
     
     return result;
-  });
-
-  registerServiceFactory(OverlayViewModel, () =>
-  {
-    const overlayService = getService(OverlayService);
-    const viewmodel = new OverlayViewModelImpl(overlayService);
-
-    return viewmodel;
   });
 }

@@ -1,58 +1,59 @@
 import { ViewElement } from "@/interfaces/viewElement";
-import { UModal } from "#components";
 import { OverlayElementBase } from "~/entities/overlay/overlayElementBase";
 import type { RenderFunction } from "@/types/renderFunction";
 import type { Action } from "~/types/action";
-import { ObservableBase } from "~/entities/observableBase";
+import VModal from "~/components/UI/VModal.vue";
 
 export class Modal extends OverlayElementBase
 {
-  private content: ViewElement | undefined;
-  private title: string | undefined;
-  private description: string | undefined;
-
-  private isOpened = new ObservableBase(false);
-
-  setContent(content: ViewElement)
-  {
-    this.content = content;
+  private data = {
+    title      : '',
+    description: '',
+  }
+  
+  private children = { 
+    content: <ViewElement | undefined>undefined
   }
 
-  setTitle(title: string)
+  private closeHandler: Action | undefined;
+
+  get title()
   {
-    this.title = title;
+    return this.data.title;
   }
 
-  setDescription(description: string)
+  set title(value)
   {
-    this.description = description;
+    this.data.title = value;
   }
 
-  override destroy(): void
+  get description()
   {
-    this.isOpened.destroy();
+    return this.data.description;
+  }
+
+  set description(value)
+  {
+    this.data.description = value;
+  }
+  
+  get content()
+  {
+    return this.children.content;
+  }
+
+  set content(content: ViewElement | undefined)
+  {
+    this.children.content = content;
+  }
+  
+  close() {
+    this.closeHandler?.();
   }
 
   override getRenderFunction(): RenderFunction
   {
-    const slots: Record<string, object> = {};
-
-    if (this.content)
-    {
-      slots['content'] = this.content.getRenderFunction();
-    }
-
-    return () => h(UModal, {
-      defaultOpen: true,
-      title      : this.title,
-      description: this.description,
-      transition : false,
-
-      'onUpdate:open': (isOpened: boolean) =>
-      {
-        this.isOpened.set(isOpened);
-      }
-    }, slots);
+    return () => h(VModal, { modal: this });
   }
 
   override getVNode(): { setup: () => RenderFunction }
@@ -66,12 +67,11 @@ export class Modal extends OverlayElementBase
 
   override onClose(handler: Action): void
   {
-    this.isOpened.subscribe(isOpened =>
+    if(this.closeHandler)
     {
-      if (!isOpened)
-      {
-        handler();
-      }
-    });
+      throw new Error('Close handler is already defined');
+    }
+    
+    this.closeHandler = handler;
   }
 }

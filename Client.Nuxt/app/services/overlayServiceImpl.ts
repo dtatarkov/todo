@@ -1,7 +1,6 @@
 import { OverlayService } from "@/interfaces/overlayService";
 import type { Overlay } from "@/interfaces/overlay";
-import type { Action } from "@/types/action";
-import type { OverlayElement } from "~/interfaces/overlayElement";
+import { type OverlayElement } from "~/interfaces/overlayElement";
 
 export class OverlayServiceImpl extends OverlayService {
   constructor(protected overlay: Overlay)
@@ -13,14 +12,14 @@ export class OverlayServiceImpl extends OverlayService {
   {
     this.overlay.addElement(element);
   }
-  
-  getElements(): OverlayElement[]
+
+  override removeElement(element: OverlayElement)
   {
-    return this.overlay.getElements();
+    this.overlay.removeElement(element);
   }
 
-  override onElementsChange(handler: Action<[elements: OverlayElement[]]>): Action
+  getElementsRef(): ComputedRef<OverlayElement[]>
   {
-    return this.overlay.onElementsChange(handler);
+    return this.overlay.getElementsRef();
   }
 }

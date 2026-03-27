@@ -22,41 +22,42 @@ export class TodosServiceImpl extends ToDosService
     return this.owner.todos;
   }
 
-  async editToDoAsync(todoId: string): Promise<void> {
+  async editToDoAsync(todoId: string): Promise<void>
+  {
     let todo = this.owner.getToDoById(todoId);
-    
-    if(!todo)
+
+    if (!todo)
     {
-      throw new Error(`ToDo(${todoId}) not found`);
+      throw new Error(`ToDo(${ todoId }) not found`);
     }
-    
+
     const form = this.formFactory.create<ToDo>();
-    
+
     form.setElements({
       title: {
-        type: FormElementType.inputText,
-        label: 'Название задачи',
+        type       : FormElementType.inputText,
+        label      : 'Название задачи',
         placeholder: 'Введите название задачи',
       },
-      
+
       description: {
-        type: FormElementType.textarea,
-        label: 'Описание задачи',
+        type       : FormElementType.textarea,
+        label      : 'Описание задачи',
         placeholder: 'Введите описание задачи'
       },
-      
+
       completionDatePlanned: {
-        type: FormElementType.inputDateTime,
+        type : FormElementType.inputDateTime,
         label: 'Плановая дата выполнения',
       }
     });
-    
+
     form.setData(todo);
 
-    const modal = new Modal();
-    modal.setTitle('Редактирование');
-    modal.setContent(form);
-    
+    const modal   = new Modal();
+    modal.title   = 'Редактирование';
+    modal.content = form;
+
     this.overlayService.addElement(modal);
   }
 }

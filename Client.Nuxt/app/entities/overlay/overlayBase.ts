@@ -1,59 +1,41 @@
 import { Overlay } from "@/interfaces/overlay";
-import type { Action } from "@/types/action";
 import type { OverlayElement } from "~/interfaces/overlayElement";
-import { ObservableBase } from "~/entities/observableBase";
 
-export class OverlayBase extends Overlay {
-  private observableElements = new ObservableBase(new Set<OverlayElement>());
+export class OverlayBase extends Overlay
+{
+  private elementsSet = shallowRef(new Set<OverlayElement>());
+  private elements    = computed(() => [...this.elementsSet.value]);
 
   override addElement(element: OverlayElement): void
   {
-    const currentElements = this.observableElements.get();
-    const newElements = new Set([...currentElements, element]);
-    
-    this.observableElements.set(newElements);
+    const currentElements = this.elementsSet.value;
+    const newElements     = new Set([...currentElements, element]);
 
-    element.onClose(() => {
+    this.elementsSet.value = newElements;
+
+    element.onClose(() =>
+    {
       this.removeElement(element);
     });
   }
 
-  removeElement(element: OverlayElement): void {
-    const currentElements = this.observableElements.get();
-    const newElements = new Set(currentElements);
+  removeElement(element: OverlayElement): void
+  {
+    if (!this.elementsSet.value.has(element))
+    {
+      return;
+    }
+
+    const currentElements = this.elementsSet.value;
+    const newElements     = new Set(currentElements);
 
     newElements.delete(element);
 
-    this.observableElements.set(newElements);
-    element.destroy();
+    this.elementsSet.value = newElements;
   }
 
-  getElements(): OverlayElement[] {
-    const elementsSet = this.observableElements.get();
-    const elements = [...elementsSet];
-    
-    return elements;    
-  }
-
-  override onElementsChange(handler: Action<[elements: OverlayElement[]]>): Action
+  getElementsRef(): ComputedRef<OverlayElement[]>
   {
-    const unsubscribe = this.observableElements.subscribe(elementsSet => {
-      const elements = [...elementsSet];
-      
-      handler(elements);
-    });
-    
-    return unsubscribe;
-  }
-
-  destroy(): void
-  {
-    let currentElements = this.observableElements.get();
-    
-    currentElements.forEach((element) => {
-      element.destroy();
-    });
-    
-    this.observableElements.destroy();
+    return this.elements;
   }
 }
