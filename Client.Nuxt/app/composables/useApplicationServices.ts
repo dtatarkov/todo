@@ -20,8 +20,6 @@ import { FormElementFactoryImpl } from "@/factories/formElementFactoryImpl";
 import { FormFactory } from "@/interfaces/formFactory";
 import { FormFactoryImpl } from "@/factories/formFactoryImpl";
 import { AppPublicRuntimeConfig } from "~/interfaces/appRuntimeConfig";
-import { ToDoCard } from "~/interfaces/todoCard";
-import { ToDoCardBase } from "~/entities/todoCardBase";
 import { ToDoCardDataMapper } from "~/interfaces/todoCardDataMapper";
 import { ToDoCardDataMapperImpl } from "~/mappers/todoCardDataMapperImpl";
 import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
@@ -101,13 +99,6 @@ export function useApplicationServices()
     return overlayService;
   }, ServiceScope.Singleton);
   
-  registerServiceFactory(ToDoCard, () => {
-    const todosService = getService(TodosService);
-    const result = new ToDoCardBase(todosService);
-    
-    return result;
-  });
-  
   registerServiceFactory(ToDoCardDataMapper, () => {
     const datesService = getService(DatesService);
     const result = new ToDoCardDataMapperImpl(datesService);
@@ -117,7 +108,9 @@ export function useApplicationServices()
   
   registerServiceFactory(ToDoElementsFactory, () => {
     const todosService = getService(TodosService);
-    const result = new ToDoElementsFactoryImpl(todosService);
+    const datesService = getService(DatesService);
+    
+    const result = new ToDoElementsFactoryImpl(todosService, datesService);
     
     return result;
   });

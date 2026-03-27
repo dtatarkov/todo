@@ -1,13 +1,12 @@
 import { UIElement } from "~/interfaces/uiElement";
 
-export type ToDoCardData = {
-  id: string;
-  title: string;
-  description: string;
-  completionDatePlanned: string;
-  completionDateActual: string;
-}
+export abstract class ToDoCard extends UIElement
+{
+  abstract id: string;
+  abstract title: string;
+  abstract description: string;
+  abstract completionDatePlanned: string;
+  abstract completionDateActual: string;
 
-export abstract class ToDoCard extends UIElement<ToDoCardData> {
   abstract handleEditButtonClick(): void;
 }

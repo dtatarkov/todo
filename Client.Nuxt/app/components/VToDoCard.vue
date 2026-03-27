@@ -1,7 +1,7 @@
 <template>
   <UCard class="todo-card" variant="subtle" :ui="cardUIOptions">
     <template #header>
-      <div class="todo-card__title font-semibold text-lg grow">{{ data.title }}</div>
+      <div class="todo-card__title font-semibold text-lg grow">{{ card.title }}</div>
 
       <div class="todo-card__actions">
         <UButton
@@ -10,21 +10,21 @@
             color="secondary"
             icon="i-heroicons-pencil-square"
             size="sm"
-            @click="() => todoCard.handleEditButtonClick()"
+            @click="() => card.handleEditButtonClick()"
         />
       </div>
     </template>
 
-    <div class="todo-card__description">{{ data.description }}</div>
+    <div class="todo-card__description">{{ card.description }}</div>
 
     <template #footer v-if="hasFooter">
       <VInfoBlock>
-        <VInfoRow label="Выполнено" v-if="data.completionDateActual.length">
-          <VDate :date="data.completionDateActual"/>
+        <VInfoRow label="Выполнено" v-if="card.completionDateActual.length">
+          <VDate :date="card.completionDateActual"/>
         </VInfoRow>
 
-        <VInfoRow label="Выполнить до" v-else-if="data.completionDatePlanned.length">
-          <VDate :date="data.completionDatePlanned"/>
+        <VInfoRow label="Выполнить до" v-else-if="card.completionDatePlanned.length">
+          <VDate :date="card.completionDatePlanned"/>
         </VInfoRow>
       </VInfoBlock>
     </template>
@@ -34,13 +34,12 @@
 <script setup lang="ts">
 import { ToDoCard } from "~/interfaces/todoCard";
 
-const props = defineProps<{ todoCard: ToDoCard }>();
-const data = useUIElement(props.todoCard);
+const props = defineProps<{ card: ToDoCard }>();
 
 const cardUIOptions = {
   root  : 'rounded-sm',
   header: 'flex gap-4 items-center text-primary'
 }
 
-const hasFooter = computed(() => data.completionDateActual.length > 0 || data.completionDatePlanned.length > 0);
+const hasFooter = computed(() => props.card.completionDateActual.length > 0 || props.card.completionDatePlanned.length > 0);
 </script>

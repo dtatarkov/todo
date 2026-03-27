@@ -34,4 +34,8 @@ export default defineNuxtConfig({
       locale    : 'ru'
     },
   },
+
+  experimental: {
+    decorators: true,
+  },
 })

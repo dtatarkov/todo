@@ -4,4 +4,14 @@ export abstract class ToDo {
   abstract description: string
   abstract completionDatePlanned: Date | undefined
   abstract completionDateActual: Date | undefined
+  
+  abstract getData(): ToDoData;
+}
+
+export type ToDoData = {
+  id: string
+  title: string
+  description: string
+  completionDatePlanned: Date | undefined
+  completionDateActual: Date | undefined
 }

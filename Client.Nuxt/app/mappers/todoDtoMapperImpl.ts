@@ -3,6 +3,7 @@ import type { ToDoGetDto } from "@/types/toDoGetDto";
 import { ToDo } from "@/interfaces/todo";
 import { ToDoBase } from "@/entities/todoBase";
 import { DatesService } from "@/interfaces/datesService";
+import { updatePropertiesWithData } from "~/utils/updatePropertiesWithData";
 
 export class ToDoDtoMapperImpl extends ToDoDtoMapper
 {
@@ -13,12 +14,15 @@ export class ToDoDtoMapperImpl extends ToDoDtoMapper
 
   mapToEntity(dto: ToDoGetDto): ToDo
   {
-    return new ToDoBase({
-      id                   : dto.id,
-      title                : dto.title,
-      description          : dto.description,
+    const todo = new ToDoBase();
+
+    updatePropertiesWithData(todo, {
+      ...dto,
+
       completionDateActual : this.datesService.fromStringOptional(dto.completionDateActual),
       completionDatePlanned: this.datesService.fromStringOptional(dto.completionDatePlanned),
     });
+    
+    return todo;
   }
 }

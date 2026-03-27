@@ -1,5 +1,6 @@
-import { ToDoCard, type ToDoCardData } from "~/interfaces/todoCard";
+import { ToDoCard } from "~/interfaces/todoCard";
+import type { ToDo } from "~/interfaces/todo";
 
 export abstract class ToDoElementsFactory {
-  abstract createToDoCard(data?: Partial<ToDoCardData>): ToDoCard;
+  abstract createToDoCard(todo: ToDo): ToDoCard;
 }
