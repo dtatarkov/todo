@@ -1,7 +1,6 @@
 import { ToDosService } from "@/interfaces/todosService";
 import { ToDo } from "@/interfaces/todo";
 import type { ToDosOwner } from "@/interfaces/todosOwner";
-import { ToDoBase } from "@/entities/todoBase";
 import type { OverlayService } from "@/interfaces/overlayService";
 import { Modal } from "@/entities/overlay/modal";
 import { FormElementType } from "@/enums/formElementType";
@@ -18,36 +17,13 @@ export class TodosServiceImpl extends ToDosService
     super();
   }
 
-  async getAllToDosAsync(): Promise<ToDo[]>
+  getAllToDos(): Ref<ToDo[]>
   {
-    await this.owner.init();
-    const todos = this.owner.getAllToDos();
-
-    return todos;
-  }
-
-  async getToDoByIdAsync(todoId: string): Promise<ToDo | undefined>
-  {
-    await this.owner.init();
-    let todo = this.owner.getToDoById(todoId);
-    
-    return todo;
-  }
-
-  async getToDoByIdOrDefaultAsync(todoId: string): Promise<ToDo>
-  {
-    let todo = await this.getToDoByIdAsync(todoId);
-
-    if (!todo)
-    {
-      todo = new ToDoBase();
-    }
-
-    return todo;
+    return this.owner.todos;
   }
 
   async editToDoAsync(todoId: string): Promise<void> {
-    let todo = await this.getToDoByIdAsync(todoId);
+    let todo = this.owner.getToDoById(todoId);
     
     if(!todo)
     {

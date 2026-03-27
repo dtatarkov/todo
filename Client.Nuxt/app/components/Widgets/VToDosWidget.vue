@@ -5,8 +5,8 @@ import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
 const todosService        = getService(ToDosService);
 const todoElementsFactory = getService(ToDoElementsFactory);
 
-const { data: todos } = useViewAsyncData(() => todosService.getAllToDosAsync(), []);
-const cards           = computed(() => todos.value.map(todo => todoElementsFactory.createToDoCard(todo)))
+const todos = todosService.getAllToDos();
+const cards = computed(() => todos.value.map(todo => todoElementsFactory.createToDoCard(todo)))
 </script>
 
 <template>

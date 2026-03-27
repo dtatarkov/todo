@@ -2,7 +2,6 @@ import { ToDo } from "@/interfaces/todo";
 
 export abstract class ToDosOwner
 {
-  abstract getAllToDos(): ToDo[];
+  abstract readonly todos: Ref<ToDo[]>;
   abstract getToDoById(id: string): ToDo | undefined;
-  abstract init(): Promise<void>
 }

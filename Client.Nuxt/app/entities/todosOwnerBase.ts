@@ -13,9 +13,9 @@ enum ToDoOwnerState
 
 export class ToDosOwnerBase extends ToDosOwner
 {
-  protected todos = new Array<ToDo>();
-
   protected state = ToDoOwnerState.initial;
+
+  readonly todos = shallowRef(new Array<ToDo>());
 
   constructor(
     protected todosRepository: ToDosRepository,
@@ -24,18 +24,15 @@ export class ToDosOwnerBase extends ToDosOwner
   )
   {
     super();
-  }
 
-  getAllToDos(): ToDo[]
-  {
-    return this.todos;
+    this.init();
   }
 
   override getToDoById(id: string): ToDo | undefined
   {
-    const todo = this.todos.find(todo => todo.id === id);
+    const result = this.todos.value.find(todo => todo.id === id);
 
-    return todo;
+    return result;
   }
 
   async init()
@@ -50,7 +47,7 @@ export class ToDosOwnerBase extends ToDosOwner
     const todoDtos = await this.ssrLoader.loadAsync('todos', () => this.todosRepository.getAllToDosAsync());
     const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
 
-    this.todos = todos;
+    this.todos.value = todos;
 
     this.state = ToDoOwnerState.initialized;
   }
