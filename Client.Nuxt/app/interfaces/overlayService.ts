@@ -1,7 +1,7 @@
 import type { OverlayElement } from "~/interfaces/overlayElement";
+import type { Modal } from "~/interfaces/modal";
 
 export abstract class OverlayService {
-  abstract addElement(element: OverlayElement): void;
-  abstract removeElement(element: OverlayElement): void;
+  abstract createModal(): Modal;
   abstract getElementsRef(): ComputedRef<OverlayElement[]>;
 }

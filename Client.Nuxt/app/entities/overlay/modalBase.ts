@@ -1,21 +1,29 @@
 import { ViewElement } from "@/interfaces/viewElement";
 import { OverlayElementBase } from "~/entities/overlay/overlayElementBase";
 import type { RenderFunction } from "@/types/renderFunction";
-import type { Action } from "~/types/action";
 import VModal from "~/components/UI/VModal.vue";
+import { Modal } from "~/interfaces/modal";
+import type { Overlay } from "~/interfaces/overlay";
 
-export class Modal extends OverlayElementBase
+export class ModalBase extends Modal
 {
+  private base = new OverlayElementBase();
+
   private data = {
     title      : '',
     description: '',
   }
-  
-  private children = { 
+
+  private _parent: Overlay | undefined;
+
+  private children = {
     content: <ViewElement | undefined>undefined
   }
 
-  private closeHandler: Action | undefined;
+  get id()
+  {
+    return this.base.id;
+  }
 
   get title()
   {
@@ -36,7 +44,17 @@ export class Modal extends OverlayElementBase
   {
     this.data.description = value;
   }
-  
+
+  get parent()
+  {
+    return this._parent;
+  }
+
+  set parent(value)
+  {
+    this._parent = value;
+  }
+
   get content()
   {
     return this.children.content;
@@ -46,32 +64,26 @@ export class Modal extends OverlayElementBase
   {
     this.children.content = content;
   }
-  
-  close() {
-    this.closeHandler?.();
-  }
 
-  override getRenderFunction(): RenderFunction
+  close()
   {
-    return () => h(VModal, { modal: this });
+    if (!this.parent)
+    {
+      throw new Error('Parent is not defined');
+    }
+
+    this.parent.removeElement(this);
   }
 
   override getVNode(): { setup: () => RenderFunction }
   {
     const vnode = {
-      setup: () => this.getRenderFunction()
+      setup: () =>
+      {
+        return () => h(VModal, { modal: this });
+      }
     }
 
     return vnode;
-  }
-
-  override onClose(handler: Action): void
-  {
-    if(this.closeHandler)
-    {
-      throw new Error('Close handler is already defined');
-    }
-    
-    this.closeHandler = handler;
   }
 }

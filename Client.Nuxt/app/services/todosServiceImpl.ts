@@ -2,7 +2,6 @@ import { ToDosService } from "@/interfaces/todosService";
 import { ToDo } from "@/interfaces/todo";
 import type { ToDosOwner } from "@/interfaces/todosOwner";
 import type { OverlayService } from "@/interfaces/overlayService";
-import { Modal } from "@/entities/overlay/modal";
 import { FormElementType } from "@/enums/formElementType";
 import type { FormFactory } from "@/interfaces/formFactory";
 
@@ -54,10 +53,8 @@ export class TodosServiceImpl extends ToDosService
 
     form.setData(todo);
 
-    const modal   = new Modal();
+    const modal   = this.overlayService.createModal();
     modal.title   = 'Редактирование';
     modal.content = form;
-
-    this.overlayService.addElement(modal);
   }
 }
