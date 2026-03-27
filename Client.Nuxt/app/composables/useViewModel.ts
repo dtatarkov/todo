@@ -13,7 +13,7 @@ export default function useViewModel<D extends Record<string, any>>(viewmodel: V
     default: () => viewmodel.getData(),
   });
 
-  const data = reactive(response.data.value as D);
+  const data = shallowReactive(response.data.value as D);
 
   const unsubscribe = viewmodel.subscribe(() =>
   {
