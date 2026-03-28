@@ -16,7 +16,7 @@ export class FormElementBase<V = any, D extends InputElementData = InputElementD
   {
     super();
 
-    this.formField.setContent(inputElement);
+    this.formField.content = inputElement;
   }
 
   get id()
@@ -26,7 +26,7 @@ export class FormElementBase<V = any, D extends InputElementData = InputElementD
 
   setData(data: FormElementCreateDataWithName): void
   {
-    this.formField.setData(data);
+    updatePropertiesWithData(this.formField, data);
     this.inputElement.setData(data as unknown as D);
   }
 
