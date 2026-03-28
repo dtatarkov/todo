@@ -2,7 +2,7 @@
 import { UFormField } from "#components";
 import type { FormField } from "~/interfaces/formField";
 
-const props = defineProps<{ field: FormField }>();
+defineProps<{ field: FormField }>();
 </script>
 
 <template>
