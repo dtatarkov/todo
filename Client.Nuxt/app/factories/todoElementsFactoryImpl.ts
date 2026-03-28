@@ -5,7 +5,8 @@ import type { ToDosService } from "~/interfaces/todosService";
 import type { ToDo } from "~/interfaces/todo";
 import type { DatesService } from "~/interfaces/datesService";
 
-export class ToDoElementsFactoryImpl extends ToDoElementsFactory {
+export class ToDoElementsFactoryImpl extends ToDoElementsFactory
+{
   constructor(
     private todosService: ToDosService,
     private datesService: DatesService
@@ -13,18 +14,18 @@ export class ToDoElementsFactoryImpl extends ToDoElementsFactory {
   {
     super();
   }
-  
+
   createToDoCard(todo: ToDo): ToDoCard
   {
     const card = new ToDoCardBase(this.todosService);
-    
+
     updatePropertiesWithData(card, {
       ...todo.getData(),
 
       completionDatePlanned: this.datesService.formatDateOptional(todo.completionDatePlanned),
-      completionDateActual: this.datesService.formatDateOptional(todo.completionDateActual)
+      completionDateActual : this.datesService.formatDateOptional(todo.completionDateActual)
     });
-    
+
     return card;
-  }  
+  }
 }

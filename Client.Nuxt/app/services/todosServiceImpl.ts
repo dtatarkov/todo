@@ -16,12 +16,17 @@ export class TodosServiceImpl extends ToDosService
     super();
   }
 
-  getAllToDosRef(): ComputedRef<ToDo[]>
+  override getAllToDosRef(): ComputedRef<ToDo[]>
   {
     return this.owner.todos;
   }
 
-  async editToDoAsync(todoId: string): Promise<void>
+  override async updateToDosAsync(): Promise<void>
+  {
+    await this.owner.updateToDosAsync();
+  }
+
+  override async editToDoAsync(todoId: string): Promise<void>
   {
     let todo = this.owner.getToDoById(todoId);
 
