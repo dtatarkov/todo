@@ -1,15 +1,16 @@
-import { UForm } from "#components";
+import { VForm } from "#components";
 import type { FormElementCreateData } from "@/types/formElementCreateData";
 import type { RenderFunction } from "@/types/renderFunction";
 import { Form } from "@/interfaces/form";
 import { FormElementFactory } from "@/interfaces/formElementFactory";
 import type { FormElement } from "@/interfaces/formElement";
-import { AsViewElement } from "~/mixins/asViewElement";
+import { UIElementId } from "~/entities/uiElementId";
 
-export class FormBase<TEntity extends Record<string, any> = Record<string, any>> extends AsViewElement(Form)
+export class FormBase<TEntity extends Record<string, any> = Record<string, any>> extends Form
 {
-  private elements: FormElement[] = [];
-  
+  private _id                           = new UIElementId();
+  private _elements: Ref<FormElement[]> = shallowRef([]);
+
   constructor(
     protected formElementFactory: FormElementFactory
   )
@@ -17,9 +18,19 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
     super();
   }
 
+  get id()
+  {
+    return this._id.value;
+  }
+
+  get elements()
+  {
+    return this._elements.value
+  }
+
   setData(data: Record<string, any>)
   {
-    for (const element of this.elements)
+    for (const element of this._elements.value)
     {
       if (element.name in data)
       {
@@ -30,7 +41,7 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
 
   setElements(elements: Partial<Record<keyof TEntity, FormElementCreateData>>)
   {
-    this.elements = Object.entries(elements).map(([name, createData]) =>
+    this._elements.value = Object.entries(elements).map(([name, createData]) =>
     {
       const element = this.formElementFactory.createElement(name, createData as FormElementCreateData);
 
@@ -38,12 +49,15 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
     });
   }
 
-  override getRenderFunction(): RenderFunction
+  override getVNode(): { setup: () => RenderFunction }
   {
-    return () => h(UForm, {
-      class: 'p-4 flex flex-col gap-4'
-    }, {
-      default: () => this.elements.map(element => element.getRenderFunction()())
-    });
+    const vnode = {
+      setup: () =>
+      {
+        return () => h(VForm, { form: this });
+      }
+    }
+
+    return vnode;
   }
 }

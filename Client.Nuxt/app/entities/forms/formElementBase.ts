@@ -4,34 +4,44 @@ import type { InputElement } from "@/interfaces/inputElement";
 import type { FormElementCreateDataWithName } from "@/types/formElementCreateDataWithName";
 import type { InputElementData } from "~/types/inputElementData";
 import { FormElement } from "~/interfaces/formElement";
-import { AsViewElement } from "~/mixins/asViewElement";
+import { UIElementId } from "~/entities/uiElementId";
 
-export class FormElementBase<V = any, D extends InputElementData = InputElementData> extends AsViewElement(FormElement)
+export class FormElementBase<V = any, D extends InputElementData = InputElementData> extends FormElement
 {
+  private _id = new UIElementId();
+
   protected formField = new FormFieldBase();
 
   constructor(protected inputElement: InputElement<V, D>)
   {
     super();
-    
+
     this.formField.setContent(inputElement);
   }
-  
-  setData(data: FormElementCreateDataWithName): void {
+
+  get id()
+  {
+    return this._id.value;
+  }
+
+  setData(data: FormElementCreateDataWithName): void
+  {
     this.formField.setData(data);
     this.inputElement.setData(data as unknown as D);
   }
-  
-  get name() {
+
+  get name()
+  {
     return this.inputElement.name;
   }
 
-  setValue(value: V): void {
+  setValue(value: V): void
+  {
     this.inputElement.setValue(value);
   }
 
-  getRenderFunction(): RenderFunction
+  override getVNode(): { setup: () => RenderFunction }
   {
-    return this.formField.getRenderFunction();
+    return this.formField.getVNode();
   }
 }

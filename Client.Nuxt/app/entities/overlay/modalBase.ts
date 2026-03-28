@@ -1,13 +1,13 @@
-import { ViewElement } from "@/interfaces/viewElement";
-import { OverlayElementBase } from "~/entities/overlay/overlayElementBase";
 import type { RenderFunction } from "@/types/renderFunction";
 import VModal from "~/components/UI/VModal.vue";
 import { Modal } from "~/interfaces/modal";
 import type { Overlay } from "~/interfaces/overlay";
+import type { UIElement } from "~/interfaces/uiElement";
+import { UIElementId } from "~/entities/uiElementId";
 
 export class ModalBase extends Modal
 {
-  private base = new OverlayElementBase();
+  private _id = new UIElementId();
 
   private data = {
     title      : '',
@@ -17,12 +17,12 @@ export class ModalBase extends Modal
   private _parent: Overlay | undefined;
 
   private children = {
-    content: <ViewElement | undefined>undefined
+    content: <UIElement | undefined>undefined
   }
 
   get id()
   {
-    return this.base.id;
+    return this._id.value;
   }
 
   get title()
@@ -60,7 +60,7 @@ export class ModalBase extends Modal
     return this.children.content;
   }
 
-  set content(content: ViewElement | undefined)
+  set content(content)
   {
     this.children.content = content;
   }

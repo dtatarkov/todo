@@ -1,8 +1,8 @@
 import { UIElement } from "~/interfaces/uiElement";
 
-export abstract class ToDoCard extends UIElement
+export abstract class ToDoCard extends UIElement<string>
 {
-  abstract id: string;
+  abstract override id: string;
   abstract title: string;
   abstract description: string;
   abstract completionDatePlanned: string;

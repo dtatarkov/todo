@@ -1,10 +1,11 @@
-import type { ViewElement } from "~/interfaces/viewElement";
 import { OverlayElement } from "~/interfaces/overlayElement";
+import type { UIElement } from "~/interfaces/uiElement";
 
-export abstract class Modal extends OverlayElement {
+export abstract class Modal extends OverlayElement
+{
   abstract title: string;
   abstract description: string;
-  abstract content: ViewElement | undefined;
+  abstract content: UIElement | undefined;
 
   abstract close(): void;
 }
