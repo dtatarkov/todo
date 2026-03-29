@@ -40,6 +40,6 @@ export class FormElementBase<V = any> extends FormElement
   setData(data: FormElementCreateDataWithName): void
   {
     updatePropertiesWithData(this.formField, data);
-    this.inputElement.setData(data);
+    updatePropertiesWithData(this.inputElement, data);
   }
 }

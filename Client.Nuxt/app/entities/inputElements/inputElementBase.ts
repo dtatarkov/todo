@@ -1,30 +1,26 @@
 import { InputElement } from "@/interfaces/inputElement";
-import { ValueMapper } from "~/interfaces/valueMapper";
-
-type InputElementPropertyConfig = {
-  data?: string;
-  mapper?: ValueMapper<any, any>
-  vmodel?: boolean
-}
+import type { StringsService } from "~/interfaces/stringsService";
 
 export abstract class InputElementBase<V = any> extends InputElement<V>
 {
   protected data: Record<string, any> = reactive({
-    id       : '',
-    name     : '',
-    autofocus: false,
+    id        : undefined,
+    name      : '',
+    autofocus : false,
+    class     : 'w-full',
+    modelValue: undefined,
+
+    'update:modelValue': (value: V) =>
+    {
+      this.value = value;
+    }
   });
 
-  protected staticData: Record<string, any> = reactive({
-    class: 'w-full'
-  });
-
-  protected propertiesScheme: Record<string, InputElementPropertyConfig> = {
-    id        : {},
-    name      : {},
-    autofocus : {},
-    class     : {},
-    modelValue: { data: 'value' }
+  constructor(
+    protected stringsService: StringsService,
+  )
+  {
+    super();
   }
 
   get id(): string
@@ -34,94 +30,43 @@ export abstract class InputElementBase<V = any> extends InputElement<V>
 
   set id(value: string)
   {
-    this.data.id = value;
+    if (this.stringsService.isStringEmpty(value))
+    {
+      this.data.id = undefined;
+    }
+    else
+    {
+      this.data.id = value;
+    }
+  }
+
+  get name(): string
+  {
+    return this.data.name;
+  }
+
+  set name(value: string)
+  {
+    this.data.name = value;
+  }
+
+  get autofocus(): boolean
+  {
+    return this.data.autofocus;
+  }
+
+  set autofocus(value: boolean)
+  {
+    this.data.autofocus = value;
   }
 
   get value(): V
   {
-    return this.data.value;
+    return this.data.modelValue;
   }
 
   set value(value: V)
   {
-    this.data.value = value;
-  }
-
-  override setData(data: Record<string, any>)
-  {
-    updatePropertiesWithData(this.data, data);
-  }
-
-  protected getProps(): Record<string, any>
-  {
-    const props = Object.entries(this.propertiesScheme).reduce((result, [propertyName, propertyConfig]) =>
-    {
-      this.defineProperty(result, propertyName, propertyConfig);
-
-      if (propertyConfig.vmodel)
-      {
-        this.defineEmit(result, propertyName, propertyConfig);
-      }
-
-      return result;
-    }, <Record<string, any>>{});
-
-    return props;
-  }
-
-  private defineProperty(properties: Record<string, any>, propertyName: string, propertyConfig: InputElementPropertyConfig)
-  {
-    const dataKey        = this.getPropertyRelatedDataKey(propertyName, propertyConfig);
-    const dataCollection = this.getDataCollectionByKey(dataKey);
-
-    let propValue = dataCollection[dataKey];
-
-    if (propertyConfig.mapper)
-    {
-      propValue = propertyConfig.mapper.map(propValue);
-    }
-
-    properties[propertyName] = propValue;
-  }
-
-  private defineEmit(properties: Record<string, any>, propertyName: string, propertyConfig: InputElementPropertyConfig)
-  {
-    const dataKey         = this.getPropertyRelatedDataKey(propertyName, propertyConfig);
-    const dataCollection  = this.getDataCollectionByKey(dataKey);
-    const emitHandlerName = `update:${ propertyName }`;
-
-    properties[emitHandlerName] = (propertyValue: any) =>
-    {
-      let dataValue = propertyValue;
-
-      if (propertyConfig.mapper)
-      {
-        dataValue = propertyConfig.mapper.mapReverse(dataValue);
-      }
-
-      dataCollection[dataKey] = dataValue;
-    }
-  }
-
-  private getPropertyRelatedDataKey(propName: string, propConfig: InputElementPropertyConfig)
-  {
-    const dataKey = propConfig.data ?? propName;
-
-    return dataKey;
-  }
-
-  private getDataCollectionByKey(key: string)
-  {
-    if (key in this.data)
-    {
-      return this.data;
-    }
-
-    if (key in this.staticData)
-    {
-      return this.staticData;
-    }
-
-    throw new Error('Unknown key');
+    this.data.modelValue = value;
   }
 }

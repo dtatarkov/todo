@@ -9,6 +9,8 @@ import { InputElementComposedBase } from "~/entities/inputElements/InputElementC
 
 export class InputElementDateTime extends InputElementComposedBase<Date | undefined>
 {
+  #name = ref('');
+
   protected children: Record<'inputDate' | 'inputTime', InputElement>
 
   constructor(
@@ -21,9 +23,36 @@ export class InputElementDateTime extends InputElementComposedBase<Date | undefi
     super(stringsService);
 
     this.children = {
-      inputDate: new InputElementDate(this.zonedDateTimeMapper),
-      inputTime: new InputElementTime(this.timeMapper),
+      inputDate: new InputElementDate(zonedDateTimeMapper, stringsService),
+      inputTime: new InputElementTime(timeMapper, stringsService),
     }
+  }
+
+  get name(): string
+  {
+    return this.#name.value
+  }
+
+  set name(value: string)
+  {
+    this.#name.value = value;
+
+    Object
+      .entries(this.children)
+      .forEach(([childName, child]) =>
+      {
+        child.name = this.stringsService.postfixNotEmpty(value, childName.toLowerCase(), '--');
+      });
+  }
+
+  get autofocus(): boolean
+  {
+    return this.children.inputDate.autofocus;
+  }
+
+  set autofocus(value: boolean)
+  {
+    this.children.inputDate.autofocus = value;
   }
 
   get value(): Date | undefined

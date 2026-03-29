@@ -34,4 +34,22 @@ describe('StringsServiceImpl', () =>
       expect(service.isStringEmpty(undefined)).toBe(true);
     });
   });
+
+  describe('postfixNotEmpty', () =>
+  {
+    it('should add postfix to non-empty string with default separator', () =>
+    {
+      expect(service.postfixNotEmpty('hello', 'post')).toBe('hello-post');
+    });
+
+    it('should add postfix to non-empty string with custom separator', () =>
+    {
+      expect(service.postfixNotEmpty('hello', 'post', '_')).toBe('hello_post');
+    });
+
+    it('should return empty string when input is empty', () =>
+    {
+      expect(service.postfixNotEmpty('', 'post')).toBe('');
+    });
+  });
 });

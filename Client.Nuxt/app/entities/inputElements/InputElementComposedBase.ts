@@ -1,11 +1,13 @@
 import { InputElement } from "~/interfaces/inputElement";
 import type { StringsService } from "~/interfaces/stringsService";
+import type { Action } from "~/types/action";
 
 export abstract class InputElementComposedBase<V> extends InputElement<V>
 {
   #id = ref('');
 
   protected abstract children: Record<string, InputElement>
+  protected dataSetters: Record<string, Action<[any]>> = {}
 
   readonly component = {
     setup: () =>
@@ -27,6 +29,18 @@ export abstract class InputElementComposedBase<V> extends InputElement<V>
   )
   {
     super();
+
+    Object.assign(this.dataSetters, {
+      id: (id: string) =>
+      {
+        this.id = id;
+      },
+
+      value: (value: V) =>
+      {
+        this.value = value;
+      }
+    })
   }
 
   get id(): string
@@ -42,38 +56,7 @@ export abstract class InputElementComposedBase<V> extends InputElement<V>
       .entries(this.children)
       .forEach(([childName, child]) =>
       {
-        const id = !this.stringsService.isStringEmpty(newId) ?
-          `${ newId }-${ childName.toLowerCase() }` :
-          newId;
-
-        child.setData({ id });
-      });
-  }
-
-  setData(data: Record<string, any>)
-  {
-    let inputsData = { ...data }
-
-    if (inputsData?.id)
-    {
-      this.id = inputsData.id;
-      delete inputsData.id;
-    }
-
-    if (inputsData?.value)
-    {
-      if (inputsData?.value)
-      {
-        this.value = inputsData.value;
-        delete inputsData.value;
-      }
-    }
-
-    Object
-      .values(this.children)
-      .forEach(child =>
-      {
-        child.setData(inputsData)
+        child.id = this.stringsService.postfixNotEmpty(newId, childName.toLowerCase());
       });
   }
 }

@@ -1,35 +1,46 @@
 import { InputElementBase } from "@/entities/inputElements/inputElementBase";
 import { UInputTime } from "#components";
 import type { TimeMapper } from "~/interfaces/timeMapper";
-import { mergeDeep } from "~/utils/mergeDeep";
 import { OptionalValueMapper } from "~/mappers/optionalValueMapper";
+import type { Time } from "@internationalized/date";
+import type { ValueMapper } from "~/interfaces/valueMapper";
+import type { StringsService } from "~/interfaces/stringsService";
 
 export class InputElementTime extends InputElementBase<number | undefined>
 {
+  protected optionalTimeMapper: ValueMapper<number | undefined, Time | undefined>
+
   readonly component = {
     setup: () =>
     {
-      return () => h(UInputTime, this.getProps());
+      return () => h(UInputTime, this.data);
     }
   }
 
   constructor(
-    timeMapper: TimeMapper
+    timeMapper: TimeMapper,
+    stringsService: StringsService,
   )
   {
-    super();
+    super(stringsService);
 
-    Object.assign(this.data, { value: undefined });
+    this.optionalTimeMapper = new OptionalValueMapper(timeMapper);
 
-    Object.assign((this.staticData, {
+    Object.assign(this.data, {
       hideTimeZone: true,
       granularity : 'minute',
-    }));
-
-    this.propertiesScheme = mergeDeep(this.propertiesScheme, {
-      modelValue: {
-        mapper: new OptionalValueMapper(timeMapper)
-      }
     });
+  }
+
+  override get value(): number | undefined
+  {
+    const time = this.optionalTimeMapper.mapReverse(this.data.modelValue);
+
+    return time;
+  }
+
+  override set value(value: number | undefined)
+  {
+    this.data.modelValue = this.optionalTimeMapper.map(value);
   }
 }

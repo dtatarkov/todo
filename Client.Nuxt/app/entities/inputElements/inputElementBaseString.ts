@@ -1,11 +1,14 @@
 import { InputElementBase } from "@/entities/inputElements/inputElementBase";
+import type { StringsService } from "~/interfaces/stringsService";
 
 export abstract class InputElementBaseString extends InputElementBase<string>
 {
-  constructor()
+  constructor(
+    stringsService: StringsService,
+  )
   {
-    super();
+    super(stringsService);
 
-    Object.assign(this.data, { value: '' });
+    Object.assign(this.data, { modelValue: '' });
   }
 }

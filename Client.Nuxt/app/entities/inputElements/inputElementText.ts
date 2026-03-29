@@ -7,7 +7,7 @@ export class InputElementText extends InputElementWithPlaceholder(InputElementBa
   readonly component = {
     setup: () =>
     {
-      return () => h(<any>UInput, this.getProps());
+      return () => h(<any>UInput, this.data);
     }
   }
 }

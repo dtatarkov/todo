@@ -30,7 +30,7 @@ export class FormElementFactoryImpl implements FormElementFactory
     const inputElement = this.createInputElement(data.type);
     const formElement  = new FormElementBase(inputElement);
 
-    formElement.setData({ name, ...data });
+    formElement.setData({ ...data, name });
 
     return formElement;
   }
@@ -40,13 +40,13 @@ export class FormElementFactoryImpl implements FormElementFactory
     switch (type)
     {
       case FormElementType.inputText:
-        return new InputElementText();
+        return new InputElementText(this.stringsService);
       case FormElementType.textarea:
-        return new InputElementTextArea();
+        return new InputElementTextArea(this.stringsService);
       case FormElementType.inputDate:
-        return new InputElementDate(this.zonedDateTimeMapper);
+        return new InputElementDate(this.zonedDateTimeMapper, this.stringsService);
       case FormElementType.inputTime:
-        return new InputElementTime(this.timeMapper);
+        return new InputElementTime(this.timeMapper, this.stringsService);
       case FormElementType.inputDateTime:
         return new InputElementDateTime(this.datesService, this.stringsService, this.zonedDateTimeMapper, this.timeMapper);
     }

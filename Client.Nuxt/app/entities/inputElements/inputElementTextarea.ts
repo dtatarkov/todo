@@ -7,7 +7,7 @@ export class InputElementTextArea extends InputElementWithPlaceholder(InputEleme
   readonly component = {
     setup: () =>
     {
-      return () => h(<any>UTextarea, this.getProps());
+      return () => h(<any>UTextarea, this.data);
     }
   }
 }
