@@ -1,7 +1,7 @@
 import { VFormField } from "#components";
-import { ViewElement } from "@/interfaces/viewElement";
 import { FormField } from "~/interfaces/formField";
 import { UIElementId } from "~/entities/uiElementId";
+import type { UIElement } from "~/interfaces/uiElement";
 
 export class FormFieldBase extends FormField
 {
@@ -13,7 +13,7 @@ export class FormFieldBase extends FormField
   });
 
   private _children = {
-    content: <ViewElement | undefined>undefined
+    content: <UIElement | undefined>undefined
   }
 
   readonly component = {

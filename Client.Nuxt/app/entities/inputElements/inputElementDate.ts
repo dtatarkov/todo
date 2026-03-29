@@ -1,47 +1,35 @@
 import { InputElementBase } from "@/entities/inputElements/inputElementBase";
-import type { InputElementDateData } from "@/types/InputElementDateData";
 import { UInputDate } from "#components";
-import { getLocalTimeZone, parseAbsolute, ZonedDateTime } from "@internationalized/date";
+import { mergeDeep } from "~/utils/mergeDeep";
+import { OptionalValueMapper } from "~/mappers/optionalValueMapper";
+import type { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
 
-export class InputElementDate extends InputElementBase<Date | undefined, InputElementDateData>
+export class InputElementDate extends InputElementBase<Date | undefined>
 {
-  override getRenderFunction(): () => object
-  {
-    return () => h(UInputDate, this.getProps());
-  }
-
-  protected override getProps(): Record<string, any>
-  {
-    const datetime = this.toDateTime(this.value);
-
-    const props = {
-      ...super.getProps(),
-
-      modelValue: datetime,
-      hideTimeZone: true,
-      granularity: 'day',
-
-      'update:modelValue': (datetime: ZonedDateTime) =>
-      {
-        const date = datetime?.toDate();
-
-        this.setValue(date);
-      }
-    }
-
-    return props;
-  }
-
-  private toDateTime(value?: Date): ZonedDateTime | undefined
-  {
-    if (!value)
+  readonly component = {
+    setup: () =>
     {
-      return undefined;
+      return () => h(UInputDate, this.getProps());
     }
+  }
 
-    const timezone = getLocalTimeZone();
-    const result   = parseAbsolute(value.toISOString(), timezone);
+  constructor(
+    zonedDateTimeMapper: ZonedDateTimeMapper
+  )
+  {
+    super();
 
-    return result;
+    Object.assign(this.data, { value: undefined });
+
+    Object.assign(this.staticData, {
+      hideTimeZone: true,
+      granularity : 'day',
+    });
+
+    this.propertiesScheme = mergeDeep(this.propertiesScheme, {
+      modelValue: {
+        mapper: new OptionalValueMapper(zonedDateTimeMapper)
+      }
+    });
   }
 }

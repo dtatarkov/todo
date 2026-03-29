@@ -1,15 +1,13 @@
 import { UInput } from "#components";
-import { FormElementType } from "@/enums/formElementType";
-import type { InputElementTextData } from "@/types/inputElementTextData";
 import { InputElementBaseString } from "@/entities/inputElements/inputElementBaseString";
 import { InputElementWithPlaceholder } from "~/mixins/inputElementWithPlaceholder";
 
-export class InputElementText extends InputElementWithPlaceholder(InputElementBaseString<InputElementTextData>)
+export class InputElementText extends InputElementWithPlaceholder(InputElementBaseString)
 {
-  static readonly type = FormElementType.inputText;
-  
-  override getRenderFunction(): () => object
-  {
-    return () => h(<any>UInput, this.getProps());
+  readonly component = {
+    setup: () =>
+    {
+      return () => h(<any>UInput, this.getProps());
+    }
   }
 }

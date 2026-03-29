@@ -1,57 +1,127 @@
-import type { InputElementData } from "@/types/inputElementData";
 import { InputElement } from "@/interfaces/inputElement";
-import { AsViewElement } from "~/mixins/asViewElement";
+import { ValueMapper } from "~/interfaces/valueMapper";
 
-export abstract class InputElementBase<V = any, D extends InputElementData<V> = InputElementData<V>, > extends AsViewElement(InputElement)
+type InputElementPropertyConfig = {
+  data?: string;
+  mapper?: ValueMapper<any, any>
+  vmodel?: boolean
+}
+
+export abstract class InputElementBase<V = any> extends InputElement<V>
 {
-  protected data: D = this.getDefaultData();
+  protected data: Record<string, any> = reactive({
+    id       : '',
+    name     : '',
+    autofocus: false,
+  });
 
-  get name()
-  {
-    return this.data.name;
+  protected staticData: Record<string, any> = reactive({
+    class: 'w-full'
+  });
+
+  protected propertiesScheme: Record<string, InputElementPropertyConfig> = {
+    id        : {},
+    name      : {},
+    autofocus : {},
+    class     : {},
+    modelValue: { data: 'value' }
   }
-  
-  get value()
+
+  get id(): string
+  {
+    return this.data.id;
+  }
+
+  set id(value: string)
+  {
+    this.data.id = value;
+  }
+
+  get value(): V
   {
     return this.data.value;
   }
 
-  setData(data?: Partial<D>)
-  {
-    Object.assign(this.data, data);
-  }  
-
-  setValue(value: V): void
+  set value(value: V)
   {
     this.data.value = value;
   }
 
+  override setData(data: Record<string, any>)
+  {
+    updatePropertiesWithData(this.data, data);
+  }
+
   protected getProps(): Record<string, any>
   {
-    return {
-      ...this.data,
+    const props = Object.entries(this.propertiesScheme).reduce((result, [propertyName, propertyConfig]) =>
+    {
+      this.defineProperty(result, propertyName, propertyConfig);
 
-      modelValue: this.data.value,
-      class     : this.getCssClasses(),
-
-      'update:modelValue': (value: V) =>
+      if (propertyConfig.vmodel)
       {
-        this.setValue(value);
+        this.defineEmit(result, propertyName, propertyConfig);
       }
+
+      return result;
+    }, <Record<string, any>>{});
+
+    return props;
+  }
+
+  private defineProperty(properties: Record<string, any>, propertyName: string, propertyConfig: InputElementPropertyConfig)
+  {
+    const dataKey        = this.getPropertyRelatedDataKey(propertyName, propertyConfig);
+    const dataCollection = this.getDataCollectionByKey(dataKey);
+
+    let propValue = dataCollection[dataKey];
+
+    if (propertyConfig.mapper)
+    {
+      propValue = propertyConfig.mapper.map(propValue);
+    }
+
+    properties[propertyName] = propValue;
+  }
+
+  private defineEmit(properties: Record<string, any>, propertyName: string, propertyConfig: InputElementPropertyConfig)
+  {
+    const dataKey         = this.getPropertyRelatedDataKey(propertyName, propertyConfig);
+    const dataCollection  = this.getDataCollectionByKey(dataKey);
+    const emitHandlerName = `update:${ propertyName }`;
+
+    properties[emitHandlerName] = (propertyValue: any) =>
+    {
+      let dataValue = propertyValue;
+
+      if (propertyConfig.mapper)
+      {
+        dataValue = propertyConfig.mapper.mapReverse(dataValue);
+      }
+
+      dataCollection[dataKey] = dataValue;
     }
   }
 
-  protected getDefaultData(): D
+  private getPropertyRelatedDataKey(propName: string, propConfig: InputElementPropertyConfig)
   {
-    return {
-      id       : '',
-      name     : '',
-      autofocus: false,
-    } as D;
+    const dataKey = propConfig.data ?? propName;
+
+    return dataKey;
   }
 
-  protected getCssClasses()
+  private getDataCollectionByKey(key: string)
   {
-    return 'w-full';
+    if (key in this.data)
+    {
+      return this.data;
+    }
+
+    if (key in this.staticData)
+    {
+      return this.staticData;
+    }
+
+    throw new Error('Unknown key');
   }
 }

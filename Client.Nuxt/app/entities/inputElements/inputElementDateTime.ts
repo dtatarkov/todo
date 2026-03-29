@@ -1,84 +1,121 @@
 import { InputElementDate } from "./inputElementDate";
 import { InputElementTime } from "~/entities/inputElements/inputElementTime";
-import { AsViewElement } from "~/mixins/asViewElement";
 import { InputElement } from "~/interfaces/inputElement";
-import type { InputElementDateTimeData } from "~/types/InputElementDateTimeData";
-import  { type DatesService } from "~/interfaces/datesService";
-import type { RenderFunction } from "~/types/renderFunction";
-import type { InputElementTimeData } from "~/types/inputElementTimeData";
+import { type DatesService } from "~/interfaces/datesService";
+import { UIElementId } from "~/entities/uiElementId";
+import type { StringsService } from "~/interfaces/stringsService";
+import type { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
+import type { TimeMapper } from "~/interfaces/timeMapper";
 
-export class InputElementDateTime extends AsViewElement(InputElement<Date | undefined, InputElementDateTimeData>)
+export class InputElementDateTime extends InputElement<Date | undefined>
 {
-  private inputDate: InputElementDate;
-  private inputTime: InputElementTime;
+  private _uiElementId = new UIElementId();
+  private _defaultId   = `input-date-time-${ this._uiElementId.value }`;
+  private _id          = ref('');
+
+  readonly component = {
+    setup: () =>
+    {
+      const props = {
+        class: 'flex gap-1'
+      }
+
+      return () => h('div', props, [
+        h(this.inputDate.component),
+        h(this.inputTime.component)
+      ])
+    }
+  }
+
+  inputDate: InputElementDate;
+  inputTime: InputElementTime;
 
   constructor(
-    private datesService: DatesService
+    private datesService: DatesService,
+    private stringsService: StringsService,
+    zonedDateTimeMapper: ZonedDateTimeMapper,
+    timeMapper: TimeMapper
   )
   {
     super();
 
-    this.inputDate = new InputElementDate();
-    this.inputTime = new InputElementTime(this.datesService);
+    this.inputDate = new InputElementDate(zonedDateTimeMapper);
+    this.inputTime = new InputElementTime(timeMapper);
+
+    this.id = this._defaultId;
   }
-  
-  get name() {
-    return this.inputDate.name;
+
+  get id()
+  {
+    return this._id.value;
+  }
+
+  set id(value)
+  {
+    let newId = this.stringsService.isStringEmpty(value) ? this._defaultId : value;
+
+    this._id.value = newId;
+
+    this.inputDate.setData({
+      id: `${ newId }-input-date`
+    });
+
+    this.inputTime.setData(({
+      id: `${ newId }-input-time`
+    }));
   }
 
   get value(): Date | undefined
   {
-    const date = this.inputDate.value;
+    const date               = this.inputDate.value;
     const timeInMilliseconds = this.inputTime.value;
 
     if (!date || !timeInMilliseconds)
     {
       return undefined;
     }
-    
+
     const result = this.datesService.setTime(date, timeInMilliseconds);
-    
+
     return result;
   }
 
-  setValue(value: Date | undefined)
+  set value(value: Date | undefined)
   {
     if (!value)
     {
-      this.inputDate.setValue(undefined);
-      this.inputTime.setValue(undefined);
+      this.inputDate.value = undefined;
+      this.inputTime.value = undefined;
       return;
     }
-    
+
     const time = this.datesService.getTime(value);
     const date = this.datesService.setTime(value, 0);
 
-    this.inputDate.setValue(date);
-    this.inputTime.setValue(time);
-  }
-  
-  setData(data?: Partial<InputElementDateTimeData>){
-    if(data?.value)
-    {
-      this.setValue(data.value);
-      delete data.value;
-    }
-    
-    this.inputDate.setData(data);
-    this.inputTime.setData(data as unknown as InputElementTimeData);
+    this.inputDate.value = date;
+    this.inputTime.value = time;
   }
 
-  getRenderFunction(): RenderFunction
+  setData(data: Record<string, any>)
   {
-    const props = {
-      class: 'flex gap-1'
+    let inputsData = { ...data }
+
+    if (inputsData?.id)
+    {
+      this.id = inputsData.id;
+      delete inputsData.id;
     }
-    
-    const children = [
-      h(this.inputDate.getVNode()),
-      h(this.inputTime.getVNode())
-    ]
-    
-    return () => h('div', props, children)
+
+    if (inputsData?.value)
+    {
+      if (inputsData?.value)
+      {
+        this.value = inputsData.value;
+        delete inputsData.value;
+      }
+    }
+
+    this.inputDate.setData(inputsData);
+    this.inputTime.setData(inputsData);
   }
 }

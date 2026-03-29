@@ -1,17 +1,16 @@
 import { FormFieldBase } from "~/entities/forms/formFieldBase";
 import type { InputElement } from "@/interfaces/inputElement";
 import type { FormElementCreateDataWithName } from "@/types/formElementCreateDataWithName";
-import type { InputElementData } from "~/types/inputElementData";
 import { FormElement } from "~/interfaces/formElement";
 import { UIElementId } from "~/entities/uiElementId";
 
-export class FormElementBase<V = any, D extends InputElementData = InputElementData> extends FormElement
+export class FormElementBase<V = any> extends FormElement
 {
   private _id = new UIElementId();
 
   protected formField = new FormFieldBase();
 
-  constructor(protected inputElement: InputElement<V, D>)
+  constructor(protected inputElement: InputElement<V>)
   {
     super();
 
@@ -25,7 +24,7 @@ export class FormElementBase<V = any, D extends InputElementData = InputElementD
 
   get name()
   {
-    return this.inputElement.name;
+    return this.formField.name;
   }
 
   override get component()
@@ -35,12 +34,12 @@ export class FormElementBase<V = any, D extends InputElementData = InputElementD
 
   setValue(value: V): void
   {
-    this.inputElement.setValue(value);
+    this.inputElement.value = value;
   }
 
   setData(data: FormElementCreateDataWithName): void
   {
     updatePropertiesWithData(this.formField, data);
-    this.inputElement.setData(data as unknown as D);
+    this.inputElement.setData(data);
   }
 }

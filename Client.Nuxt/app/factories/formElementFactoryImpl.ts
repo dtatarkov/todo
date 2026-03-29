@@ -10,11 +10,17 @@ import { InputElementTextArea } from "~/entities/inputElements/inputElementTexta
 import { InputElementTime } from "~/entities/inputElements/inputElementTime";
 import { InputElementDateTime } from "~/entities/inputElements/inputElementDateTime";
 import { InputElementDate } from "~/entities/inputElements/inputElementDate";
+import type { StringsService } from "~/interfaces/stringsService";
+import type { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
+import type { TimeMapper } from "~/interfaces/timeMapper";
 
 export class FormElementFactoryImpl implements FormElementFactory
 {
   constructor(
-    private datesService: DatesService
+    private datesService: DatesService,
+    private stringsService: StringsService,
+    private zonedDateTimeMapper: ZonedDateTimeMapper,
+    private timeMapper: TimeMapper,
   )
   {
   }
@@ -38,11 +44,11 @@ export class FormElementFactoryImpl implements FormElementFactory
       case FormElementType.textarea:
         return new InputElementTextArea();
       case FormElementType.inputDate:
-        return new InputElementDate();
+        return new InputElementDate(this.zonedDateTimeMapper);
       case FormElementType.inputTime:
-        return new InputElementTime(this.datesService);
+        return new InputElementTime(this.timeMapper);
       case FormElementType.inputDateTime:
-        return new InputElementDateTime(this.datesService);
+        return new InputElementDateTime(this.datesService, this.stringsService, this.zonedDateTimeMapper, this.timeMapper);
     }
   }
 }

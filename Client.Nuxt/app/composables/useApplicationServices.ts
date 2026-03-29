@@ -24,24 +24,34 @@ import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
 import { ToDoElementsFactoryImpl } from "~/factories/todoElementsFactoryImpl";
 import { SSRLoader } from "~/interfaces/ssrLoader";
 import { SSRLoaderImpl } from "~/services/ssrLoaderImpl";
+import { StringsService } from "~/interfaces/stringsService";
+import { StringsServiceImpl } from "~/services/stringsServiceImpl";
+import { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
+import { ZonedDateTimeMapperImpl } from "~/mappers/zonedDateTimeMapperImpl";
+import { TimeMapperImpl } from "~/mappers/timeMapperImpl";
+import { TimeMapper } from "~/interfaces/timeMapper";
 
 export function useApplicationServices()
 {
   registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
-  
+
   registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
-  
-  registerServiceFactory(DatesService, () => {
+
+  registerServiceFactory(DatesService, () =>
+  {
     const config = getService(AppPublicRuntimeConfig);
     const result = new DatesServiceImpl(config);
-    
+
     return result;
-  }, ServiceScope.Singleton)
-  
-  registerServiceFactory(AppPublicRuntimeConfig, () => {
+  }, ServiceScope.Singleton);
+
+  registerService(StringsService, StringsServiceImpl, ServiceScope.Singleton);
+
+  registerServiceFactory(AppPublicRuntimeConfig, () =>
+  {
     const config = useRuntimeConfig();
-    
+
     return config.public;
   }, ServiceScope.Singleton);
 
@@ -49,6 +59,16 @@ export function useApplicationServices()
   {
     const datesService = getService(DatesService);
     const mapper       = new ToDoDtoMapperImpl(datesService);
+
+    return mapper;
+  }, ServiceScope.Singleton);
+
+  registerService(ZonedDateTimeMapper, ZonedDateTimeMapperImpl);
+
+  registerServiceFactory(TimeMapper, () =>
+  {
+    const datesService = getService(DatesService);
+    const mapper       = new TimeMapperImpl(datesService);
 
     return mapper;
   }, ServiceScope.Singleton);
@@ -65,51 +85,58 @@ export function useApplicationServices()
 
   registerServiceFactory(ToDosService, () =>
   {
-    const todosOwner   = getService(ToDosOwner);
+    const todosOwner     = getService(ToDosOwner);
     const overlayService = getService(OverlayService);
-    const formFactory = getService(FormFactory);
-    
+    const formFactory    = getService(FormFactory);
+
     const todosService = new TodosServiceImpl(todosOwner, overlayService, formFactory);
 
     return todosService;
   }, ServiceScope.Singleton);
-  
+
   registerServiceFactory(FormElementFactory, () =>
   {
-    const datesService = getService(DatesService);
-    const result = new FormElementFactoryImpl(datesService);
-    
+    const datesService        = getService(DatesService);
+    const stringsService      = getService(StringsService);
+    const zonedDateTimeMapper = getService(ZonedDateTimeMapper);
+    const timeMapper          = getService(TimeMapper);
+
+    const result = new FormElementFactoryImpl(datesService, stringsService, zonedDateTimeMapper, timeMapper);
+
     return result;
   }, ServiceScope.Singleton);
-  
-  registerServiceFactory(FormFactory, () => {
+
+  registerServiceFactory(FormFactory, () =>
+  {
     const formElementFactory = getService(FormElementFactory);
-    const formFactory = new FormFactoryImpl(formElementFactory);
-    
+    const formFactory        = new FormFactoryImpl(formElementFactory);
+
     return formFactory;
   }, ServiceScope.Singleton);
 
   registerServiceFactory(OverlayService, () =>
   {
-    const overlay = getService(Overlay);
+    const overlay        = getService(Overlay);
     const overlayService = new OverlayServiceImpl(overlay);
 
     return overlayService;
   }, ServiceScope.Singleton);
-  
-  registerServiceFactory(ToDoCardDataMapper, () => {
+
+  registerServiceFactory(ToDoCardDataMapper, () =>
+  {
     const datesService = getService(DatesService);
-    const result = new ToDoCardDataMapperImpl(datesService);
-    
+    const result       = new ToDoCardDataMapperImpl(datesService);
+
     return result;
   });
-  
-  registerServiceFactory(ToDoElementsFactory, () => {
+
+  registerServiceFactory(ToDoElementsFactory, () =>
+  {
     const todosService = getService(ToDosService);
     const datesService = getService(DatesService);
-    
+
     const result = new ToDoElementsFactoryImpl(todosService, datesService);
-    
+
     return result;
   });
 }
