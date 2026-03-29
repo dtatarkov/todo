@@ -1,6 +1,5 @@
 import { VForm } from "#components";
 import type { FormElementCreateData } from "@/types/formElementCreateData";
-import type { RenderFunction } from "@/types/renderFunction";
 import { Form } from "@/interfaces/form";
 import { FormElementFactory } from "@/interfaces/formElementFactory";
 import type { FormElement } from "@/interfaces/formElement";
@@ -10,6 +9,13 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
 {
   private _id                           = new UIElementId();
   private _elements: Ref<FormElement[]> = shallowRef([]);
+
+  override component = {
+    setup: () =>
+    {
+      return () => h(VForm, { form: this });
+    }
+  }
 
   constructor(
     protected formElementFactory: FormElementFactory
@@ -47,17 +53,5 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
 
       return element;
     });
-  }
-
-  override getVNode(): { setup: () => RenderFunction }
-  {
-    const vnode = {
-      setup: () =>
-      {
-        return () => h(VForm, { form: this });
-      }
-    }
-
-    return vnode;
   }
 }

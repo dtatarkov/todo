@@ -1,6 +1,5 @@
 import { VFormField } from "#components";
 import { ViewElement } from "@/interfaces/viewElement";
-import type { RenderFunction } from "@/types/renderFunction";
 import { FormField } from "~/interfaces/formField";
 import { UIElementId } from "~/entities/uiElementId";
 
@@ -15,6 +14,13 @@ export class FormFieldBase extends FormField
 
   private _children = {
     content: <ViewElement | undefined>undefined
+  }
+
+  readonly component = {
+    setup: () =>
+    {
+      return () => h(VFormField, { field: this });
+    }
   }
 
   get id(): number
@@ -50,15 +56,5 @@ export class FormFieldBase extends FormField
   set content(value)
   {
     this._children.content = value;
-  }
-
-  override getVNode(): { setup: () => RenderFunction }
-  {
-    return {
-      setup: () =>
-      {
-        return () => h(VFormField, { field: this });
-      }
-    }
   }
 }

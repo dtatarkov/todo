@@ -21,7 +21,7 @@ function handleOpen(isOpened: boolean)
       @update:open="handleOpen"
   >
     <template #content>
-      <component v-if="modal.content" :is="modal.content.getVNode()" />
+      <component v-if="modal.content" :is="modal.content.component" />
     </template>
   </UModal>
 </template>

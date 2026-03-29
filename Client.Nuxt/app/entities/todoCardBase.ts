@@ -1,6 +1,5 @@
 import { ToDoCard } from "~/interfaces/todoCard";
 import type { ToDosService } from "~/interfaces/todosService";
-import type { RenderFunction } from "~/types/renderFunction";
 import { VToDoCard } from "#components";
 
 export class ToDoCardBase extends ToDoCard
@@ -13,6 +12,13 @@ export class ToDoCardBase extends ToDoCard
     completionDateActual : ''
   });
 
+  readonly component = {
+    setup: () =>
+    {
+      return () => h(VToDoCard, { card: this });
+    }
+  }
+
   constructor(
     private todosService: ToDosService
   )
@@ -20,54 +26,54 @@ export class ToDoCardBase extends ToDoCard
     super();
   }
 
-  override get id() {
+  override get id()
+  {
     return this.data.id;
   }
 
-  override get title() {
+  override get title()
+  {
     return this.data.title;
   }
 
-  override get description() {
+  override get description()
+  {
     return this.data.description;
   }
 
-  override get completionDatePlanned() {
+  override get completionDatePlanned()
+  {
     return this.data.completionDatePlanned;
   }
 
-  override get completionDateActual() {
+  override get completionDateActual()
+  {
     return this.data.completionDateActual;
   }
 
-  override set id(value: string) {
+  override set id(value: string)
+  {
     this.data.id = value;
   }
 
-  override set title(value: string) {
+  override set title(value: string)
+  {
     this.data.title = value;
   }
 
-  override set description(value: string) {
+  override set description(value: string)
+  {
     this.data.description = value;
   }
 
-  override set completionDatePlanned(value: string) {
+  override set completionDatePlanned(value: string)
+  {
     this.data.completionDatePlanned = value;
   }
 
-  override set completionDateActual(value: string) {
-    this.data.completionDateActual = value;
-  }
-
-  override getVNode(): { setup: () => RenderFunction }
+  override set completionDateActual(value: string)
   {
-    return {
-      setup: () =>
-      {
-        return () => h(VToDoCard, { card: this });
-      }
-    }
+    this.data.completionDateActual = value;
   }
 
   async handleEditButtonClick()

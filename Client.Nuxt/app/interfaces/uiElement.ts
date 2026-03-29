@@ -1,8 +1,7 @@
-import type { RenderFunction } from "~/types/renderFunction";
+import type { VComponent } from "~/types/vcomponent";
 
 export abstract class UIElement<Key extends string | number = string | number>
 {
   abstract readonly id: Key;
-
-  abstract getVNode(): { setup: () => RenderFunction };
+  abstract readonly component: VComponent;
 }

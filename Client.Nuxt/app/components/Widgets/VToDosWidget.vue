@@ -14,7 +14,7 @@ const cards = computed(() => todos.value.map(todo => todoElementsFactory.createT
 <template>
   <div class="p-4">
     <VGrid>
-      <component v-for="card of cards" :key="card.id" :is="card.getVNode()"/>
+      <component v-for="card of cards" :key="card.id" :is="card.component" />
     </VGrid>
   </div>
 </template>

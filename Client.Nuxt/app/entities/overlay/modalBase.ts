@@ -1,4 +1,3 @@
-import type { RenderFunction } from "@/types/renderFunction";
 import VModal from "~/components/UI/VModal.vue";
 import { Modal } from "~/interfaces/modal";
 import type { Overlay } from "~/interfaces/overlay";
@@ -18,6 +17,13 @@ export class ModalBase extends Modal
 
   private children = {
     content: <UIElement | undefined>undefined
+  }
+
+  readonly component = {
+    setup: () =>
+    {
+      return () => h(VModal, { modal: this });
+    }
   }
 
   get id()
@@ -73,17 +79,5 @@ export class ModalBase extends Modal
     }
 
     this.parent.removeElement(this);
-  }
-
-  override getVNode(): { setup: () => RenderFunction }
-  {
-    const vnode = {
-      setup: () =>
-      {
-        return () => h(VModal, { modal: this });
-      }
-    }
-
-    return vnode;
   }
 }
