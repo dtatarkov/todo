@@ -5,7 +5,7 @@ import type { UIElement } from "~/interfaces/uiElement";
 
 export class FormFieldBase extends FormField
 {
-  private _id = new UIElementId();
+  #id = new UIElementId('form-field');
 
   private _data = reactive({
     label: '',
@@ -23,9 +23,9 @@ export class FormFieldBase extends FormField
     }
   }
 
-  get id(): number
+  get id(): string
   {
-    return this._id.value;
+    return this.#id.value;
   }
 
   get label(): string

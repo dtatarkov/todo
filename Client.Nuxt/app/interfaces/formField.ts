@@ -1,6 +1,6 @@
 import { UIElement } from "~/interfaces/uiElement";
 
-export abstract class FormField extends UIElement<number>
+export abstract class FormField extends UIElement<string>
 {
   abstract name: string;
   abstract label: string;

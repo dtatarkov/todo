@@ -6,7 +6,7 @@ import { UIElementId } from "~/entities/uiElementId";
 
 export class FormElementBase<V = any> extends FormElement
 {
-  private _id = new UIElementId();
+  #id = new UIElementId('form-element');
 
   protected formField = new FormFieldBase();
 
@@ -19,7 +19,7 @@ export class FormElementBase<V = any> extends FormElement
 
   get id()
   {
-    return this._id.value;
+    return this.#id.value;
   }
 
   get name()

@@ -7,8 +7,8 @@ import { UIElementId } from "~/entities/uiElementId";
 
 export class FormBase<TEntity extends Record<string, any> = Record<string, any>> extends Form
 {
-  private _id                           = new UIElementId();
-  private _elements: Ref<FormElement[]> = shallowRef([]);
+  #id                           = new UIElementId('form');
+  #elements: Ref<FormElement[]> = shallowRef([]);
 
   override component = {
     setup: () =>
@@ -26,17 +26,17 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
 
   get id()
   {
-    return this._id.value;
+    return this.#id.value;
   }
 
   get elements()
   {
-    return this._elements.value
+    return this.#elements.value
   }
 
   setData(data: Record<string, any>)
   {
-    for (const element of this._elements.value)
+    for (const element of this.#elements.value)
     {
       if (element.name in data)
       {
@@ -47,7 +47,7 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
 
   setElements(elements: Partial<Record<keyof TEntity, FormElementCreateData>>)
   {
-    this._elements.value = Object.entries(elements).map(([name, createData]) =>
+    this.#elements.value = Object.entries(elements).map(([name, createData]) =>
     {
       const element = this.formElementFactory.createElement(name, createData as FormElementCreateData);
 

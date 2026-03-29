@@ -6,16 +6,16 @@ import { UIElementId } from "~/entities/uiElementId";
 
 export class ModalBase extends Modal
 {
-  private _id = new UIElementId();
+  #id = new UIElementId('modal');
 
-  private data = {
+  #data = {
     title      : '',
     description: '',
   }
 
-  private _parent: Overlay | undefined;
+  #parent: Overlay | undefined;
 
-  private children = {
+  #children = {
     content: <UIElement | undefined>undefined
   }
 
@@ -28,47 +28,47 @@ export class ModalBase extends Modal
 
   get id()
   {
-    return this._id.value;
+    return this.#id.value;
   }
 
   get title()
   {
-    return this.data.title;
+    return this.#data.title;
   }
 
   set title(value)
   {
-    this.data.title = value;
+    this.#data.title = value;
   }
 
   get description()
   {
-    return this.data.description;
+    return this.#data.description;
   }
 
   set description(value)
   {
-    this.data.description = value;
+    this.#data.description = value;
   }
 
   get parent()
   {
-    return this._parent;
+    return this.#parent;
   }
 
   set parent(value)
   {
-    this._parent = value;
+    this.#parent = value;
   }
 
   get content()
   {
-    return this.children.content;
+    return this.#children.content;
   }
 
   set content(content)
   {
-    this.children.content = content;
+    this.#children.content = content;
   }
 
   close()
