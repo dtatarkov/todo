@@ -1,4 +1,4 @@
-import { StringsService } from "~/interfaces/stringsService";
+import { StringsService } from "../interfaces/stringsService";
 
 export class StringsServiceImpl extends StringsService
 {

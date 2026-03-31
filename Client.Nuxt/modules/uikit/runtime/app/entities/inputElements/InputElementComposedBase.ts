@@ -1,4 +1,3 @@
-import type { StringsService } from "~/interfaces/stringsService";
 import type { Action } from "~/types/action";
 
 export abstract class InputElementComposedBase<V> extends InputElement<V>

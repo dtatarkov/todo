@@ -1,5 +1,3 @@
-import { DatesServiceImpl } from "@/services/datesServiceImpl";
-import { DatesService } from "@/interfaces/datesService";
 import { ToDosService } from "@/interfaces/todosService";
 import { TodosServiceImpl } from "@/services/todosServiceImpl";
 import { ToDosOwner } from "@/interfaces/todosOwner";
@@ -12,20 +10,16 @@ import { OverlayServiceImpl } from "@/services/overlayServiceImpl";
 import { OverlayService } from "@/interfaces/overlayService";
 import { OverlayBase } from "@/entities/overlay/overlayBase";
 import { Overlay } from "@/interfaces/overlay";
-import { ServiceScope } from "@/enums/serviceScope";
 import { FormElementFactory } from "@/interfaces/formElementFactory";
 import { FormElementFactoryImpl } from "@/factories/formElementFactoryImpl";
 import { FormFactory } from "@/interfaces/formFactory";
 import { FormFactoryImpl } from "@/factories/formFactoryImpl";
-import { AppPublicRuntimeConfig } from "~/interfaces/appRuntimeConfig";
 import { ToDoCardDataMapper } from "~/interfaces/todoCardDataMapper";
 import { ToDoCardDataMapperImpl } from "~/mappers/todoCardDataMapperImpl";
 import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
 import { ToDoElementsFactoryImpl } from "~/factories/todoElementsFactoryImpl";
 import { SSRLoader } from "~/interfaces/ssrLoader";
 import { SSRLoaderImpl } from "~/services/ssrLoaderImpl";
-import { StringsService } from "~/interfaces/stringsService";
-import { StringsServiceImpl } from "~/services/stringsServiceImpl";
 import { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
 import { ZonedDateTimeMapperImpl } from "~/mappers/zonedDateTimeMapperImpl";
 import { TimeMapperImpl } from "~/mappers/timeMapperImpl";
@@ -33,27 +27,12 @@ import { TimeMapper } from "~/interfaces/timeMapper";
 
 export function useApplicationServices()
 {
+  useSharedServices();
+
   registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
 
   registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
-
-  registerServiceFactory(DatesService, () =>
-  {
-    const config = getService(AppPublicRuntimeConfig);
-    const result = new DatesServiceImpl(config);
-
-    return result;
-  }, ServiceScope.Singleton);
-
-  registerService(StringsService, StringsServiceImpl, ServiceScope.Singleton);
-
-  registerServiceFactory(AppPublicRuntimeConfig, () =>
-  {
-    const config = useRuntimeConfig();
-
-    return config.public;
-  }, ServiceScope.Singleton);
 
   registerServiceFactory(ToDoDtoMapper, () =>
   {

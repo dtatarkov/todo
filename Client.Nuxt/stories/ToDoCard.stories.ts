@@ -1,23 +1,23 @@
 import type { Meta, StoryObj } from '@storybook-vue/nuxt';
-import ToDoCard from '../app/components/ToDoCard.vue';
-import { ToDoViewModel, type ToDoViewModelData } from "@/interfaces/todoViewModel";
+import VToDoCard from '../app/components/VToDoCard.vue';
 import { fn } from "storybook/test";
 
-function getToDoViewModelData(data: Partial<ToDoViewModelData>) {
+function getToDoViewModelData(data: Partial<ToDoViewModelData>)
+{
   return {
     id                   : '',
     title                : '',
     description          : '',
     completionDatePlanned: '',
     completionDateActual : '',
-    
+
     ...data
   }
 }
 
-const meta: Meta<typeof ToDoCard> = {
-  title    : 'Components/ToDoCard',
-  component: ToDoCard,
+const meta: Meta<typeof VToDoCard> = {
+  title    : 'Components/VToDoCard',
+  component: VToDoCard,
   argTypes : {
     todoId: {
       control: 'text'
@@ -26,8 +26,6 @@ const meta: Meta<typeof ToDoCard> = {
 
   beforeEach: () =>
   {
-    useServiceLocator();
-
     registerServiceFactory(ToDoViewModel, () =>
     {
       let todoId = '';
@@ -75,7 +73,7 @@ const meta: Meta<typeof ToDoCard> = {
 }
 
 export default meta;
-type Story = StoryObj<typeof ToDoCard>;
+type Story = StoryObj<typeof VToDoCard>;
 
 export const Default: Story = {
   args: {

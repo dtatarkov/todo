@@ -1,6 +1,6 @@
 import { DateTime, Duration } from 'luxon';
-import { DatesService } from '@/interfaces/datesService';
-import { AppPublicRuntimeConfig } from "@/interfaces/appRuntimeConfig";
+import { DatesService } from '../interfaces/datesService';
+import { AppPublicRuntimeConfig } from "../interfaces/appRuntimeConfig";
 
 export class DatesServiceImpl extends DatesService
 {

@@ -3,7 +3,6 @@ import { ToDoCard } from "~/interfaces/todoCard";
 import { ToDoCardBase } from "~/entities/todoCardBase";
 import type { ToDosService } from "~/interfaces/todosService";
 import type { ToDo } from "~/interfaces/todo";
-import type { DatesService } from "~/interfaces/datesService";
 
 export class ToDoElementsFactoryImpl extends ToDoElementsFactory
 {

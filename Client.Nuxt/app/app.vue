@@ -8,7 +8,6 @@
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale';
 
-useServiceLocator();
 useApplicationServices();
 
 const config = useRuntimeConfig();

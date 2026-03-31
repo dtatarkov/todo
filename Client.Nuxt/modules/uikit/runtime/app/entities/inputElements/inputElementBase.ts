@@ -1,5 +1,3 @@
-import type { StringsService } from "~/interfaces/stringsService";
-
 export abstract class InputElementBase<V = any> extends InputElement<V>
 {
   protected data: Record<string, any> = reactive({
