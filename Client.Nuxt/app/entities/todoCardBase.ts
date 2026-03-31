@@ -15,7 +15,13 @@ export class ToDoCardBase extends ToDoCard
   readonly component = {
     setup: () =>
     {
-      return () => h(VToDoCard, { card: this });
+      return () => h(VToDoCard, {
+        title                : this.title,
+        description          : this.description,
+        completionDatePlanned: this.completionDatePlanned,
+        completionDateActual : this.completionDateActual,
+        onEditButtonClick    : () => this.handleEditButtonClick()
+      });
     }
   }
 
