@@ -3,7 +3,7 @@ import { createResolver } from "nuxt/kit";
 
 export default defineNuxtModule({
   meta: {
-    name: 'todo',
+    name: 'overlay',
   },
 
   setup()
@@ -18,11 +18,10 @@ export default defineNuxtModule({
       path: resolver.resolve('./runtime/app/components')
     });
 
-    addImportsDir(resolver.resolve('./runtime/app/composables'));
-
     addImports([
-      { from: resolver.resolve('./runtime/app/interfaces/todosService'), name: 'ToDosService' },
-      { from: resolver.resolve('./runtime/app/interfaces/todo'), name: 'ToDo' },
+      { from: resolver.resolve('./runtime/app/interfaces/modal'), name: 'Modal' },
+      { from: resolver.resolve('./runtime/app/interfaces/overlayService'), name: 'OverlayService' },
+      { from: resolver.resolve('./runtime/app/interfaces/overlayElement'), name: 'OverlayElement' },
     ]);
 
     addPlugin(resolver.resolve('./runtime/plugins/servicesPlugin'), { append: true });

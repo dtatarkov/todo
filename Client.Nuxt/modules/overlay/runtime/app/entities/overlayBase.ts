@@ -1,20 +1,20 @@
-import { Overlay } from "@/interfaces/overlay";
-import type { OverlayElement } from "~/interfaces/overlayElement";
-import { ModalBase } from "~/entities/overlay/modalBase";
+import { Overlay } from "../interfaces/overlay";
+import type { OverlayElement } from "../interfaces/overlayElement";
+import { ModalBase } from "../entities/modalBase";
 
 export class OverlayBase extends Overlay
 {
   private elementsSet = shallowRef(new Set<OverlayElement>());
-  
-  readonly elements    = computed(() => [...this.elementsSet.value]);
-  
+
+  readonly elements = computed(() => [...this.elementsSet.value]);
+
   override createModal()
   {
-    const modal = new ModalBase();
+    const modal  = new ModalBase();
     modal.parent = this;
-    
+
     this.addElement(modal);
-    
+
     return modal;
   }
 

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { ModalBase } from "~/entities/overlay/modalBase";
-
-const props = defineProps<{ modal: ModalBase }>();
+const props = defineProps<{ modal: Modal }>();
 
 function handleOpen(isOpened: boolean)
 {

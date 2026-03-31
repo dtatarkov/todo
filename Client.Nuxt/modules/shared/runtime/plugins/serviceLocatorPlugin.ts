@@ -1,5 +1,5 @@
-import { ServiceLocator } from "@@/modules/shared/runtime/app/interfaces/ServiceLocator";
-import { ServiceLocatorBase } from "@@/modules/shared/runtime/app/entities/serviceLocatorBase";
+import { ServiceLocator } from "../app/interfaces/serviceLocator";
+import { ServiceLocatorBase } from "../app/entities/serviceLocatorBase";
 
 export default defineNuxtPlugin((nuxtApp) =>
 {

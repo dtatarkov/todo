@@ -1,16 +1,15 @@
-import { ToDosRepository } from "../interfaces/todosRepository";
-import { ToDoDtoMapper } from "../interfaces/todoDtoMapper";
-import { ToDoDtoMapperImpl } from "../mappers/todoDtoMapperImpl";
-import { ToDosOwner } from "../interfaces/todosOwner";
-import { ToDosOwnerBase } from "../entities/todosOwnerBase";
-import { ToDosService } from "../interfaces/todosService";
-import { TodosServiceImpl } from "@@/modules/todo/runtime/app/services/todosServiceImpl";
-import { ToDoElementsFactory } from "@@/modules/todo/runtime/app/interfaces/todoElementsFactory";
-import { ToDoElementsFactoryImpl } from "@@/modules/todo/runtime/app/factories/todoElementsFactoryImpl";
-import { ToDosRepositoryImpl } from "../repositories/todosRepositoryImpl";
-import { OverlayService } from "~/interfaces/overlayService";
+import { ToDosRepository } from "../app/interfaces/todosRepository";
+import { ToDoDtoMapper } from "../app/interfaces/todoDtoMapper";
+import { ToDoDtoMapperImpl } from "../app/mappers/todoDtoMapperImpl";
+import { ToDosOwner } from "../app/interfaces/todosOwner";
+import { ToDosOwnerBase } from "../app/entities/todosOwnerBase";
+import { ToDosService } from "../app/interfaces/todosService";
+import { ToDosRepositoryImpl } from "../app/repositories/todosRepositoryImpl";
+import { TodosServiceImpl } from "../app/services/todosServiceImpl";
+import { ToDoElementsFactory } from "../app/interfaces/todoElementsFactory";
+import { ToDoElementsFactoryImpl } from "../app/factories/todoElementsFactoryImpl";
 
-export function useToDoServices()
+export default defineNuxtPlugin((nuxtApp) =>
 {
   registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
 
@@ -52,4 +51,4 @@ export function useToDoServices()
 
     return result;
   });
-}
+})

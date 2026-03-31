@@ -2,7 +2,7 @@ import { ToDosOwner } from "../interfaces/todosOwner";
 import { ToDo } from "../interfaces/todo";
 import type { ToDosRepository } from "../interfaces/todosRepository";
 import type { ToDoDtoMapper } from "../interfaces/todoDtoMapper";
-import type { ToDoGetDto } from "@@/modules/todo/runtime/app/types/toDoGetDto";
+import type { ToDoGetDto } from "../types/toDoGetDto";
 
 export class ToDosOwnerBase extends ToDosOwner
 {

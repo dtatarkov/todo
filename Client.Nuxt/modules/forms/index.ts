@@ -1,6 +1,5 @@
-import { addComponentsDir, addImports, addImportsDir, defineNuxtModule } from "@nuxt/kit";
+import { addComponentsDir, addImports, addImportsDir, addPlugin, defineNuxtModule } from "@nuxt/kit";
 import { createResolver } from "nuxt/kit";
-import { FormFactory } from "@@/modules/forms/runtime/app/interfaces/formFactory";
 
 export default defineNuxtModule({
   meta: {
@@ -26,5 +25,7 @@ export default defineNuxtModule({
       { from: resolver.resolve('./runtime/app/interfaces/form'), name: 'Form' },
       { from: resolver.resolve('./runtime/app/interfaces/formFactory'), name: 'FormFactory' },
     ]);
+
+    addPlugin(resolver.resolve('./runtime/plugins/servicesPlugin'), { append: true });
   },
 })

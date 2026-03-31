@@ -1,11 +1,11 @@
 import { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
 import { TimeMapper } from "~/interfaces/timeMapper";
-import { FormElementFactory } from "../interfaces/formElementFactory";
-import { FormFactory } from "../interfaces/formFactory";
-import { FormElementFactoryImpl } from "../factories/formElementFactoryImpl";
-import { FormFactoryImpl } from "../factories/formFactoryImpl";
+import { FormElementFactory } from "../app/interfaces/formElementFactory";
+import { FormFactory } from "../app/interfaces/formFactory";
+import { FormElementFactoryImpl } from "../app/factories/formElementFactoryImpl";
+import { FormFactoryImpl } from "../app/factories/formFactoryImpl";
 
-export function useFormServices()
+export default defineNuxtPlugin((nuxtApp) =>
 {
   registerServiceFactory(FormElementFactory, () =>
   {
@@ -26,4 +26,4 @@ export function useFormServices()
 
     return formFactory;
   }, ServiceScope.Singleton);
-}
+})

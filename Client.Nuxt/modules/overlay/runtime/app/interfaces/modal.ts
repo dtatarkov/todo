@@ -1,4 +1,4 @@
-import { OverlayElement } from "~/interfaces/overlayElement";
+import { OverlayElement } from "../interfaces/overlayElement";
 
 export abstract class Modal extends OverlayElement
 {

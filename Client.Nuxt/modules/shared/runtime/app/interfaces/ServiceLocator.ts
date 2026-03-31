@@ -1,7 +1,3 @@
-import type { ServiceIdentifier } from "@@/modules/shared/runtime/app/types/serviceIdentifier";
-import type { Constructor } from "@@/modules/shared/runtime/app/types/constructor";
-import { ServiceScope } from "@@/modules/shared/runtime/app/enums/serviceScope";
-
 export abstract class ServiceLocator
 {
   abstract get<T>(serviceIdentifier: ServiceIdentifier<T>): T

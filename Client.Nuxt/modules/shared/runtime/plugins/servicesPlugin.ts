@@ -1,0 +1,28 @@
+import { ServiceScope } from "../app/enums/serviceScope";
+import { AppPublicRuntimeConfig } from "../app/interfaces/appRuntimeConfig";
+import { DatesService } from "../app/interfaces/datesService";
+import { StringsService } from "../app/interfaces/stringsService";
+import { DatesServiceImpl } from "../app/services/datesServiceImpl";
+import { StringsServiceImpl } from "../app/services/stringsServiceImpl";
+import { SSRLoaderImpl } from "../app/services/ssrLoaderImpl";
+
+export default defineNuxtPlugin((nuxtApp) =>
+{
+  registerServiceFactory(AppPublicRuntimeConfig, () =>
+  {
+    const config = useRuntimeConfig();
+
+    return config.public;
+  }, ServiceScope.Singleton);
+
+  registerServiceFactory(DatesService, () =>
+  {
+    const config = getService(AppPublicRuntimeConfig);
+    const result = new DatesServiceImpl(config);
+
+    return result;
+  }, ServiceScope.Singleton);
+
+  registerService(StringsService, StringsServiceImpl, ServiceScope.Singleton);
+  registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
+})
