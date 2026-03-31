@@ -1,5 +1,3 @@
-import { UIElement } from "~/interfaces/uiElement";
-
 export abstract class ToDoCard extends UIElement<string>
 {
   abstract override id: string;

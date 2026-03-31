@@ -1,10 +1,10 @@
-import { InputElementBase } from "@/entities/inputElements/inputElementBase";
 import { UInputDate } from "#components";
 import { OptionalValueMapper } from "~/mappers/optionalValueMapper";
 import type { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
 import type { ValueMapper } from "~/interfaces/valueMapper";
 import type { ZonedDateTime } from "@internationalized/date";
 import type { StringsService } from "~/interfaces/stringsService";
+import { InputElementBase } from "#uikit/entities/inputElements/inputElementBase";
 
 export class InputElementDate extends InputElementBase<Date | undefined>
 {

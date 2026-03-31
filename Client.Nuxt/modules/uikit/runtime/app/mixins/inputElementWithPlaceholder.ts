@@ -1,5 +1,5 @@
 import type { AbstractConstructor } from "~/types/abstractConstructor";
-import type { InputElementBase } from "~/entities/inputElements/inputElementBase";
+import type { InputElementBase } from "#uikit/entities/inputElements/inputElementBase";
 
 export function InputElementWithPlaceholder<TBase extends AbstractConstructor<InputElementBase>>(Base: TBase)
 {
@@ -12,10 +12,16 @@ export function InputElementWithPlaceholder<TBase extends AbstractConstructor<In
       Object.assign(this.data, {
         placeholder: ''
       });
+    }
 
-      mergeDeep(this.propertiesScheme, {
-        placeholder: {}
-      });
+    get placeholder(): string
+    {
+      return this.data.placeholder;
+    }
+
+    set placeholder(value: string)
+    {
+      this.data.placeholder = value;
     }
   }
 

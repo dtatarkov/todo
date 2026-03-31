@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   ],
 
   alias: {
-    '#components': './app/components',
+    '#uikit': '../modules/uikit/runtime/app'
   },
 
   css: ['~/assets/css/main.css'],

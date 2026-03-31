@@ -1,4 +1,3 @@
-import { InputElement } from "~/interfaces/inputElement";
 import type { StringsService } from "~/interfaces/stringsService";
 import type { Action } from "~/types/action";
 

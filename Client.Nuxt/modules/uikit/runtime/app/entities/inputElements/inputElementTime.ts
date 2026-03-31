@@ -1,10 +1,10 @@
-import { InputElementBase } from "@/entities/inputElements/inputElementBase";
 import { UInputTime } from "#components";
 import type { TimeMapper } from "~/interfaces/timeMapper";
 import { OptionalValueMapper } from "~/mappers/optionalValueMapper";
 import type { Time } from "@internationalized/date";
 import type { ValueMapper } from "~/interfaces/valueMapper";
 import type { StringsService } from "~/interfaces/stringsService";
+import { InputElementBase } from "#uikit/entities/inputElements/inputElementBase";
 
 export class InputElementTime extends InputElementBase<number | undefined>
 {

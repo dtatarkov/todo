@@ -1,7 +1,6 @@
 import VModal from "~/components/UI/VModal.vue";
 import { Modal } from "~/interfaces/modal";
 import type { Overlay } from "~/interfaces/overlay";
-import type { UIElement } from "~/interfaces/uiElement";
 import { UIElementId } from "~/entities/uiElementId";
 
 export class ModalBase extends Modal

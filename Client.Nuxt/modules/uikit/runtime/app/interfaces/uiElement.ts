@@ -1,4 +1,4 @@
-import type { VComponent } from "~/types/vcomponent";
+import type { VComponent } from "#uikit/types/vcomponent";
 
 export abstract class UIElement<Key extends string | number = string | number>
 {

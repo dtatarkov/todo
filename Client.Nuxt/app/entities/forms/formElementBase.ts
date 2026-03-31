@@ -1,5 +1,4 @@
 import { FormFieldBase } from "~/entities/forms/formFieldBase";
-import type { InputElement } from "@/interfaces/inputElement";
 import type { FormElementCreateDataWithName } from "@/types/formElementCreateDataWithName";
 import { FormElement } from "~/interfaces/formElement";
 import { UIElementId } from "~/entities/uiElementId";

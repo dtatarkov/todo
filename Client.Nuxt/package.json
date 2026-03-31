@@ -41,7 +41,6 @@
   },
   "pnpm": {
     "overrides": {
-      "unimport": "5.6.0",
       "citty": "^0.1.6"
     },
     "onlyBuiltDependencies": [

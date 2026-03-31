@@ -1,4 +1,3 @@
-import { InputElement } from "@/interfaces/inputElement";
 import type { StringsService } from "~/interfaces/stringsService";
 
 export abstract class InputElementBase<V = any> extends InputElement<V>

@@ -19,6 +19,6 @@
         },
         {
             "path": "./tsconfig.unit.json"
-        },
-    ]
+        }
+    ],
 }
