@@ -8,10 +8,6 @@ export default defineNuxtConfig({
     '@nuxt/ui',
   ],
 
-  alias: {
-    '#uikit': '../modules/uikit/runtime/app'
-  },
-
   css: ['~/assets/css/main.css'],
 
   components: [

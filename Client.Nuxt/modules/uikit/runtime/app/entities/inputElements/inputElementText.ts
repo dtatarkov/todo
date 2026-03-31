@@ -1,6 +1,6 @@
 import { UInput } from "#components";
-import { InputElementWithPlaceholder } from "#uikit/mixins/inputElementWithPlaceholder";
-import { InputElementBaseString } from "#uikit/entities/inputElements/inputElementBaseString";
+import { InputElementWithPlaceholder } from "../../mixins/inputElementWithPlaceholder";
+import { InputElementBaseString } from "./inputElementBaseString";
 
 export class InputElementText extends InputElementWithPlaceholder(InputElementBaseString)
 {

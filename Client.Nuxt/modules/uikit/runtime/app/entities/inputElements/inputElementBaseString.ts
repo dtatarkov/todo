@@ -1,5 +1,5 @@
 import type { StringsService } from "~/interfaces/stringsService";
-import { InputElementBase } from "#uikit/entities/inputElements/inputElementBase";
+import { InputElementBase } from "./inputElementBase";
 
 export abstract class InputElementBaseString extends InputElementBase<string>
 {
