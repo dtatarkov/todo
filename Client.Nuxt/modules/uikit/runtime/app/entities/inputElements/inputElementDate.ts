@@ -5,7 +5,7 @@ import type { ValueMapper } from "~/interfaces/valueMapper";
 import type { ZonedDateTime } from "@internationalized/date";
 import { InputElementBase } from "./inputElementBase";
 
-export class InputElementDate extends InputElementBase<Date | undefined>
+export class InputElementDate extends InputElementBase<Date | undefined> implements InputElementDateData
 {
   protected optionalZonedDateTimeMapper: ValueMapper<Date | undefined, ZonedDateTime | undefined>
 

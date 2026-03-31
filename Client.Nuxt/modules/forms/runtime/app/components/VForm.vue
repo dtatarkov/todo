@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Form } from "~/interfaces/form";
+import type { Form } from "../interfaces/form";
 
 defineProps<{ form: Form }>();
 </script>

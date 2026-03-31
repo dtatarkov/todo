@@ -5,7 +5,7 @@ import type { Time } from "@internationalized/date";
 import type { ValueMapper } from "~/interfaces/valueMapper";
 import { InputElementBase } from "./inputElementBase";
 
-export class InputElementTime extends InputElementBase<number | undefined>
+export class InputElementTime extends InputElementBase<number | undefined> implements InputElementTimeData
 {
   protected optionalTimeMapper: ValueMapper<number | undefined, Time | undefined>
 

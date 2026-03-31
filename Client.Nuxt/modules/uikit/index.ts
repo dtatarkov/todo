@@ -15,6 +15,7 @@ export default defineNuxtModule({
     });
 
     addImportsDir(resolver.resolve('./runtime/app/entities/inputElements'));
+    addImportsDir(resolver.resolve('./runtime/app/types/inputElements'));
 
     addImports([
       { from: resolver.resolve('./runtime/app/interfaces/inputElement'), name: 'InputElement' },

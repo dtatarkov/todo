@@ -1,4 +1,4 @@
-import type { FormElementCreateData } from "@/types/formElementCreateData";
+import type { FormElementCreateData } from "../types/formElementCreateData";
 
 export abstract class Form<TEntity extends Record<string, any> = Record<string, any>> extends UIElement
 {

@@ -1,4 +1,4 @@
-export abstract class InputElement<V = any> extends UIElement<string>
+export abstract class InputElement<V = any> extends UIElement<string> implements InputElementData<V>
 {
   abstract override id: string;
   abstract name: string;

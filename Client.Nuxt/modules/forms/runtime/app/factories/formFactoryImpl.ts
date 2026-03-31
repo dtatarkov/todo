@@ -1,7 +1,7 @@
-import { Form } from "@/interfaces/form";
-import { FormBase } from "@/entities/forms/formBase";
-import { FormElementFactory } from "@/interfaces/formElementFactory";
-import { FormFactory } from "@/interfaces/formFactory";
+import { Form } from "../interfaces/form";
+import { FormBase } from "../entities/formBase";
+import { FormElementFactory } from "../interfaces/formElementFactory";
+import { FormFactory } from "../interfaces/formFactory";
 
 export class FormFactoryImpl implements FormFactory
 {

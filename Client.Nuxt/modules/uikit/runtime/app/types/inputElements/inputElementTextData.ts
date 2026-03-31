@@ -1,4 +1,4 @@
-import type { InputElementData } from "@/types/inputElementData";
+import type { InputElementData } from "./inputElementData";
 
 export type InputElementTextData = InputElementData<string> & {
   placeholder: string;

@@ -1,6 +1,6 @@
-import { FormFieldBase } from "~/entities/forms/formFieldBase";
-import type { FormElementCreateDataWithName } from "@/types/formElementCreateDataWithName";
-import { FormElement } from "~/interfaces/formElement";
+import { FormFieldBase } from "../entities/formFieldBase";
+import type { FormElementCreateDataWithName } from "../types/formElementCreateDataWithName";
+import { FormElement } from "../interfaces/formElement";
 
 export class FormElementBase<V = any> extends FormElement
 {
