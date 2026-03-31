@@ -14,6 +14,10 @@ export default defineNuxtModule({
       path: resolver.resolve('./runtime/app/widgets')
     });
 
+    addComponentsDir({
+      path: resolver.resolve('./runtime/app/components')
+    });
+
     addImportsDir(resolver.resolve('./runtime/app/composables'));
 
     addImports([
