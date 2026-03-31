@@ -24,6 +24,7 @@ export default defineNuxtModule({
       { from: resolver.resolve('./runtime/app/interfaces/appRuntimeConfig'), name: 'AppPublicRuntimeConfig' },
       { from: resolver.resolve('./runtime/app/interfaces/datesService'), name: 'DatesService' },
       { from: resolver.resolve('./runtime/app/interfaces/stringsService'), name: 'StringsService' },
+      { from: resolver.resolve('./runtime/app/interfaces/ssrLoader'), name: 'SSRLoader' },
     ])
   },
 })

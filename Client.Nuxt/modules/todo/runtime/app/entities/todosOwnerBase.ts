@@ -2,7 +2,7 @@ import { ToDosOwner } from "../interfaces/todosOwner";
 import { ToDo } from "../interfaces/todo";
 import type { ToDosRepository } from "../interfaces/todosRepository";
 import type { ToDoDtoMapper } from "../interfaces/todoDtoMapper";
-import type { SSRLoader } from "~/interfaces/ssrLoader";
+import type { ToDoGetDto } from "@@/modules/todo/runtime/app/types/toDoGetDto";
 
 export class ToDosOwnerBase extends ToDosOwner
 {
@@ -75,8 +75,8 @@ class ToDosOwnerBaseStateInitial extends ToDosOwnerBaseStateBase
   {
     owner.state = owner.states.initializing;
 
-    const todoDtos = await this.ssrLoader.loadAsync('todos', () => this.todosRepository.getAllToDosAsync());
-    const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
+    const todoDtos: ToDoGetDto[] = await this.ssrLoader.loadAsync('todos', () => this.todosRepository.getAllToDosAsync());
+    const todos                  = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
 
     owner.setToDos(todos);
 

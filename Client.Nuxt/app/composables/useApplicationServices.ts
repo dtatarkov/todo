@@ -6,8 +6,6 @@ import { FormElementFactory } from "@/interfaces/formElementFactory";
 import { FormElementFactoryImpl } from "@/factories/formElementFactoryImpl";
 import { FormFactory } from "@/interfaces/formFactory";
 import { FormFactoryImpl } from "@/factories/formFactoryImpl";
-import { SSRLoader } from "~/interfaces/ssrLoader";
-import { SSRLoaderImpl } from "~/services/ssrLoaderImpl";
 import { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
 import { ZonedDateTimeMapperImpl } from "~/mappers/zonedDateTimeMapperImpl";
 import { TimeMapperImpl } from "~/mappers/timeMapperImpl";
@@ -19,8 +17,6 @@ export function useApplicationServices()
   useToDoServices();
 
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
-
-  registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
 
   registerService(ZonedDateTimeMapper, ZonedDateTimeMapperImpl);
 

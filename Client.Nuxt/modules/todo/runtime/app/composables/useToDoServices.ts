@@ -9,7 +9,6 @@ import { TodosServiceImpl } from "@@/modules/todo/runtime/app/services/todosServ
 import { ToDoElementsFactory } from "@@/modules/todo/runtime/app/interfaces/todoElementsFactory";
 import { ToDoElementsFactoryImpl } from "@@/modules/todo/runtime/app/factories/todoElementsFactoryImpl";
 import { ToDosRepositoryImpl } from "../repositories/todosRepositoryImpl";
-import { SSRLoader } from "~/interfaces/ssrLoader";
 import { OverlayService } from "~/interfaces/overlayService";
 
 export function useToDoServices()

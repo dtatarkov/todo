@@ -1,5 +1,3 @@
-import type { SSRLoader } from "~/interfaces/ssrLoader";
-
 export class SSRLoaderImpl implements SSRLoader
 {
   async loadAsync<T>(key: string, handler: () => Promise<T>): Promise<T>

@@ -4,6 +4,7 @@ import { DatesService } from "../interfaces/datesService";
 import { StringsService } from "../interfaces/stringsService";
 import { DatesServiceImpl } from "../services/datesServiceImpl";
 import { StringsServiceImpl } from "../services/stringsServiceImpl";
+import { SSRLoaderImpl } from "../services/ssrLoaderImpl";
 
 export function useSharedServices()
 {
@@ -13,7 +14,7 @@ export function useSharedServices()
 
     return config.public;
   }, ServiceScope.Singleton);
-  
+
   registerServiceFactory(DatesService, () =>
   {
     const config = getService(AppPublicRuntimeConfig);
@@ -23,4 +24,5 @@ export function useSharedServices()
   }, ServiceScope.Singleton);
 
   registerService(StringsService, StringsServiceImpl, ServiceScope.Singleton);
+  registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
 }
