@@ -15,6 +15,11 @@ export default defineNuxtModule({
     addImportsDir(resolver.resolve('./runtime/app/composables'));
     addImportsDir(resolver.resolve('./runtime/app/utils'));
 
+    addImports({
+      from: resolver.resolve('./runtime/app/entities/uiElementId'),
+      name: 'UIElementId'
+    });
+
     addImports([
       { from: resolver.resolve('./runtime/app/interfaces/appRuntimeConfig'), name: 'AppPublicRuntimeConfig' },
       { from: resolver.resolve('./runtime/app/interfaces/datesService'), name: 'DatesService' },

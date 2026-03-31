@@ -1,6 +1,5 @@
 import { VFormField } from "#components";
 import { FormField } from "~/interfaces/formField";
-import { UIElementId } from "~/entities/uiElementId";
 
 export class FormFieldBase extends FormField
 {
