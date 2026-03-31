@@ -1,5 +1,5 @@
-import { ToDosRepository } from "@/interfaces/todosRepository";
-import type { ToDoGetDto } from "@/types/toDoGetDto";
+import { ToDosRepository } from "../interfaces/todosRepository";
+import type { ToDoGetDto } from "../types/toDoGetDto";
 
 export class ToDosRepositoryImpl extends ToDosRepository
 {

@@ -1,7 +1,7 @@
-import { ToDosService } from "@/interfaces/todosService";
-import { ToDo } from "@/interfaces/todo";
-import type { ToDosOwner } from "@/interfaces/todosOwner";
-import type { OverlayService } from "@/interfaces/overlayService";
+import { ToDosService } from "../interfaces/todosService";
+import { ToDo } from "../interfaces/todo";
+import type { ToDosOwner } from "../interfaces/todosOwner";
+import type { OverlayService } from "~/interfaces/overlayService";
 import { FormElementType } from "@/enums/formElementType";
 import type { FormFactory } from "@/interfaces/formFactory";
 

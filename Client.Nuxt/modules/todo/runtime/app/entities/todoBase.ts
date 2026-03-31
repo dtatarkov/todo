@@ -1,4 +1,4 @@
-import { ToDo, type ToDoData } from "@/interfaces/todo";
+import { ToDo, type ToDoData } from "../interfaces/todo";
 
 export class ToDoBase extends ToDo
 {

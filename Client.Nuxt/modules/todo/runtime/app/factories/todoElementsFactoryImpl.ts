@@ -1,8 +1,8 @@
-import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
-import { ToDoCard } from "~/interfaces/todoCard";
-import { ToDoCardBase } from "~/entities/todoCardBase";
-import type { ToDosService } from "~/interfaces/todosService";
-import type { ToDo } from "~/interfaces/todo";
+import { ToDoElementsFactory } from "../interfaces/todoElementsFactory";
+import { ToDoCard } from "../interfaces/todoCard";
+import { ToDoCardBase } from "../entities/todoCardBase";
+import type { ToDosService } from "../interfaces/todosService";
+import type { ToDo } from "../interfaces/todo";
 
 export class ToDoElementsFactoryImpl extends ToDoElementsFactory
 {

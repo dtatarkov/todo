@@ -1,5 +1,5 @@
-import { ToDoCard } from "~/interfaces/todoCard";
-import type { ToDosService } from "~/interfaces/todosService";
+import { ToDoCard } from "../interfaces/todoCard";
+import type { ToDosService } from "../interfaces/todosService";
 import { VToDoCard } from "#components";
 
 export class ToDoCardBase extends ToDoCard

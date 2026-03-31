@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ToDosService } from "~/interfaces/todosService";
-import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
+import { ToDosService } from "../interfaces/todosService";
+import { ToDoElementsFactory } from "../interfaces/todoElementsFactory";
 
 const todosService        = getService(ToDosService);
 const todoElementsFactory = getService(ToDoElementsFactory);

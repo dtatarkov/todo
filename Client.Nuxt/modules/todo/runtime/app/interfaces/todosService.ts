@@ -1,4 +1,4 @@
-import { ToDo } from "@/interfaces/todo";
+import { ToDo } from "../interfaces/todo";
 
 export abstract class ToDosService
 {

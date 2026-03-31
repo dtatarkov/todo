@@ -1,7 +1,7 @@
-import { ToDosOwner } from "@/interfaces/todosOwner";
-import { ToDo } from "@/interfaces/todo";
-import type { ToDosRepository } from "@/interfaces/todosRepository";
-import type { ToDoDtoMapper } from "@/interfaces/todoDtoMapper";
+import { ToDosOwner } from "../interfaces/todosOwner";
+import { ToDo } from "../interfaces/todo";
+import type { ToDosRepository } from "../interfaces/todosRepository";
+import type { ToDoDtoMapper } from "../interfaces/todoDtoMapper";
 import type { SSRLoader } from "~/interfaces/ssrLoader";
 
 export class ToDosOwnerBase extends ToDosOwner

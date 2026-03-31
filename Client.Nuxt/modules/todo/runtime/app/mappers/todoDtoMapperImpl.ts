@@ -1,7 +1,7 @@
-import { ToDoDtoMapper } from "@/interfaces/todoDtoMapper";
-import type { ToDoGetDto } from "@/types/toDoGetDto";
-import { ToDo } from "@/interfaces/todo";
-import { ToDoBase } from "@/entities/todoBase";
+import { ToDoDtoMapper } from "../interfaces/todoDtoMapper";
+import type { ToDoGetDto } from "../types/toDoGetDto";
+import { ToDo } from "../interfaces/todo";
+import { ToDoBase } from "../entities/todoBase";
 import { updatePropertiesWithData } from "~/utils/updatePropertiesWithData";
 
 export class ToDoDtoMapperImpl extends ToDoDtoMapper

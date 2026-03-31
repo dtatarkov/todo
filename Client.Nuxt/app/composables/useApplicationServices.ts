@@ -1,11 +1,3 @@
-import { ToDosService } from "@/interfaces/todosService";
-import { TodosServiceImpl } from "@/services/todosServiceImpl";
-import { ToDosOwner } from "@/interfaces/todosOwner";
-import { ToDosOwnerBase } from "@/entities/todosOwnerBase";
-import { ToDosRepository } from "@/interfaces/todosRepository";
-import { ToDosRepositoryImpl } from "@/repositories/todosRepositoryImpl";
-import { ToDoDtoMapperImpl } from "@/mappers/todoDtoMapperImpl";
-import { ToDoDtoMapper } from "@/interfaces/todoDtoMapper";
 import { OverlayServiceImpl } from "@/services/overlayServiceImpl";
 import { OverlayService } from "@/interfaces/overlayService";
 import { OverlayBase } from "@/entities/overlay/overlayBase";
@@ -14,10 +6,6 @@ import { FormElementFactory } from "@/interfaces/formElementFactory";
 import { FormElementFactoryImpl } from "@/factories/formElementFactoryImpl";
 import { FormFactory } from "@/interfaces/formFactory";
 import { FormFactoryImpl } from "@/factories/formFactoryImpl";
-import { ToDoCardDataMapper } from "~/interfaces/todoCardDataMapper";
-import { ToDoCardDataMapperImpl } from "~/mappers/todoCardDataMapperImpl";
-import { ToDoElementsFactory } from "~/interfaces/todoElementsFactory";
-import { ToDoElementsFactoryImpl } from "~/factories/todoElementsFactoryImpl";
 import { SSRLoader } from "~/interfaces/ssrLoader";
 import { SSRLoaderImpl } from "~/services/ssrLoaderImpl";
 import { ZonedDateTimeMapper } from "~/interfaces/zonedDateTimeMapper";
@@ -28,19 +16,11 @@ import { TimeMapper } from "~/interfaces/timeMapper";
 export function useApplicationServices()
 {
   useSharedServices();
+  useToDoServices();
 
-  registerService(ToDosRepository, ToDosRepositoryImpl, ServiceScope.Singleton);
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
 
   registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
-
-  registerServiceFactory(ToDoDtoMapper, () =>
-  {
-    const datesService = getService(DatesService);
-    const mapper       = new ToDoDtoMapperImpl(datesService);
-
-    return mapper;
-  }, ServiceScope.Singleton);
 
   registerService(ZonedDateTimeMapper, ZonedDateTimeMapperImpl);
 
@@ -50,27 +30,6 @@ export function useApplicationServices()
     const mapper       = new TimeMapperImpl(datesService);
 
     return mapper;
-  }, ServiceScope.Singleton);
-
-  registerServiceFactory(ToDosOwner, () =>
-  {
-    const todosRepository = getService(ToDosRepository);
-    const todoDtoMapper   = getService(ToDoDtoMapper);
-    const ssrLoader       = getService(SSRLoader);
-    const todoOwner       = new ToDosOwnerBase(todosRepository, todoDtoMapper, ssrLoader);
-
-    return todoOwner;
-  }, ServiceScope.Singleton);
-
-  registerServiceFactory(ToDosService, () =>
-  {
-    const todosOwner     = getService(ToDosOwner);
-    const overlayService = getService(OverlayService);
-    const formFactory    = getService(FormFactory);
-
-    const todosService = new TodosServiceImpl(todosOwner, overlayService, formFactory);
-
-    return todosService;
   }, ServiceScope.Singleton);
 
   registerServiceFactory(FormElementFactory, () =>
@@ -101,21 +60,4 @@ export function useApplicationServices()
     return overlayService;
   }, ServiceScope.Singleton);
 
-  registerServiceFactory(ToDoCardDataMapper, () =>
-  {
-    const datesService = getService(DatesService);
-    const result       = new ToDoCardDataMapperImpl(datesService);
-
-    return result;
-  });
-
-  registerServiceFactory(ToDoElementsFactory, () =>
-  {
-    const todosService = getService(ToDosService);
-    const datesService = getService(DatesService);
-
-    const result = new ToDoElementsFactoryImpl(todosService, datesService);
-
-    return result;
-  });
 }
