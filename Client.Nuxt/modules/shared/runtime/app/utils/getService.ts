@@ -1,9 +1,9 @@
 import type { ServiceIdentifier } from "../types/serviceIdentifier";
-import { ServiceLocatorBase } from "../entities/serviceLocatorBase";
 
 export function getService<T>(serviceIdentifier: ServiceIdentifier<T>): T
 {
-  let service = ServiceLocatorBase.instance.get(serviceIdentifier);
+  const serviceLocator = useServiceLocator();
+  const service        = serviceLocator.get(serviceIdentifier);
 
   return service;
 }
