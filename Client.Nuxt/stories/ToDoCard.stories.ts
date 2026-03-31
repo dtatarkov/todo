@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook-vue/nuxt';
-import VToDoCard from '../app/components/VToDoCard.vue';
+import VToDoCard from '../modules/todo/runtime/app/components/VToDoCard.vue';
 import { fn } from "storybook/test";
 
 const meta: Meta<typeof VToDoCard> = {
@@ -7,7 +7,7 @@ const meta: Meta<typeof VToDoCard> = {
   component: VToDoCard,
 
   args: {
-    //@ts-expect-error
+    // @ts-expect-error
     onEditButtonClick: fn(),
   },
 
