@@ -1,5 +1,4 @@
 import { Time } from "@internationalized/date";
-import { ValueMapper } from "~/interfaces/valueMapper";
 
 export class TimeMapperImpl extends ValueMapper<number, Time>
 {

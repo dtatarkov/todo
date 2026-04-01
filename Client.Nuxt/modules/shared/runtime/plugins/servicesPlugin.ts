@@ -5,6 +5,8 @@ import { StringsService } from "../app/interfaces/stringsService";
 import { DatesServiceImpl } from "../app/services/datesServiceImpl";
 import { StringsServiceImpl } from "../app/services/stringsServiceImpl";
 import { SSRLoaderImpl } from "../app/services/ssrLoaderImpl";
+import { TimeMapperImpl } from "../app/mappers/timeMapperImpl";
+import { ZonedDateTimeMapperImpl } from "../app/mappers/zonedDateTimeMapperImpl";
 
 export default defineNuxtPlugin((nuxtApp) =>
 {
@@ -25,4 +27,14 @@ export default defineNuxtPlugin((nuxtApp) =>
 
   registerService(StringsService, StringsServiceImpl, ServiceScope.Singleton);
   registerService(SSRLoader, SSRLoaderImpl, ServiceScope.Singleton);
+
+  registerService(ZonedDateTimeMapper, ZonedDateTimeMapperImpl);
+
+  registerServiceFactory(TimeMapper, () =>
+  {
+    const datesService = getService(DatesService);
+    const mapper       = new TimeMapperImpl(datesService);
+
+    return mapper;
+  }, ServiceScope.Singleton);
 })

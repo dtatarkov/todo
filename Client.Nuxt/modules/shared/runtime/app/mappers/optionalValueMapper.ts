@@ -1,5 +1,3 @@
-import { ValueMapper } from "~/interfaces/valueMapper";
-
 export class OptionalValueMapper<I, O> extends ValueMapper<I | undefined, O | undefined>
 {
   constructor(private valueMapper: ValueMapper<I, O>)

@@ -1,8 +1,5 @@
 import { UInputTime } from "#components";
-import type { TimeMapper } from "~/interfaces/timeMapper";
-import { OptionalValueMapper } from "~/mappers/optionalValueMapper";
 import type { Time } from "@internationalized/date";
-import type { ValueMapper } from "~/interfaces/valueMapper";
 import { InputElementBase } from "./inputElementBase";
 
 export class InputElementTime extends InputElementBase<number | undefined> implements InputElementTimeData
