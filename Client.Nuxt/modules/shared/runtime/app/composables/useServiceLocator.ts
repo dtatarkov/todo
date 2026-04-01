@@ -1,4 +1,4 @@
-import { ServiceLocator } from "../interfaces/ServiceLocator";
+import { ServiceLocator } from "../interfaces/serviceLocator";
 
 export function useServiceLocator()
 {
