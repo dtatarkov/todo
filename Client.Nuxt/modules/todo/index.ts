@@ -14,17 +14,6 @@ export default defineNuxtModule({
       path: resolver.resolve('./runtime/app/widgets')
     });
 
-    addComponentsDir({
-      path: resolver.resolve('./runtime/app/components')
-    });
-
-    addImportsDir(resolver.resolve('./runtime/app/composables'));
-
-    addImports([
-      { from: resolver.resolve('./runtime/app/interfaces/todosService'), name: 'ToDosService' },
-      { from: resolver.resolve('./runtime/app/interfaces/todo'), name: 'ToDo' },
-    ]);
-
     addPlugin(resolver.resolve('./runtime/plugins/servicesPlugin'), { append: true });
   },
 })

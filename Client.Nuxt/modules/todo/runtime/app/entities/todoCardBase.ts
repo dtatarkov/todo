@@ -1,6 +1,6 @@
 import { ToDoCard } from "../interfaces/todoCard";
 import type { ToDosService } from "../interfaces/todosService";
-import { VToDoCard } from "#components";
+import VToDoCard from "../components/VToDoCard.vue";
 
 export class ToDoCardBase extends ToDoCard
 {
