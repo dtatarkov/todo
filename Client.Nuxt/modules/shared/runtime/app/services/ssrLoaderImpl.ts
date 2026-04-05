@@ -4,11 +4,11 @@ enum SSRLoaderState
   initialized = 2,
 }
 
-export class SSRLoaderImpl implements SSRLoader
+export class SSRLoaderImpl extends SSRLoader
 {
   protected state = SSRLoaderState.initial;
 
-  async loadAsync<T>(key: string, handler: () => Promise<T>): Promise<T>
+  override async loadAsync<T>(key: string, handler: () => Promise<T>): Promise<T>
   {
     let result: T;
 
