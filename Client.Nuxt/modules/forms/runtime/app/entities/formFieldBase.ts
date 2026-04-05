@@ -1,10 +1,9 @@
 import { VFormField } from "#components";
 import { FormField } from "../interfaces/formField";
+import { getUniqueId } from "@@/modules/shared/runtime/app/utils/getUniqueId";
 
 export class FormFieldBase extends FormField
 {
-  #id = new UIElementId('form-field');
-
   private _data = reactive({
     label: '',
     name : '',
@@ -14,16 +13,13 @@ export class FormFieldBase extends FormField
     content: <UIElement | undefined>undefined
   }
 
+  readonly key = getUniqueId('form-field');
+
   readonly component = {
     setup: () =>
     {
       return () => h(VFormField, { field: this });
     }
-  }
-
-  get id(): string
-  {
-    return this.#id.value;
   }
 
   get label(): string

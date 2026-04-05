@@ -15,7 +15,6 @@ export default defineNuxtModule({
     addImportsDir(resolver.resolve('./runtime/app/composables'));
     addImportsDir(resolver.resolve('./runtime/app/utils'));
 
-    addImports({ from: resolver.resolve('./runtime/app/entities/uiElementId'), name: 'UIElementId' });
     addImports({ from: resolver.resolve('./runtime/app/entities/observableBase'), name: 'ObservableBase' });
     addImports({ from: resolver.resolve('./runtime/app/mappers/optionalValueMapper'), name: 'OptionalValueMapper' });
 

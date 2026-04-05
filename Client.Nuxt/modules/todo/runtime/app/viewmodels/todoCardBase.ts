@@ -12,6 +12,8 @@ export class ToDoCardBase extends ToDoCard
     completionDateActual : <Date | undefined>undefined,
   });
 
+  readonly key = getUniqueId('todo-card');
+
   readonly component = {
     setup: () =>
     {

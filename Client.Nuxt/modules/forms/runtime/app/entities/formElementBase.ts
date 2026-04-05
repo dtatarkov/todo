@@ -1,10 +1,11 @@
 import { FormFieldBase } from "../entities/formFieldBase";
 import type { FormElementCreateDataWithName } from "../types/formElementCreateDataWithName";
 import { FormElement } from "../interfaces/formElement";
+import { getUniqueId } from "@@/modules/shared/runtime/app/utils/getUniqueId";
 
 export class FormElementBase<V = any> extends FormElement
 {
-  #id = new UIElementId('form-element');
+  readonly key = getUniqueId('form-element');
 
   protected formField = new FormFieldBase();
 
@@ -13,11 +14,6 @@ export class FormElementBase<V = any> extends FormElement
     super();
 
     this.formField.content = inputElement;
-  }
-
-  get id()
-  {
-    return this.#id.value;
   }
 
   get name()

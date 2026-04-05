@@ -1,11 +1,11 @@
-import type { Action } from "~/types/action";
-
 export abstract class InputElementComposedBase<V> extends InputElement<V>
 {
   #id = ref('');
 
   protected abstract children: Record<string, InputElement>
   protected dataSetters: Record<string, Action<[any]>> = {}
+
+  readonly key = getUniqueId('input-element-composed');
 
   readonly component = {
     setup: () =>

@@ -1,3 +1,5 @@
+import { getUniqueId } from "@@/modules/shared/runtime/app/utils/getUniqueId";
+
 export abstract class InputElementBase<V = any> extends InputElement<V>
 {
   protected data: Record<string, any> = reactive({
@@ -12,6 +14,8 @@ export abstract class InputElementBase<V = any> extends InputElement<V>
       this.value = value;
     }
   });
+
+  readonly key = getUniqueId('input-element-base');
 
   constructor(
     protected stringsService: StringsService,

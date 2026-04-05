@@ -6,10 +6,11 @@ import type { FormElement } from "../interfaces/formElement";
 
 export class FormBase<TEntity extends Record<string, any> = Record<string, any>> extends Form
 {
-  #id                           = new UIElementId('form');
   #elements: Ref<FormElement[]> = shallowRef([]);
 
-  override component = {
+  readonly key = getUniqueId('form');
+
+  readonly component = {
     setup: () =>
     {
       return () => h(VForm, { form: this });
@@ -21,11 +22,6 @@ export class FormBase<TEntity extends Record<string, any> = Record<string, any>>
   )
   {
     super();
-  }
-
-  get id()
-  {
-    return this.#id.value;
   }
 
   get elements()

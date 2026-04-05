@@ -1,11 +1,10 @@
 import { VModal } from "#components";
 import { Modal } from "../interfaces/modal";
 import type { Overlay } from "../interfaces/overlay";
+import { getUniqueId } from "@@/modules/shared/runtime/app/utils/getUniqueId";
 
 export class ModalBase extends Modal
 {
-  #id = new UIElementId('modal');
-
   #data = {
     title      : '',
     description: '',
@@ -17,16 +16,13 @@ export class ModalBase extends Modal
     content: <UIElement | undefined>undefined
   }
 
+  readonly key = getUniqueId('modal');
+
   readonly component = {
     setup: () =>
     {
       return () => h(VModal, { modal: this });
     }
-  }
-
-  get id()
-  {
-    return this.#id.value;
   }
 
   get title()

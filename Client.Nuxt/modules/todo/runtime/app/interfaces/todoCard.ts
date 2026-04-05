@@ -1,6 +1,6 @@
 export abstract class ToDoCard extends UIElement<string>
 {
-  abstract override id: string;
+  abstract id: string;
   abstract title: string;
   abstract description: string;
   abstract completionDatePlanned: Date | undefined;

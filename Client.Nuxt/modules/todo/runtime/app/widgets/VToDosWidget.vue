@@ -7,7 +7,7 @@ const { cards } = await useToDoCards();
 <template>
   <div class="p-4">
     <VGrid>
-      <component v-for="card of cards" :key="card.id" :is="card.component" />
+      <component v-for="card of cards" :key="card.key" :is="card.component" />
     </VGrid>
   </div>
 </template>
