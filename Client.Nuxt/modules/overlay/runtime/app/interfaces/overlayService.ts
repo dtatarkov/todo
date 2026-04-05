@@ -5,5 +5,5 @@ export abstract class OverlayService
 {
   abstract createModal(): Modal;
 
-  abstract getElementsRef(): ComputedRef<OverlayElement[]>;
+  abstract getElements(): Observable<OverlayElement[]>;
 }

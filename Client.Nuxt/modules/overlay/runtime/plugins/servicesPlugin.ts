@@ -6,6 +6,7 @@ import { OverlayServiceImpl } from "../app/services/overlayServiceImpl";
 export default defineNuxtPlugin((nuxtApp) =>
 {
   registerService(Overlay, OverlayBase, ServiceScope.Singleton);
+  
   registerServiceFactory(OverlayService, () =>
   {
     const overlay        = getService(Overlay);

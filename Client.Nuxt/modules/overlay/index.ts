@@ -14,10 +14,6 @@ export default defineNuxtModule({
       path: resolver.resolve('./runtime/app/widgets')
     });
 
-    addComponentsDir({
-      path: resolver.resolve('./runtime/app/components')
-    });
-
     addImports([
       { from: resolver.resolve('./runtime/app/interfaces/modal'), name: 'Modal' },
       { from: resolver.resolve('./runtime/app/interfaces/overlayService'), name: 'OverlayService' },

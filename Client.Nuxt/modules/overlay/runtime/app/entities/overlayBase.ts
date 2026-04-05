@@ -1,12 +1,15 @@
 import { Overlay } from "../interfaces/overlay";
-import type { OverlayElement } from "../interfaces/overlayElement";
+import { type OverlayElement } from "../interfaces/overlayElement";
 import { ModalBase } from "../entities/modalBase";
 
 export class OverlayBase extends Overlay
 {
-  private elementsSet = shallowRef(new Set<OverlayElement>());
+  private elements = new ObservableBase(new Array<OverlayElement>());
 
-  readonly elements = computed(() => [...this.elementsSet.value]);
+  override getElements(): Observable<OverlayElement[]>
+  {
+    return this.elements;
+  }
 
   override createModal()
   {
@@ -18,26 +21,26 @@ export class OverlayBase extends Overlay
     return modal;
   }
 
-  override addElement(element: OverlayElement): void
+  override removeElement(element: OverlayElement): void
   {
-    const currentElements = this.elementsSet.value;
-    const newElements     = new Set([...currentElements, element]);
-
-    this.elementsSet.value = newElements;
-  }
-
-  removeElement(element: OverlayElement): void
-  {
-    if (!this.elementsSet.value.has(element))
+    if (!this.elements.value.includes(element))
     {
       return;
     }
 
-    const currentElements = this.elementsSet.value;
-    const newElements     = new Set(currentElements);
+    const currentElements = this.elements.value;
+    const newElementsSet  = new Set(currentElements);
 
-    newElements.delete(element);
+    newElementsSet.delete(element);
 
-    this.elementsSet.value = newElements;
+    this.elements.value = [...newElementsSet];
+  }
+
+  private addElement(element: OverlayElement): void
+  {
+    const currentElements = this.elements.value;
+    const newElementsSet  = new Set([...currentElements, element]);
+
+    this.elements.value = [...newElementsSet];
   }
 }

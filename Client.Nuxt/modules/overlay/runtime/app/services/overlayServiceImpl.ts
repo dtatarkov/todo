@@ -16,8 +16,8 @@ export class OverlayServiceImpl extends OverlayService
     return modal;
   }
 
-  getElementsRef(): ComputedRef<OverlayElement[]>
+  getElements(): ComputedRef<OverlayElement[]>
   {
-    return this.overlay.elements;
+    return this.overlay.getElements();
   }
 }
