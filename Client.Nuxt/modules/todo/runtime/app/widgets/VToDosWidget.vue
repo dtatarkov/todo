@@ -1,14 +1,7 @@
 <script lang="ts" setup>
-import { ToDosService } from "../interfaces/todosService";
-import { ToDoElementsFactory } from "../interfaces/todoElementsFactory";
+import { useToDoCards } from "../composables/useToDoCards";
 
-const todosService        = getService(ToDosService);
-const todoElementsFactory = getService(ToDoElementsFactory);
-
-await todosService.updateToDosAsync();
-
-const todos = todosService.getAllToDosRef();
-const cards = computed(() => todos.value.map(todo => todoElementsFactory.createToDoCard(todo)));
+const { cards } = await useToDoCards();
 </script>
 
 <template>

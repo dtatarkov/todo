@@ -8,25 +8,35 @@ export class ToDoCardBase extends ToDoCard
     id                   : '',
     title                : '',
     description          : '',
-    completionDatePlanned: '',
-    completionDateActual : ''
+    completionDatePlanned: <Date | undefined>undefined,
+    completionDateActual : <Date | undefined>undefined,
   });
 
   readonly component = {
     setup: () =>
     {
+      const onEditButtonClick = async () =>
+      {
+        await this.todosService.editToDoAsync(this.id);
+      }
+
+      const completionDatePlanned = computed(() => this.datesService.formatDateOptional(this.completionDatePlanned));
+      const completionDateActual  = computed(() => this.datesService.formatDateOptional(this.completionDateActual));
+
       return () => h(VToDoCard, {
-        title                : this.title,
-        description          : this.description,
-        completionDatePlanned: this.completionDatePlanned,
-        completionDateActual : this.completionDateActual,
-        onEditButtonClick    : () => this.handleEditButtonClick()
+        ...this.data,
+
+        completionDatePlanned: completionDatePlanned.value,
+        completionDateActual : completionDateActual.value,
+
+        onEditButtonClick,
       });
     }
   }
 
   constructor(
-    private todosService: ToDosService
+    protected todosService: ToDosService,
+    protected datesService: DatesService
   )
   {
     super();
@@ -57,33 +67,28 @@ export class ToDoCardBase extends ToDoCard
     return this.data.completionDateActual;
   }
 
-  override set id(value: string)
+  override set id(value)
   {
     this.data.id = value;
   }
 
-  override set title(value: string)
+  override set title(value)
   {
     this.data.title = value;
   }
 
-  override set description(value: string)
+  override set description(value)
   {
     this.data.description = value;
   }
 
-  override set completionDatePlanned(value: string)
+  override set completionDatePlanned(value)
   {
     this.data.completionDatePlanned = value;
   }
 
-  override set completionDateActual(value: string)
+  override set completionDateActual(value)
   {
     this.data.completionDateActual = value;
-  }
-
-  async handleEditButtonClick()
-  {
-    await this.todosService.editToDoAsync(this.data.id);
   }
 }
