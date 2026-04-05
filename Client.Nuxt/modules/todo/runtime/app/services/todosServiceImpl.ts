@@ -1,7 +1,6 @@
 import { ToDosService } from "../interfaces/todosService";
 import { ToDo } from "../interfaces/todo";
 import type { ToDosOwner } from "../interfaces/todosOwner";
-import type { OverlayService } from "~/interfaces/overlayService";
 
 export class TodosServiceImpl extends ToDosService
 {
@@ -14,9 +13,9 @@ export class TodosServiceImpl extends ToDosService
     super();
   }
 
-  override getAllToDosRef(): ComputedRef<ToDo[]>
+  override getAllToDos(): Observable<ToDo[]>
   {
-    return this.owner.todos;
+    return this.owner.getAllToDos();
   }
 
   override async updateToDosAsync(): Promise<void>

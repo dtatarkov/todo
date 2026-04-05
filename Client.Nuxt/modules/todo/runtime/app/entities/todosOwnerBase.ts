@@ -4,14 +4,9 @@ import type { ToDosRepository } from "../interfaces/todosRepository";
 import type { ToDoDtoMapper } from "../interfaces/todoDtoMapper";
 import type { ToDoGetDto } from "../types/toDoGetDto";
 
-export class ToDosOwnerBase extends ToDosOwner
+export class ToDosOwnerBase extends ToDosOwner implements Destroyable
 {
-  private _todos = shallowRef(new Array<ToDo>());
-
-  readonly todos = computed(() => this._todos.value);
-
-  states: Record<'initial' | 'initializing' | 'initialized', TodosOwnerBaseState>
-  state: TodosOwnerBaseState;
+  protected todos = new ObservableBase(new Array<ToDo>());
 
   constructor(
     protected todosRepository: ToDosRepository,
@@ -20,19 +15,11 @@ export class ToDosOwnerBase extends ToDosOwner
   )
   {
     super();
-
-    this.states = {
-      initial     : new ToDosOwnerBaseStateInitial(this.todosRepository, this.todoDtoMapper, this.ssrLoader),
-      initializing: new ToDosOwnerBaseStateInitializing(),
-      initialized : new ToDosOwnerBaseStateInitialized(this.todosRepository, this.todoDtoMapper)
-    }
-
-    this.state = this.states.initial;
   }
 
-  setToDos(todos: ToDo[])
+  override getAllToDos(): Observable<ToDo[]>
   {
-    this._todos.value = todos;
+    return this.todos;
   }
 
   override getToDoById(id: string): ToDo | undefined
@@ -42,67 +29,16 @@ export class ToDosOwnerBase extends ToDosOwner
     return result;
   }
 
-  async updateToDosAsync()
+  override async updateToDosAsync()
   {
-    await this.state.updateToDosAsync(this);
-  }
-}
-
-abstract class TodosOwnerBaseState
-{
-  abstract updateToDosAsync(owner: ToDosOwnerBase): Promise<void>;
-}
-
-class ToDosOwnerBaseStateBase extends TodosOwnerBaseState
-{
-  async updateToDosAsync(owner: ToDosOwnerBase): Promise<void>
-  {
-  }
-}
-
-class ToDosOwnerBaseStateInitial extends ToDosOwnerBaseStateBase
-{
-  constructor(
-    private todosRepository: ToDosRepository,
-    private todoDtoMapper: ToDoDtoMapper,
-    private ssrLoader: SSRLoader
-  )
-  {
-    super();
-  }
-
-  override async updateToDosAsync(owner: ToDosOwnerBase): Promise<void>
-  {
-    owner.state = owner.states.initializing;
-
     const todoDtos: ToDoGetDto[] = await this.ssrLoader.loadAsync('todos', () => this.todosRepository.getAllToDosAsync());
     const todos                  = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
 
-    owner.setToDos(todos);
-
-    owner.state = owner.states.initialized;
-  }
-}
-
-class ToDosOwnerBaseStateInitializing extends ToDosOwnerBaseStateBase
-{
-}
-
-class ToDosOwnerBaseStateInitialized extends ToDosOwnerBaseStateBase
-{
-  constructor(
-    private todosRepository: ToDosRepository,
-    private todoDtoMapper: ToDoDtoMapper,
-  )
-  {
-    super();
+    this.todos.value = todos;
   }
 
-  override async updateToDosAsync(owner: ToDosOwnerBase): Promise<void>
+  destroy()
   {
-    const todoDtos = await this.todosRepository.getAllToDosAsync();
-    const todos    = todoDtos.map(todoDto => this.todoDtoMapper.mapToEntity(todoDto));
-
-    owner.setToDos(todos);
+    this.todos.destroy();
   }
 }

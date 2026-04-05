@@ -6,10 +6,10 @@ export async function useToDoCards()
   const todosService        = getService(ToDosService);
   const todoElementsFactory = getService(ToDoElementsFactory);
 
-  await todosService.updateToDosAsync();
-
-  const todos = todosService.getAllToDosRef();
+  const todos = useObservable(todosService.getAllToDos());
   const cards = computed(() => todos.value.map(todo => todoElementsFactory.createToDoCard(todo)));
+
+  await todosService.updateToDosAsync();
 
   return {
     cards,

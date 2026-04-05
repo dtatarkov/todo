@@ -2,7 +2,7 @@ import { ToDo } from "../interfaces/todo";
 
 export abstract class ToDosOwner
 {
-  abstract readonly todos: ComputedRef<ToDo[]>;
+  abstract getAllToDos(): Observable<ToDo[]>;
 
   abstract updateToDosAsync(): Promise<void>;
 

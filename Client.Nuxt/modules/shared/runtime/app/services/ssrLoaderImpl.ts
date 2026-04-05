@@ -1,8 +1,29 @@
+enum SSRLoaderState
+{
+  initial     = 0,
+  initialized = 2,
+}
+
 export class SSRLoaderImpl implements SSRLoader
 {
+  protected state = SSRLoaderState.initial;
+
   async loadAsync<T>(key: string, handler: () => Promise<T>): Promise<T>
   {
-    const response = await useAsyncData(key, handler);
-    return response.data.value as T;
+    let result: T;
+
+    if (this.state === SSRLoaderState.initial)
+    {
+      const response = await useAsyncData(key, handler);
+      result         = response.data.value as T;
+
+      this.state = SSRLoaderState.initialized;
+    }
+    else
+    {
+      result = await handler();
+    }
+
+    return result;
   }
 }
