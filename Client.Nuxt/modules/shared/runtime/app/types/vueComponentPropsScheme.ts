@@ -1,3 +1,3 @@
-import type { PropScheme } from "@@/modules/shared/runtime/app/types/propScheme";
+import type { VueComponentPropScheme } from "@@/modules/shared/runtime/app/types/vueComponentPropScheme";
 
-export type PropsScheme = Record<string, PropScheme>;
+export type VueComponentPropsScheme = Record<string, VueComponentPropScheme>;
