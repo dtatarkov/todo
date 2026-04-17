@@ -1,1 +1,0 @@
-export type Func<R, T extends any[] = any[]> = (...args: T) => R 
